@@ -1,13 +1,13 @@
 {
   "version": 2,
-  "builds": [{
-    "src": "package.json",
-    "use": "@vercel/static-build",
-    "config": {
-      "distDir": "dist"
-    }
-  }],
-  "routes": [{ "src": "/admin/(.*)", "dest": "/admin/" }],
   "installCommand": "npm install --legacy-peer-deps",
-  "buildCommand": "npm run build"
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/admin/index.html"
+    }
+  ]
 }
