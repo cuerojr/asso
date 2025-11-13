@@ -1,0 +1,38 @@
+.informe-header{
+    border-bottom: 1px solid;
+}
+
+.icon-wrapper{
+    border-right: 1px solid #333;
+}
+
+.informe-generado{
+    background-color: #f8f8f8;
+    color: #000;
+    border:1px solid;
+    .card{
+        background-color: #FFF;
+    }
+
+    .table{
+        color: #000 !important;
+    }
+
+    
+}
+
+h1{
+    input.form-control{
+        font-size: 1.5rem  !important;
+    }
+}
+
+.table-informes{
+        td{
+            background-color: #FFF;
+            color: #000;
+        }
+        th{
+            color: #FFF;
+        }
+}

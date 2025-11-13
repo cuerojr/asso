@@ -1,0 +1,104 @@
+.parawrapper{
+    width: max-content;
+}
+
+
+
+.modal-compartir{
+    .modal-content{
+        background-color: #FFF !important;
+        color: #000;
+    }
+
+    .custom-switch, .custom-switch.rc-switch-checked.custom-switch-primary-inverse{
+        background-color: rgb(220, 220, 220) !important;
+      }
+
+      .habilitar-wrapper{
+        background-color: rgb(220, 220, 220);
+        border-radius: 20px;
+        padding: 20px;
+      }
+
+    .link-publico-wrapper{
+        height: 40px;
+        padding: 10px;
+        border:1px solid rgb(126, 126, 126);
+    }
+
+    .form-title{
+        color: #000;
+        font-weight: normal;
+    }
+
+    .form-control{
+        background-color: #FFF !important;
+    }
+
+    .modal .close{
+      color: #000;
+    }
+}
+
+
+.fade-out {
+    animation: fadeOut ease 3s;
+    -webkit-animation: fadeOut ease 3s;
+    -moz-animation: fadeOut ease 3s;
+    -o-animation: fadeOut ease 3s;
+    -ms-animation: fadeOut ease 3s;
+  }
+  @keyframes fadeOut {
+    0% {
+      opacity:1;
+    }
+    100% {
+      opacity:0;
+    }
+  }
+
+  @-moz-keyframes fadeOut {
+    0% {
+      opacity:1;
+    }
+    100% {
+      opacity:0;
+    }
+  }
+
+  @-webkit-keyframes fadeOut {
+    0% {
+      opacity:1;
+    }
+    100% {
+      opacity:0;
+    }
+  }
+
+  @-o-keyframes fadeOut {
+    0% {
+      opacity:1;
+    }
+    100% {
+      opacity:0;
+    }
+  }
+
+  @-ms-keyframes fadeOut {
+    0% {
+      opacity:1;
+    }
+    100% {
+      opacity:0;
+    }
+  }
+
+  .estado-comentario{
+    .read-note{
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      cursor:pointer;
+      color: #1D1A1D;
+    }
+  }

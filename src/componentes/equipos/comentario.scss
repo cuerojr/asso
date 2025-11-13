@@ -1,0 +1,26 @@
+.comentario-wrapper{
+    position: absolute;
+    width: 400px;
+    height: 150px;
+    right: 0;
+    bottom: 50px;
+    padding: 10px;
+    background: #000;
+    font-size: 14px;
+    border-radius: 10px;
+
+    &:after {
+    content: '';
+	position: absolute;
+	bottom: 0;
+	right: 15px;
+	width: 0;
+	height: 0;
+	border: 20px solid transparent;
+	border-top-color: #000;
+	border-bottom: 0;
+	border-right: 0;
+	margin-left: -10px;
+	margin-bottom: -20px;
+    }
+}
