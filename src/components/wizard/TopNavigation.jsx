@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import { WithWizard } from 'react-albus';
+import { WithWizard } from "react-albus";
 import { NavLink } from "react-router-dom";
 export class TopNavigation extends Component {
   constructor(props) {
@@ -21,33 +21,45 @@ export class TopNavigation extends Component {
     if (this.props.disableNav) {
       return;
     }
-    this.props.topNavClick(stepItem, push)
+    this.props.topNavClick(stepItem, push);
   }
 
   render() {
     return (
-      <WithWizard render={({ next, previous, step, steps, go, push }) => (
-        <ul className={"nav nav-tabs " + this.props.className + (this.props.disableNav ? " disabled" : "")}>
-          {
-            steps.map((stepItem, index) => {
+      <WithWizard
+        render={({ next, previous, step, steps, go, push }) => (
+          <ul
+            className={
+              "nav nav-tabs " +
+              this.props.className +
+              (this.props.disableNav ? " disabled" : "")
+            }
+          >
+            {steps.map((stepItem, index) => {
               if (!stepItem.hideTopNav) {
                 return (
-                  <li key={index} className={"nav-item " + this.getClassName(steps, step, index, stepItem)}>
+                  <li
+                    key={index}
+                    className={
+                      "nav-item " +
+                      this.getClassName(steps, step, index, stepItem)
+                    }
+                  >
                     {/*<NavLink to="#" location={{}} className="nav-link" onClick={() => this.itemClick(stepItem, push)}>*/}
-                    <span className="nav-link" style={{"cursor":"default"}}>
+                    <span className="nav-link" style={{ cursor: "default" }}>
                       <span>{stepItem.name}</span>
                       <small>{stepItem.desc}</small>
-                      </span>
+                    </span>
                     {/*</NavLink>*/}
                   </li>
-                )
+                );
               } else {
-                return <Fragment key={index} />
+                return <Fragment key={index} />;
               }
-            })
-          }
-        </ul>
-      )} />
-    )
+            })}
+          </ul>
+        )}
+      />
+    );
   }
 }
