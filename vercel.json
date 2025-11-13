@@ -6,8 +6,5 @@
       "distDir": "dist"
     }
   }],
-  "routes": [{
-    "src": "/(.*)",
-    "dest": "/"
-  }]
+  "routes": [{ "src": "/admin/(.*)", "dest": "/admin/" }]
 }
