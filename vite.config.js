@@ -9,6 +9,6 @@ export default defineConfig({
     devSourcemap: false
   },
   build: {
-    assetsDir: 'admin_static', // 👈 tiene que ir dentro de build
+    assetsDir: 'admin_static', 
   },
 });
