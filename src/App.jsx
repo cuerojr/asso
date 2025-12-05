@@ -44,7 +44,7 @@ class App extends Component {
         <React.Fragment>
           <NotificationContainer />
           <Suspense fallback={<div className="loading" />}>
-            <Router basename="/admin">
+            <Router basename="/">
               <Routes>
                 {/* Rutas protegidas */}
                 <Route
