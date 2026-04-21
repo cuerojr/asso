@@ -1,10 +1,38 @@
-import { BASEURL } from './baseurl';
+import {
+	BASEURL
+} from './baseurl';
 import moment from 'moment';
+
+const handleResponse = async (response) => {
+	const text = await response.text();
+	try {
+		const data = JSON.parse(text);
+
+		if (data.stat === 0 || data.error) {
+			throw new Error(data.err || data.error || 'Error en la operación');
+		}
+
+		return data;
+	} catch (parseError) {
+		if (parseError instanceof SyntaxError) {
+			// Ahora sí, detecta si es HTML
+			if (text.includes('<br />') || text.includes('<html>') || text.includes('Fatal error')) {
+				console.error('⚠️ El servidor devolvió HTML en lugar de JSON:', text);
+				throw new Error('Error del servidor PHP. Revisa los logs.');
+			}
+			console.error('❌ Error al parsear JSON:', text);
+			throw new Error('Respuesta inválida del servidor');
+		}
+		throw parseError;
+	}
+};
+
+
 export const listarControles = (idEmpresa, idEquipo, idComponente) => {
 
 	const params = {
 		a: 'lt',
-	    c:idComponente
+		c: idComponente
 	}
 	let u = new URLSearchParams(params).toString();
 	const url = BASEURL + '?' + u;
@@ -14,13 +42,7 @@ export const listarControles = (idEmpresa, idEquipo, idComponente) => {
 	};
 
 	return fetch(url, request).then(response => response.json());
-  /*
-    let promise = new Promise(function(resolve, reject) {
-        return resolve([{"id":"1","nombre":"Control de Vibraciones","fecha":"2021-11-10","estado":"normal", "recomendaciones":"recomendacion 1", "observaciones":"observaciones 1", "reporte":"reporte 1", "color_estado":"#990000", "file":"http://www.rutaarchivo/nombre.jpg"},
-                        {"id":"2","nombre":"Termografía","fecha":"2021-11-10","estado":"normal", "recomendaciones":"recomendacion 2", "observaciones":"observaciones 2", "reporte":"reporte 2", "color_estado":"#009900", "file":"http://www.rutaarchivo/nombre.jpg"}]);
 
-    });
-    return promise;*/
 };
 
 export const altaControl = (tipoTest, idEstado, idComponente, fecha, fallas, observaciones, recomendaciones, file) => {
@@ -34,8 +56,8 @@ export const altaControl = (tipoTest, idEstado, idComponente, fecha, fallas, obs
 	data.append('fa', fallas);
 	data.append('o', observaciones);
 	data.append('r', recomendaciones);
-	if(file){
-		file.map((archivo)=>{
+	if (file) {
+		file.map((archivo) => {
 			data.append('file[]', archivo);
 		})
 	}
@@ -49,28 +71,39 @@ export const altaControl = (tipoTest, idEstado, idComponente, fecha, fallas, obs
 
 };
 
-export const actualizarControl = (idControl, idTipoTest, idEstado, idComponente, fecha, fallas, observaciones, recomendaciones, reporte, file) => {
+export const actualizarControl = ({
+	idControl,
+	idTipoTest,
+	idEstado,
+	idComponente,
+	fecha,
+	fallas,
+	observaciones,
+	recomendaciones,
+	reporte,
+	file
+}) => {
 
 	const data = new FormData();
 	data.append('a', 'mt');
-	data.append('id',idControl);
-	data.append('t',idTipoTest);
-	data.append('e',idEstado);
-	data.append('c',idComponente);
-	data.append('f',fecha);
-	data.append('fa',fallas);
-	data.append('o',observaciones);
-	data.append('r',recomendaciones);
-	data.append('p',reporte);
-	file.map((archivo)=>{
-		data.append('file[]', archivo);
-	})
+	data.append('id', idControl);
+	data.append('t', idTipoTest);
+	data.append('e', idEstado);
+	data.append('c', idComponente);
+	data.append('f', fecha);
+	data.append('fa', fallas);
+	data.append('o', observaciones);
+	data.append('r', recomendaciones);
+	if (file) {
+		file.map((archivo) => {
+			data.append('file[]', archivo);
+		})
+	}
 
 	return fetch(BASEURL, {
 		method: 'POST',
 		body: data
-	}).then(response => response.json());
-
+	}).then(handleResponse);
 };
 
 export const recargarEstadosControl = (idComponente) => {

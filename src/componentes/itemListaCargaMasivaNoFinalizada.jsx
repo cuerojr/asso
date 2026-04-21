@@ -3,6 +3,9 @@ import { Card, CardBody, Button, CardTitle } from "reactstrap";
 import moment from "moment";
 import { WithWizard } from "react-albus";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+
 export const ItemListaCargaMasivaNoFinalizada = ({
   item,
   habDeshab,
@@ -37,7 +40,7 @@ export const ItemListaCargaMasivaNoFinalizada = ({
                   confirmCargaMasiva(item.id);
                 }}
               >
-                <i className="simple-icon-trash h4 mr-2" />
+                <FontAwesomeIcon icon={faTrashCan} className="h4 mr-2" />
               </Button>
             </div>
           </CardTitle>

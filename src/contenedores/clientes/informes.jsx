@@ -222,7 +222,8 @@ const Informes = (props) => {
           <DetalleInforme 
             detalleInforme={props.detalleInforme}  
             ocultarDetalle={ocultarDetalle} 
-            deleteInforme={props.fetchDeleteInforme} 
+            //deleteInforme={props.fetchDeleteInforme} 
+            deleteInforme={deleteInforme} 
           />
         ) : (
           <div className="loading" />

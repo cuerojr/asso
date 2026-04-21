@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+/*import React, { Component } from "react";
 import { Navigate } from "react-router-dom";
 
 class Main extends Component {
@@ -6,4 +6,4 @@ class Main extends Component {
     return <Navigate to="/app" />
   }
 }
-export default Main;
+export default Main;*/

@@ -4,6 +4,9 @@ import { setearControlesDeEquipo } from '../../../../../reducers/cargas-masivas-
 import { connect } from 'react-redux';
 import ReactDOMServer from 'react-dom/server';
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+
 const Archivo = ({ 
     handleChangeStatus, 
     setearControlesDeEquipo, 
@@ -69,7 +72,7 @@ const Archivo = ({
                     </div>
                 </div>
                 <a href="#/" className="remove" data-dz-remove>
-                    {" "}<i className="glyph-icon simple-icon-trash" />{" "}
+                    <FontAwesomeIcon icon={faTrashCan} />
                 </a>
             </div>
         ),

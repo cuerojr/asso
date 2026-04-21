@@ -30,7 +30,6 @@ const ItemListaCargaMasivaNoFinalizada = ({
   setearEquipoSeleccionadoEnCargaMasiva,
   resetdetalleDeComponentesYControles,
 }) => {
-  //console.log("🚀 ~ ItemListaCargaMasivaNoFinalizada2 ~ item:", item)
 
   const seleccionarCargaMasivaSeleccionada = (item) => {
     const idRutasArray = JSON.parse(item.id_rutas);

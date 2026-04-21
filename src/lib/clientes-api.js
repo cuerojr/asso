@@ -1,12 +1,14 @@
-import { BASEURL } from './baseurl';
+import {
+	BASEURL
+} from './baseurl';
 
-export const listarClientes= () => {
+export const listarClientes = () => {
 
 	const params = {
-		a:'gle',
+		a: 'gle',
 	}
 	let u = new URLSearchParams(params).toString();
-	const url = BASEURL+'?'+u;
+	const url = BASEURL + '?' + u;
 
 	const request = {
 		method: 'GET',
@@ -17,13 +19,13 @@ export const listarClientes= () => {
 
 };
 
-export const listarCantidadClientes= () => {
+export const listarCantidadClientes = () => {
 
 	const params = {
-		a:'rce',
+		a: 'rce',
 	}
 	let u = new URLSearchParams(params).toString();
-	const url = BASEURL+'?'+u;
+	const url = BASEURL + '?' + u;
 
 	const request = {
 		method: 'GET',
@@ -34,14 +36,14 @@ export const listarCantidadClientes= () => {
 
 };
 
-export const detalleCliente= (idEmpresa) => {
+export const detalleCliente = (idEmpresa) => {
 
 	const params = {
-		a:'gde',
-		e:idEmpresa
+		a: 'gde',
+		e: idEmpresa
 	}
 	let u = new URLSearchParams(params).toString();
-	const url = BASEURL+'?'+u;
+	const url = BASEURL + '?' + u;
 
 	const request = {
 		method: 'GET',
@@ -104,7 +106,7 @@ export const deleteCliente = (id) => {
 };
 
 
-export const habilitarDeshabilitarCliente = (id,h) => {
+export const habilitarDeshabilitarCliente = (id, h) => {
 	const data = new FormData();
 	data.append('a', 'mhe');
 	data.append('id', id);
@@ -143,16 +145,45 @@ export const enviarNotificacionCliente = (id, asunto, texto, file) => {
 	}).then(response => response.json());
 }
 
-export const listarNotificaciones= (idEmpresa) => {
+export const listarNotificaciones = (a= "ln",snv= "0", pag, idUsuario, sm) => {
 
 	const params = {
-		a:'ln',
-		sm:"1",
-		p:0,
-		id:idEmpresa
+		a,
+		snv,
+        p:pag,
+		id:idUsuario
 	}
+	if(sm){
+		params.sm = sm;
+	}
+
 	let u = new URLSearchParams(params).toString();
-	const url = BASEURL+'?'+u;
+	const url = BASEURL + '?' + u;
+
+	const request = {
+		method: 'GET',
+	};
+
+	return fetch(url, request)
+		.then(response => response.json());
+
+};
+
+export const buscarNotificaciones = (a = "sn", snv = "0", pag, idUsuario, sm, q) => {
+
+	const params = {
+		a,
+		snv,
+		p: pag,
+		id: idUsuario,
+		q
+	}
+	if (sm) {
+		params.sm = sm;
+	}
+
+	let u = new URLSearchParams(params).toString();
+	const url = BASEURL + '?' + u;
 
 	const request = {
 		method: 'GET',
@@ -166,11 +197,11 @@ export const listarNotificaciones= (idEmpresa) => {
 export const getDetalleNotificaciones = (idNotificacion) => {
 
 	const params = {
-		a:'gnd',
-		id:idNotificacion
+		a: 'gnd',
+		id: idNotificacion
 	}
 	let u = new URLSearchParams(params).toString();
-	const url = BASEURL+'?'+u;
+	const url = BASEURL + '?' + u;
 
 	const request = {
 		method: 'GET',

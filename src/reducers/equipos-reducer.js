@@ -6,7 +6,8 @@ const initialState = {
     equipos: [],
     modalCargaVariosEquipos:false,
     modalImportarXLS:false,
-    equipoSeleccionadoCargaIndividual:null
+    equipoSeleccionadoCargaIndividual:null,
+    filterIsVisible: false
 };
 
 const LISTAR_EQUIPOS = 'LISTAR_EQUIPOS';
@@ -15,6 +16,7 @@ const FILSTRAR_EQUIPOS = 'FILSTRAR_EQUIPOS';
 const MODAL_CARGA_VARIOS_EQUIPOS = 'MODAL_CARGA_VARIOS_EQUIPOS';
 const MODAL_IMPORTAR_XLS = 'MODAL_IMPORTAR_XLS';
 const EQUIPO_SELECCIONADO_CARGA_INDIVIDUAL = 'EQUIPO_SELECCIONADO_CARGA_INDIVIDUAL';
+const MOSTRAR_OCULTAR_FILTROS = 'MOSTRAR_OCULTAR_FILTROS';
 
 const listarEquiposAction = (equipos) => ({ type: LISTAR_EQUIPOS, payload: equipos });
 export const resetEquiposAction = () => ({ type: RESET_EQUIPOS });
@@ -22,6 +24,7 @@ const filtrarEquiposAction = (equipos) => ({ type: FILSTRAR_EQUIPOS, payload: eq
 const modalCargaVariosEquiposAction = (visibilidad) => ({ type: MODAL_CARGA_VARIOS_EQUIPOS, payload: visibilidad });
 const modalImportarEquiposAction = (visibilidad) => ({ type: MODAL_IMPORTAR_XLS, payload: visibilidad });
 const equipoSeleccionadoCargaIndividualAction = (equipo) => ({ type: EQUIPO_SELECCIONADO_CARGA_INDIVIDUAL, payload: equipo });
+const mostrarOcultarFiltrosAction = (visibilidad) => ({ type: MOSTRAR_OCULTAR_FILTROS, payload: visibilidad });
 
 export const fetchlistarEquipos = (idEmpresa, idRuta) => {
     return (dispatch) => {
@@ -83,6 +86,14 @@ export const seleccionarEquipoCargaIndividual = (equipo) => {
     }
 }
 
+export const mostrarOcultarFiltros = (visibilidad) => {
+    return (dispatch) => {
+        console.log("🚀 ~ mostrarOcultarFiltros ~ dispatch:", dispatch)
+        
+        return dispatch(mostrarOcultarFiltrosAction(visibilidad));
+    }
+}
+
 export default (state = initialState, action) => {
     switch (action.type) {
         //en todos los casos regresamos un objeto nuevo en el cual incluimos todos las propiedades del objeto state con ...state
@@ -99,6 +110,8 @@ export default (state = initialState, action) => {
             return { ...state, modalImportarXLS: action.payload };
         case EQUIPO_SELECCIONADO_CARGA_INDIVIDUAL:
             return { ...state, equipoSeleccionadoCargaIndividual: action.payload };
+        case MOSTRAR_OCULTAR_FILTROS:
+            return { ...state, filterIsVisible: action.payload };
         default:
             return { ...state };
     }

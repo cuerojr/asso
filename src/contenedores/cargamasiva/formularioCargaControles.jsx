@@ -12,7 +12,7 @@ import { eliminarImagenDeCargaMasiva } from "../../lib/cargas-masivas-api";
 import { Tarjeta } from "../../componentes/tarjeta";
 import { fetchListarObservaciones, fetchListarRecomendaciones } from '../../reducers/autocompletar-reducer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSquare, faSquareCheck } from '@fortawesome/free-solid-svg-icons'
+import { faSquare, faSquareCheck, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 
 import ReactDOMServer from 'react-dom/server';
 
@@ -375,7 +375,7 @@ const FormularioCargaControles = forwardRef((props, ref) => {
                 </div>
                 <a href="#/" className="remove" data-dz-remove>
                     {" "}
-                    <i className="glyph-icon simple-icon-trash" />{" "}
+                    <FontAwesomeIcon icon={faTrashCan} />{" "}
                 </a>
             </div>
         ),
@@ -531,8 +531,8 @@ const FormularioCargaControles = forwardRef((props, ref) => {
                                                     <div className='col-xs-12 col-md-3 position-relative mb-4'>
                                                         <div style={{ "background": "#6A6A6A" }} className="text-center">
                                                             <img src={archivo.filename} alt={archivo.id} className="img-fluid" width={450} height={450}/>
-                                                            <Button className="position-absolute remove-image" color="danger" onClick={() => { eliminarImagen(archivo.id, index) }}>
-                                                                <i className='simple-icon-trash' />
+                                                            <Button className="position-absolute d-flex justify-content-center align-items-center" color="danger" onClick={() => { eliminarImagen(archivo.id, index) }}>
+                                                                <FontAwesomeIcon icon={faTrashCan} />
                                                             </Button>
                                                         </div>
                                                     </div>

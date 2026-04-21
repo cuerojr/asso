@@ -173,7 +173,7 @@ const detalleDeComponentesYControlesAction = (detalleDeComponentesYControles) =>
     payload: detalleDeComponentesYControles
 });
 
-export const fetchDetalleDeComponentesYControles = (idCargaMasiva, idEquipo) => {
+export const fetchDetalleDeComponentesYControles = (idCargaMasiva, idEquipo) => {    
     return (dispatch) => {
         detalleDeComponentesYControles(idCargaMasiva, idEquipo)
             .then(res => {
@@ -240,7 +240,6 @@ export const setearCargaMasiva = (cargaMasiva) => {
 
 
 export const setearEquipoSeleccionadoEnCargaMasiva = (equipoEnCargaMasivaId) => {
-    //console.log("🚀 ~ setearEquipoSeleccionadoEnCargaMasiva ~ equipoEnCargaMasiva:", equipoEnCargaMasivaId)    
     return (dispatch) => dispatch(setEquipoSeleccionadoEnCargaMasiva(equipoEnCargaMasivaId));
 }
 
@@ -339,22 +338,21 @@ export default (state = initialState, action) => {
                 ...state, equipoNoControlado: action.payload
             }
         case CONTROLESDEEQUIPO: {
-                                                        const updatedControles = Array.isArray(action.payload) ? action.payload : [action.payload];
+            const updatedControles = Array.isArray(action.payload) ? action.payload : [action.payload];
 
-                                                        const newControlesDelEquipo = state.controlesDelEquipo.map(control => {
-                                                            const foundControl = updatedControles.find(updatedControl => updatedControl.componente === control.componente);
-                                                            return foundControl ? foundControl : control;
-                                                        });
+            const newControlesDelEquipo = state.controlesDelEquipo.map(control => {
+                const foundControl = updatedControles.find(updatedControl => updatedControl.componente === control.componente);
+                return foundControl ? foundControl : control;
+            });
 
-                                                        const newControlsToAdd = updatedControles.filter(updatedControl =>
-                                                            !state.controlesDelEquipo.find(control => control.componente === updatedControl.componente)
-                                                        );
-
-                                                        return {
-                                                            ...state,
-                                                            controlesDelEquipo: [...newControlesDelEquipo, ...newControlsToAdd]
-                                                        };
-                                                    }
+            const newControlsToAdd = updatedControles.filter(updatedControl =>
+                !state.controlesDelEquipo.find(control => control.componente === updatedControl.componente)
+            );
+            return {
+                ...state,
+                controlesDelEquipo: [...newControlesDelEquipo, ...newControlsToAdd]
+            };
+        }
         case CLEAN_CONTROLESDEEQUIPO:
             return {
                 ...state, controlesDelEquipo: []

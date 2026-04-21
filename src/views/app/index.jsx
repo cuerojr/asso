@@ -1,8 +1,9 @@
-import React, { Suspense, useState } from "react";
+/*import React, { Suspense, useState } from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import CargarNuevoInforme from "../../contenedores/informes/cargar-nuevo-informe";
 import AppLayout from "../../layout/AppLayout";
 import { Modal, ModalHeader, ModalBody } from "reactstrap";
+
 
 // Lazy imports
 const Clientes = React.lazy(() => import("./clientes/"));
@@ -26,7 +27,7 @@ const App = () => {
 
   return (
     <AppLayout abrirModal={abrirModal} navigate={navigate}>
-      {/* Modal global */}
+      {/* Modal global /}
       <Modal isOpen={modalOpen} toggle={abrirModal} size="lg">
         <ModalHeader toggle={abrirModal}>
           Cargar Nuevo Informe
@@ -40,13 +41,13 @@ const App = () => {
         </ModalBody>
       </Modal>
 
-      <div className="dashboard-wrappers w-full">
+      {/*<div className="dashboard-wrappers w-full">
         <Suspense fallback={<div className="loading" />}>
           <Routes>
-            {/* Redirect inicial /app => /app/clientes */}
+            {/* Redirect inicial /app => /app/clientes /}
             <Route index element={<Navigate to="clientes" replace />} />
 
-            {/* Rutas hijas */}
+            {/* Rutas hijas /}
             <Route path="clientes/*" element={<Clientes abrirModal={abrirModal} />} />
             <Route path="usuarios/*" element={<Usuarios />} />
             <Route path="mi-usuario" element={<MiUsuario />} />
@@ -54,13 +55,13 @@ const App = () => {
             <Route path="carga-masiva-controles" element={<CargaMasiva />} />
             <Route path="configuracion/*" element={<Configuracion />} />
 
-            {/* Opcional: catch all */}
+            {/* Opcional: catch all /}
             <Route path="*" element={<Navigate to="clientes" replace />} />
           </Routes>
         </Suspense>
-      </div>
+      </div>/}
     </AppLayout>
   );
 };
 
-export default App;
+export default App;*/

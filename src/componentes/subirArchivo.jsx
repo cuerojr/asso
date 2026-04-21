@@ -3,6 +3,8 @@ import React, { Component } from "react";
 import DropzoneComponent from "react-dropzone-component";
 import ReactDOMServer from 'react-dom/server';
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
 var dropzoneComponentConfig = {
   postUrl: 'no-url'
@@ -53,7 +55,7 @@ var dropzoneConfig = {
       </div>
       <a href="#/" className="remove" data-dz-remove>
         {" "}
-        <i className="glyph-icon simple-icon-trash" />{" "}
+        <FontAwesomeIcon icon={faTrashCan} />{" "}
       </a>
     </div>
   ),

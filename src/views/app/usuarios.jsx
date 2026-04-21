@@ -1,10 +1,11 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Row, Button } from 'reactstrap';
 import { AltaUsuario } from "../../contenedores/usuarios/alta-usuario";
 import { ListaUsuarios } from "../../contenedores/usuarios/lista-usuarios";
 import { fetchlistarUsuarios, fetchAltaUsuario, fetchdeleteUsuario, fetchupdateUsuario } from '../../reducers/usuarios-reducer';
 import { DetalleUsuario } from "../../contenedores/usuarios/detalle-usuario";
 import { NotificationManager } from "../../components/common/react-notifications";
+import AppLayout from "../../layout/AppLayout";
 
 import { connect } from 'react-redux';
 
@@ -39,7 +40,7 @@ const Usuarios = (props) => {
     }
 
     return (
-        <Fragment>
+        <AppLayout >  
             <Row>
                 {detalleUsuario == 1 && <div className="col-md-12 mb-2">
                     <Button color="link" className="pl-0" onClick={salirDetalleUsuario}>&lt; Volver</Button>
@@ -67,7 +68,7 @@ const Usuarios = (props) => {
                 </div>
             </Row>}
 
-        </Fragment>
+        </AppLayout>
     )
 }
 

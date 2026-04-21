@@ -1,28 +1,40 @@
-import React, { Fragment } from "react";
 import { Card, CardBody, Button } from "reactstrap";
 import moment from "moment";
 
 export const ItemListaControles = ({ item, editarControlSeleccionado }) => {
-
-	return (
-		<Fragment>
-			<div className="col-md-12">
-				<Card className="card d-flex mb-3">
-					<div className="d-flex flex-grow-1 min-width-zero">
-						<CardBody className="align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
-							<p className="list-item-heading mb-0 truncate w-50 w-xs-60 mb-1 mt-1">
-								<i className="simple-icon-target mr-2" ></i>
-								<Button color="link" className="pl-0" onClick={()=>{editarControlSeleccionado(item)}}>CONTROL: {item.nombre}</Button>
-								
-							</p>
-                            <div className="list-item-heading mb-0 truncate w-30 d-flex align-items-center justify-content-end" style={{"height":"50px", "lineHeight":"50px"}}>
-								<div className="border-right fecha pr-2 mr-2">Fecha: {moment(item.fecha).format("DD/MM/YYYY")}</div>
-								Estado: <span className='estados-tag pl-2 pr-2 ml-2 p-1' style={{'background':item.color_estado}}>{item.estado}</span>
-							</div>
-                        </CardBody>
-					</div>
-				</Card>
-			</div>
-		</Fragment>
-	)
-} 
+  return (
+    <Button
+      color="link"
+      className="w-100 p-0  mb-3"
+      onClick={() => editarControlSeleccionado(item)}
+	  style={{
+		textDecoration: "none",
+		color: "inherit"
+	  }}
+    >
+      <Card className="card">
+        <CardBody className="d-flex align-items-center">
+          <p className="list-item-heading mb-0 pl-0 d-flex flex-column align-items-start text-uppercase">
+            <span className="opacity-50 mb-2">TIPO DE CONTROL</span>{" "}
+            {item.nombre}
+          </p>
+          <div className="mb-0 d-flex align-items-center justify-content-between ml-auto">
+            <p className="border-right list-item-heading mb-0 pr-4 d-flex flex-column align-items-start">
+              <span className="opacity-50 mb-2">FECHA</span>{" "}
+              {moment(item.fecha).format("DD/MM/YYYY")}
+            </p>
+            <p className="list-item-heading mb-0 pl-4 d-flex flex-column align-items-start">
+              <span className="opacity-50 mb-2">ESTADO</span>
+              <span
+                className="estados-tag pl-2 pr-2 ml-2 p-1"
+                style={{ background: item.color_estado }}
+              >
+                {item.estado}
+              </span>
+            </p>
+          </div>
+        </CardBody>
+      </Card>
+    </Button>
+  );
+};

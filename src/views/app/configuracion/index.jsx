@@ -1,7 +1,10 @@
 import React, { useState, Suspense, useEffect } from 'react';
+import { NavLink, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
+
 import { Row, Col, Nav, NavItem } from "reactstrap";
+import AppLayout from "../../../layout/AppLayout";
+
 import classnames from "classnames";
-import { NavLink, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
 const Servicios = React.lazy(() => import('./servicios'));
 const Autocompletar = React.lazy(() => import('./autocompletar'));
@@ -17,6 +20,7 @@ const Configuracion = () => {
   }, [location.pathname]);
 
   return (
+    <AppLayout >  
     <div className="dashboard-wrapper">
       <Row>
         <Col md={12}>
@@ -64,6 +68,7 @@ const Configuracion = () => {
         </Routes>
       </Suspense>
     </div>
+    </AppLayout>
   );
 };
 

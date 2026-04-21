@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Row, Button, Input } from "reactstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { mostrarOcultarFiltros } from "../reducers/equipos-reducer";
 
 const FiltroDeEquipos = ({
   idEmpresa,
@@ -13,6 +14,8 @@ const FiltroDeEquipos = ({
   fallas,
   currentTab,
   onFilter,
+  filterIsVisible,
+  mostrarOcultarFiltros
 }) => {
   const [startDateRange, setStartDateRange] = useState(null);
   const [endDateRange, setEndDateRange] = useState(null);
@@ -141,14 +144,14 @@ const FiltroDeEquipos = ({
           position: "fixed",
         }}
       >
-        <Button className="mb-4" outline onClick={toggleInformeFiltro}>
-          {!navRefVisible ? "X" : "Ver Filtros"}
+        <Button className="mb-4" outline onClick={() => mostrarOcultarFiltros(filterIsVisible ? false : true)}>
+          {filterIsVisible ? "X" : "Ver Filtros"}
         </Button>
       </div>
 
       <div
         ref={filterNavRef}
-        className={`app-menu ${!navRefVisible ? "shown" : "main-hidden"}`}
+        className={`app-menu ${filterIsVisible ? "shown" : "main-hidden"}`}
       >
         <div className="scrollbar-container ps">
           <div className="app-menu-content px-4">
@@ -307,10 +310,13 @@ const FiltroDeEquipos = ({
 
 const mapStateToProps = (state) => ({
   equipos: state.equiposReducer.equipos,
+  filterIsVisible: state.equiposReducer.filterIsVisible,
   secciones: state.seccionesReducer.secciones,
   rutas: state.rutasReducer.rutas,
   estados: state.estadosReducer.estados,
   fallas: state.fallasReducer.fallas,
 });
 
-export default connect(mapStateToProps, {})(FiltroDeEquipos);
+export default connect(mapStateToProps, {
+  mostrarOcultarFiltros,
+})(FiltroDeEquipos);

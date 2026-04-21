@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useCallback } from "react";
 import {
   NavItem,
   Modal,
@@ -28,9 +28,14 @@ import "dropzone/dist/min/dropzone.min.css";
 import DropzoneComponent from "react-dropzone-component";
 import ReactDOMServer from "react-dom/server";
 
-const Delta = ReactQuill.Quill.import("delta");
-const Break = ReactQuill.Quill.import("blots/break");
-const Embed = ReactQuill.Quill.import("blots/embed");
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import BuscarMensaje from "./mensajes/buscar-mensajes";
+
+// Importaciones correctas para Quill
+const Delta = Quill.import("delta");
+const Break = Quill.import("blots/break");
+const Embed = Quill.import("blots/embed");
 
 const lineBreakMatcher = () => {
   let newDelta = new Delta();
@@ -53,7 +58,11 @@ class SmartBreak extends Break {
 
 SmartBreak.blotName = "break";
 SmartBreak.tagName = "BR";
-ReactQuill.Quill.register(SmartBreak);
+
+// Registrar solo una vez
+if (!Quill.imports["blots/break"]) {
+  Quill.register(SmartBreak);
+}
 
 const quillModules = {
   toolbar: [
@@ -147,7 +156,7 @@ const dropzoneConfig = {
       </div>
       <a href="#/" className="remove" data-dz-remove>
         {" "}
-        <i className="glyph-icon simple-icon-trash" />{" "}
+        <FontAwesomeIcon icon={faTrashCan} />{" "}
       </a>
     </div>
   ),
@@ -162,15 +171,23 @@ const Notificaciones = (props) => {
   const [asunto, setAsunto] = useState("");
   const [archivo, setArchivo] = useState("");
   const [estadoEnviado, setEstadoEnviado] = useState(false);
+  const [quillKey, setQuillKey] = useState(0); // Key para forzar re-render del editor
 
   const mostrarNotificaciones = () => {
     setMostrarModalNotificaciones(true);
-    // setClienteSeleccionado(props.idEmpresa);
   };
 
   const seleccionarCliente = (e) => {
     setClienteSeleccionado(e.target.value);
   };
+
+  // Usar useCallback para evitar re-creación de función
+  const handleQuillChange = useCallback((content, delta, source, editor) => {
+    // Solo actualizar si el cambio viene del usuario
+    if (source === "user") {
+      setTextQuillStandart(content);
+    }
+  }, []);
 
   const enviarNotificacion = (e) => {
     enviarNotificacionCliente(
@@ -180,7 +197,7 @@ const Notificaciones = (props) => {
       archivo
     ).then((res) => {
       console.log(res);
-      if (res.stat == 1) {
+      if (res.stat === 1) {
         setEstadoEnviado(true);
       }
     });
@@ -191,11 +208,17 @@ const Notificaciones = (props) => {
     setAsunto("");
     setArchivo("");
     setEstadoEnviado(false);
+    setQuillKey(prev => prev + 1); // Forzar re-render del editor
   };
 
   const finalizar = () => {
     setMostrarModalNotificaciones(false);
     volver();
+  };
+
+  const cerrarModal = () => {
+    setMostrarModalNotificaciones(false);
+    volver(); // Limpiar al cerrar
   };
 
   const borrarNotificacion = (idNotificacion) => {
@@ -216,9 +239,9 @@ const Notificaciones = (props) => {
     }
   }, [props.clientes, props.detalleClienteState]);
 
-  useState(() => {
+  useEffect(() => {
     props.fetchListarClientes();
-  }, []);
+  }, [props.fetchListarClientes]);
 
   return (
     <Fragment>
@@ -228,6 +251,7 @@ const Notificaciones = (props) => {
           <i className="simple-icon-bell" /> Enviar mensajes
         </NavLink>
       )}
+      
       {props.mostrarBt && (
         <Button
           color="primary"
@@ -240,12 +264,8 @@ const Notificaciones = (props) => {
         </Button>
       )}
       <Modal isOpen={mostrarModalNotificaciones} size="lg" keyboard={false}>
-        <ModalHeader
-          toggle={() => {
-            setMostrarModalNotificaciones(false);
-          }}
-        >
-          ENVIAR MENSAJE AL CLIENTE:
+        <ModalHeader toggle={cerrarModal}>
+          ENVIAR MENSAJE AL CLIENTE
         </ModalHeader>
         {!estadoEnviado && (
           <Fragment>
@@ -288,13 +308,16 @@ const Notificaciones = (props) => {
               <FormGroup>
                 <Label for="mensaje">Mensaje: </Label>
                 <ReactQuill
+                  style={{
+                    backgroundColor: "white",
+                  }}
+                  key={quillKey}
                   id="mensaje"
                   theme="snow"
                   value={textQuillStandart}
-                  onChange={(value, delta, source, editor) => {
-                    if (source === "user") setTextQuillStandart(value);
-                  }}
+                  onChange={handleQuillChange}
                   modules={quillModules}
+                  preserveWhitespace
                 />
               </FormGroup>
 
@@ -317,7 +340,6 @@ const Notificaciones = (props) => {
                     });
                   },
                   addedfile: (file) => {
-                    //this.props.cargarAchivo(file)
                     setArchivo(file);
                   },
                 }}

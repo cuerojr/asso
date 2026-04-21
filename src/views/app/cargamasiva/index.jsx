@@ -1,23 +1,48 @@
-import React, { Fragment, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { connect } from "react-redux";
+
 import { Row, Col } from "reactstrap";
+import { Wizard, Steps, Step } from "react-albus";
+
 import { fetchListarClientes } from "../../../reducers/clientes-reducer";
 import { fetchListarCargasMasivas } from "../../../reducers/cargas-masivas-reducer";
 import { fetchlistarRutas } from "../../../reducers/rutas-reducer";
-import { setearCargaMasiva, setearDisabledInputs } from "../../../reducers/cargas-masivas-reducer";
+import {
+  setearCargaMasiva,
+  setearDisabledInputs,
+} from "../../../reducers/cargas-masivas-reducer";
 import {
   setearRutaSeleccionadaLabel,
   setearRutaSeleccionada,
 } from "../../../reducers/cargas-masivas-reducer";
-import { connect } from "react-redux";
 import CargasMasivasNoFinalizadas from "./paso1/CargasMasivasNoFinalizadas";
+import AppLayout from "../../../layout/AppLayout";
 import { TopNavigation } from "../../../components/wizard/TopNavigation";
-import { Wizard, Steps, Step } from "react-albus";
+
 import DatosGlobales from "./paso1/Index";
 import CargaControles from "./paso2/Index";
 import Paso3 from "./paso3/Index";
 
 const CargaMasiva = (props) => {
-  const { fetchListarCargasMasivas, cargasMasivas, equipoSeleccionadoEnCargaMasiva } = props;
+  const {
+    fetchListarCargasMasivas,
+    cargasMasivas,
+    equipoSeleccionadoEnCargaMasiva,
+  } = props;
+
+  const navigate = useNavigate();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [clienteACargarEnElInforme, setClienteACargarEnElInforme] =
+    useState(null);
+  const [seccionACargarEnElInforme, setSeccionACargarEnElInforme] =
+    useState(null);
+
+  const abrirModal = (cliente = null, seccion = null) => {
+    setClienteACargarEnElInforme(cliente);
+    setSeccionACargarEnElInforme(seccion);
+    setModalOpen(!modalOpen);
+  };
 
   useEffect(() => {
     fetchListarCargasMasivas();
@@ -28,7 +53,7 @@ const CargaMasiva = (props) => {
       props.setearCargaMasiva({
         tituloDeReferencia: "",
       });
-      props.setearDisabledInputs(false)
+      props.setearDisabledInputs(false);
     };
   }, []);
 
@@ -46,7 +71,7 @@ const CargaMasiva = (props) => {
   };
 
   return (
-    <Fragment>
+    <AppLayout >      
       <Row>
         <Col xs={12}>
           <h1>
@@ -86,7 +111,11 @@ const CargaMasiva = (props) => {
                 <DatosGlobales onClickNext={onClickNext} />
               </Step>
               <Step id="step2" name="Carga de controles">
-                <CargaControles equipoSeleccionadoEnCargaMasiva={equipoSeleccionadoEnCargaMasiva}/>
+                <CargaControles
+                  equipoSeleccionadoEnCargaMasiva={
+                    equipoSeleccionadoEnCargaMasiva
+                  }
+                />
               </Step>
               <Step id="step3" name="Notificar Cliente">
                 <Paso3 />
@@ -95,7 +124,7 @@ const CargaMasiva = (props) => {
           </Col>
         </Row>
       </Wizard>
-    </Fragment>
+    </AppLayout>
   );
 };
 
@@ -105,7 +134,8 @@ const mapStateToProps = (state) => {
     rutas: state.rutasReducer.rutas,
     rutaSeleccionada: state.cargasMasivasReducer.rutaSeleccionada,
     cargasMasivas: state.cargasMasivasReducer.cargasMasivas,
-    equipoSeleccionadoEnCargaMasiva: state.cargasMasivasReducer.equipoSeleccionadoEnCargaMasiva,
+    equipoSeleccionadoEnCargaMasiva:
+      state.cargasMasivasReducer.equipoSeleccionadoEnCargaMasiva,
   };
 };
 
@@ -120,6 +150,6 @@ export default connect(
     setearRutaSeleccionadaLabel,
     setearRutaSeleccionada,
     setearCargaMasiva,
-    setearDisabledInputs
+    setearDisabledInputs,
   }
 )(CargaMasiva);

@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useEffect } from "react";
+import React, { useState, Fragment, useEffect, useRef } from "react";
 import { Row, Col, Button, Modal, ModalBody, Table } from "reactstrap";
 import DatosPrincipales from "./DatosPrincipales";
 import { WithWizard } from "react-albus";
@@ -22,13 +22,15 @@ const FInalizar = ({
   setearCantidadesFinalesAction,
   controlesDelEquipo,
   equipoNoControlado,
+  equipoSeleccionadoEnCargaMasiva,
 }) => {
+
   const [mostrarModal, setMostrarModal] = useState(false);
   const [detalleConfirmFinalizarCarga, setDetalleConfirmFinalizarCarga] =
     useState(null);
   const [imagenesPorComponente, setImagenesPorComponente] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-
+  
   const abrirModal = async () => {
     setIsLoading(true);
 
@@ -41,7 +43,8 @@ const FInalizar = ({
     });
     setImagenesPorComponente(imagenesMap);
 
-    if (equipoNoControlado) {
+    /*if (equipoNoControlado) {
+
       const res = await guardarEquipoNoControlado(
         equipoNoControlado.idCargaMasiva,
         equipoNoControlado.equipoSeleccionadoEnCargaMasiva,
@@ -51,7 +54,7 @@ const FInalizar = ({
       );
       if (res.stat === 1) {
         setearEquipoNoControlado(null);
-        cleanControlesDelEquipo();
+        //cleanControlesDelEquipo();
         confirmDetalleFinalizarCarga(cargaMasiva.id).then((res) => {
           setDetalleConfirmFinalizarCarga(res);
           setMostrarModal(true);
@@ -59,44 +62,55 @@ const FInalizar = ({
         });
       }
     } else {
-      const promises = controlesDelEquipo.map((control) => {
-        const {
-          fallasSeleccionada,
-          estado,
-          componente,
-          observacion,
-          recomendacion,
-          imagenes,
-          fecha,
-          idCargaMasiva,
-        } = control;
+      const promisesControledEquipment = localControles
+        .filter((control) => !control.noControlado)
+        .map((control) => {
+          const {
+            fallasSeleccionada,
+            estado,
+            componente,
+            observacion,
+            recomendacion,
+            imagenes,
+            fecha,
+            idCargaMasiva,
+          } = control;
 
-        let fallasValues = [];
-        if (fallasSeleccionada)
-          fallasValues = fallasSeleccionada.map((falla) => String(falla.value));
+          let fallasValues = [];
+          if (fallasSeleccionada)
+            fallasValues = fallasSeleccionada.map((falla) => String(falla.value));
 
-        const estadoId = estado ? estado.id : null;
+          const estadoId = estado ? estado.id : null;
 
-        return cargaControlPorComponente(
-          idCargaMasiva,
-          moment(fecha).format("YYYY-MM-DD"),
-          estadoId,
-          componente,
-          JSON.stringify(fallasValues),
-          observacion,
-          recomendacion,
-          imagenes
-        );
-      });
+          return cargaControlPorComponente(
+            idCargaMasiva,
+            moment(fecha).format("YYYY-MM-DD"),
+            estadoId,
+            componente,
+            JSON.stringify(fallasValues),
+            observacion,
+            recomendacion,
+            imagenes
+          );
+        });
 
-      await Promise.all(promises);
+      await Promise.all(promisesControledEquipment);
       const res3 = await confirmDetalleFinalizarCarga(cargaMasiva.id);
       if (res3) {
         setDetalleConfirmFinalizarCarga(res3);
         setMostrarModal(true);
         setIsLoading(false);
       }
-    }
+    }*/
+
+      
+      const res3 = await confirmDetalleFinalizarCarga(cargaMasiva.id);
+      if (res3) {
+
+        setDetalleConfirmFinalizarCarga(res3);
+        setMostrarModal(true);
+        setIsLoading(false);
+      }
   };
 
   const onClickNext = (goToNext, steps, step) => {
@@ -258,8 +272,7 @@ const FInalizar = ({
                                   {componente.tests.length > 0 ? (
                                     <td
                                       style={{
-                                        background:
-                                          componente.tests[0].color,
+                                        background: componente.tests[0].color,
                                       }}
                                     >
                                       {componente.tests[0].estado}
@@ -289,11 +302,11 @@ const FInalizar = ({
                                   componente.tests[0].recomendaciones}
                               </td>
                               <td>
-                                {imagenesPorComponente[componente.id]?.[0]
-                                  ?.filename && (
+                                {componente.tests[0]?.imagenes[0]
+                                        ?.filename && (
                                   <img
                                     src={
-                                      imagenesPorComponente[componente.id][0]
+                                      componente.tests[0].imagenes[0]
                                         ?.filename
                                     }
                                     alt="imagen"
@@ -333,6 +346,8 @@ const mapStateToProps = (state) => ({
   cargaMasiva: state.cargasMasivasReducer.cargaMasiva,
   controlesDelEquipo: state.cargasMasivasReducer.controlesDelEquipo,
   equipoNoControlado: state.cargasMasivasReducer.equipoNoControlado,
+  equipoSeleccionadoEnCargaMasiva:
+    state.cargasMasivasReducer.equipoSeleccionadoEnCargaMasiva,
 });
 
 export default connect(mapStateToProps, {

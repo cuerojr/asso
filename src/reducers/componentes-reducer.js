@@ -4,11 +4,18 @@ import {
 
 const initialState = {
     componentes: [],
+    componenteIndividualSeleccionado: null,
 };
 
 const LISTAR_COMPONENTES = 'LISTAR_COMPONENTES';
+const SET_COMPONENTE_SELECCIONADO = 'SET_COMPONENTE_SELECCIONADO';
 
 const listarcomponentesAction = (componentes) => ({ type: LISTAR_COMPONENTES, payload: componentes });
+
+const componenteIndividualSeleccionadoAction = (componente) => ({
+    type: SET_COMPONENTE_SELECCIONADO,
+    payload: componente
+});
 
 export const fetchlistarcomponentes = (idEmpresa, idEquipo) => {
     return (dispatch) => {
@@ -27,12 +34,18 @@ export const fetchlistarcomponentes = (idEmpresa, idEquipo) => {
     }
 };
 
+export const setComponenteSeleccionado = (componente) => {    
+    return (dispatch) => dispatch(componenteIndividualSeleccionadoAction(componente));
+}
+
 export default (state = initialState, action) => {
     switch (action.type) {
         //en todos los casos regresamos un objeto nuevo en el cual incluimos todos las propiedades del objeto state con ...state
         case LISTAR_COMPONENTES:
             //cambiamos el valor de la propiedad post  
             return { ...state, componentes: action.payload };
+        case SET_COMPONENTE_SELECCIONADO:
+            return { ...state, componenteIndividualSeleccionado: action.payload };
         default:
             return { ...state };
     }

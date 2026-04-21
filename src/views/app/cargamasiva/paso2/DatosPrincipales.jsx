@@ -31,10 +31,10 @@ const DatosPrincipales = (props) => {
         <>CLIENTE: {cargaMasiva.clienteSeleccionado?.label}</>
       ]} />
       <Fila columnas={[
-        <>RUTA: {cargaMasiva.rutasSeleccionadas.map((ruta, index) => (
-          <div key={index} className='datos-principales-rutas-label'>{ruta.label}, </div>
+        <>RUTA: {cargaMasiva.rutasSeleccionadas?.map((ruta, index) => (
+          <div key={index} className='datos-principales-rutas-label'>{ruta?.label}, </div>
         ))}</>,
-        <>TIPO DE CONTROL: {cargaMasiva.tipoTesteo.label}</>
+        <>TIPO DE CONTROL: {cargaMasiva.tipoTesteo?.label}</>
       ]} />
       <Fila columnas={[
         <>SECCIONES: {cargaMasiva.seccionSeleccionada.map((seccion, index) => (

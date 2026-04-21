@@ -3,7 +3,10 @@ import { InputGroup, InputGroupAddon, Input, Row, Button, Col } from "reactstrap
 import { Tarjeta } from "./tarjeta";
 import { connect } from 'react-redux';
 import { fetchListarObservaciones, fetchListarRecomendaciones } from '../reducers/autocompletar-reducer';
-import {altaAutocompletar} from '../lib/autocompletar-api'
+import {altaAutocompletar} from '../lib/autocompletar-api';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const AltaAutocompletar = ({tipo, fetchListarObservaciones, fetchListarRecomendaciones}) => {
 
@@ -59,7 +62,7 @@ const AltaAutocompletar = ({tipo, fetchListarObservaciones, fetchListarRecomenda
                     </Col>
                     <Col md={2} className='pl-0'>
                         <Button color="success" size="lg" style={{ width: "100%" }} onClick={guardarHandle}>
-                            <i className="simple-icon-plus" /> Guardar
+                            <FontAwesomeIcon icon={faPlus} /> Guardar
                         </Button>
                     </Col>
                 </Row>

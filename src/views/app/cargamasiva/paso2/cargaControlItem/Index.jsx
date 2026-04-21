@@ -20,6 +20,11 @@ import { setearControlesDeEquipo } from "../../../../../reducers/cargas-masivas-
 import moment from "moment";
 import ListadoDeImagenes from "./ListadoDeImagenes";
 
+import {
+  fetchListarObservaciones,
+  fetchListarRecomendaciones,
+} from "../../../../../reducers/autocompletar-reducer";
+
 const obtenerDatosTest = (test, fechaGlobal, estados, opcionesFallas, ) => {
   let fecha = fechaGlobal || test.fecha;
   let estadoSeleccionado = estados.find(
@@ -56,15 +61,17 @@ const CargaControlItem = ({
   equipoNoControlado,
   cargaMasiva,
   setearControlesDeEquipo,
-  detalleCliente
-}) => {
+  detalleCliente,
+  fetchListarObservaciones,
+  fetchListarRecomendaciones
+}) => {  
   const estadoInicialControl = {
     fecha: "",
     estado: "",
     fallasSeleccionada: [],
     observacion: "",
     recomendacion: "",
-    componente: componente.id,
+    componente: componente?.id ,
     idCargaMasiva: cargaMasiva.id,
   };
 
@@ -128,6 +135,11 @@ const CargaControlItem = ({
     fallas,
     setearControlesDeEquipo,
   ]);
+
+  useEffect(() => {
+    fetchListarObservaciones();
+    fetchListarRecomendaciones();
+  }, []);
 
   useEffect(() => {
     if (fallas.length) {
@@ -325,6 +337,7 @@ const mapStateToProps = (state) => ({
   detalleCliente: state.clientesReducer.detalleClienteState
 });
 
-export default connect(mapStateToProps, { setearControlesDeEquipo })(
+export default connect(mapStateToProps, { setearControlesDeEquipo, fetchListarObservaciones,
+  fetchListarRecomendaciones })(
   CargaControlItem
 );

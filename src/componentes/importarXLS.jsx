@@ -6,6 +6,8 @@ import "dropzone/dist/min/dropzone.min.css";
 import DropzoneComponent from "react-dropzone-component";
 import { NotificationManager } from "../components/common/react-notifications";
 import { altaMasivaEquiposExcel, altaMasivaEquiposExcelSegundaEtapa } from '../lib/importar-xls-api'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
 let dropzone = null;
 import ReactDOMServer from 'react-dom/server';
@@ -61,7 +63,7 @@ const dropzoneConfig = {
             </div>
             <a href="#/" className="remove" data-dz-remove>
                 {" "}
-                <i className="glyph-icon simple-icon-trash" />{" "}
+                <FontAwesomeIcon icon={faTrashCan} />{" "}
             </a>
         </div>
     ),

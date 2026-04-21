@@ -66,7 +66,6 @@ export const eliminarCargaMasiva = (idCarga) => {
 };
 
 export const cargaControlPorComponente  = (idCargaMasiva, fecha, estado, componente, fallas, observaciones, recomendaciones, file) => {
-	//console.log("🚀 ~ cargaControlPorComponente ~ file:", file)
 	
 	const data = new FormData();
 	data.append('a', 'atm');
@@ -143,8 +142,7 @@ export const enviarNotificacionCliente = (idCargaMasiva) => {
 
 
 export const guardarEquipoNoControlado = (idCargaMasiva, equipo, motivo, observacion, fecha) => {
-	//console.log("🚀 ~ guardarEquipoNoControlado ~ equipo:", equipo)
-
+	
 	const data = new FormData();
 	data.append('a', 'amnc');
 	data.append('id', idCargaMasiva);

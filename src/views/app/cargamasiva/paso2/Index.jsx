@@ -21,8 +21,6 @@ const Paso2 = ({
     fetchListarRecomendaciones, 
     fetchListarObservaciones 
 }) => {
-    //console.log("🚀 ~ Paso2 ~ equipoSeleccionadoEnCargaMasiva:", equipoSeleccionadoEnCargaMasiva)
-
     const [index, setindex] = useState(0);
 
     useEffect(() => {

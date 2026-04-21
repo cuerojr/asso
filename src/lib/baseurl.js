@@ -1,4 +1,4 @@
-const isDev = import.meta.env.VITE_NODE_ENV === 'development';
+//const isDev = import.meta.env.VITE_NODE_ENV === 'development';
 
 //export const BASEURL = isDev
 export const BASEURL = 'https://clientes.assoconsultores.ar/api_dev.php'

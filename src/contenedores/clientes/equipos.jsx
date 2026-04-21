@@ -1,12 +1,20 @@
-import React, { useEffect, useState, useRef, Fragment, useCallback } from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  Fragment,
+  useCallback,
+} from "react";
 import { connect } from "react-redux";
 import {
   fetchlistarEquipos,
   filtrarEquipos,
+  mostrarOcultarFiltros,
   mostrarOcultarModalCargarVariosEquipos,
   mostrarOcultarModalImportarEquipos,
-  resetEquiposAction
+  resetEquiposAction,
 } from "../../reducers/equipos-reducer";
+
 import { fetchlistarSecciones } from "../../reducers/secciones-reducer";
 import { fetchlistarRutas } from "../../reducers/rutas-reducer";
 import { fetchlistarEstados } from "../../reducers/estados-reducer";
@@ -22,6 +30,8 @@ import {
   DropdownItem,
   Col,
 } from "reactstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { ItemListaEquipo } from "../../componentes/itemListaEquipo";
 import NuevoEquipo from "../../componentes/nuevoEquipo";
 import CargarVariosEquipos from "../../componentes/cargarVariosEquipos";
@@ -34,6 +44,7 @@ import {
 } from "../../lib/equipos-api";
 import { NotificationManager } from "../../components/common/react-notifications";
 import FiltroDeEquipos from "../../componentes/filtroDeEquipos";
+import { recargarEstadosEquipo } from "../../lib/equipos-api";
 
 const Equipos = ({
   idEmpresa,
@@ -53,6 +64,9 @@ const Equipos = ({
   nombreEmpresa,
   currentTab,
   resetEquiposAction,
+  controles,
+  mostrarOcultarFiltros,
+  filterIsVisible,
 }) => {
   const [modalNuevoEquipo, setModalNuevoEquipo] = useState(false);
   const [barraNuevoEquipo, setBarraNuevoEquipo] = useState(false);
@@ -78,8 +92,13 @@ const Equipos = ({
       setCurrentPage(1);
       setEquiposFiltrados([]);
     }
-    
   }, [idEmpresa, currentTab]);
+
+  /*useEffect(()=> {
+    recargarEstadosEquipo(idEmpresa);
+    console.log("🚀 ~ Equipos ~ idEmpresa:", idEmpresa)
+    
+  },[currentTab]);*/
 
   // Determinar la lista a mostrar según filtros
   const equiposAMostrar = equiposFiltrados.length ? equiposFiltrados : equipos;
@@ -110,13 +129,13 @@ const Equipos = ({
       nombre,
       descripcion,
       idSeccion,
-      idRuta
+      idRuta,
     ).then((res) => {
       if (res.stat === 1) {
         NotificationManager.success(
           "El equipo ha sido actualizado",
           "Hecho",
-          3000
+          3000,
         );
         fetchlistarEquipos(idEmpresa);
       } else {
@@ -131,7 +150,7 @@ const Equipos = ({
         NotificationManager.success(
           "El equipo ha sido eliminado",
           "Hecho",
-          3000
+          3000,
         );
         fetchlistarEquipos(idEmpresa);
         setDetalleEquipo(null);
@@ -142,8 +161,8 @@ const Equipos = ({
   };
 
   const handleFilter = useCallback((data) => {
-  setEquiposFiltrados(data);
-}, []);
+    setEquiposFiltrados(data);
+  }, []);
 
   return (
     <Fragment>
@@ -155,6 +174,15 @@ const Equipos = ({
           <Row className="align-items-center justify-content-between p-4">
             <Col xs="12" md="6" className="mb-3 mb-md-0 p-0">
               <h1 className="m-0 p-0">{equipos.length} Equipos</h1>
+              <Button
+                className="py-2 ml-4"
+                outline
+                onClick={() =>
+                  mostrarOcultarFiltros(filterIsVisible ? false : true)
+                }
+              >
+                <FontAwesomeIcon icon={faFilter} /> {"Filtrar"}
+              </Button>
             </Col>
             <Col xs="12" md="6" className="text-md-end p-0 text-right">
               <Dropdown
@@ -257,10 +285,12 @@ const Equipos = ({
 
 const mapStateToProps = (state) => ({
   equipos: state.equiposReducer.equipos,
+  filterIsVisible: state.equiposReducer.filterIsVisible,
   secciones: state.seccionesReducer.secciones,
   rutas: state.rutasReducer.rutas,
   estados: state.estadosReducer.estados,
   fallas: state.fallasReducer.fallas,
+  controles: state.controlesReducer.controles,
 });
 
 export default connect(mapStateToProps, {
@@ -272,5 +302,6 @@ export default connect(mapStateToProps, {
   fetchlistarFallas,
   mostrarOcultarModalCargarVariosEquipos,
   mostrarOcultarModalImportarEquipos,
-  resetEquiposAction
+  resetEquiposAction,
+  mostrarOcultarFiltros,
 })(Equipos);

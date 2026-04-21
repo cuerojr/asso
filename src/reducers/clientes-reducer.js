@@ -5,7 +5,8 @@ import {
     altaCliente,
     updateCliente,
     deleteCliente,
-    listarNotificaciones
+    listarNotificaciones,
+    buscarNotificaciones
 } from '../lib/clientes-api';
 
 const initialState = {
@@ -23,6 +24,7 @@ const DETALLE_CLIENTE = 'DETALLE_CLIENTE';
 const UPDATE_CLIENTE = 'UPDATE_CLIENTE';
 const DELETE_CLIENTE = 'DELETE_CLIENTE';
 const LISTAR_NOTIFICACIONES = 'LISTAR_NOTIFICACIONES';
+const BUSCAR_NOTIFICACIONES = 'BUSCAR_NOTIFICACIONES';
 const TOTAL_NOTIFICACIONES = 'TOTAL_NOTIFICACIONES';
 
 const listarClientesAction = (clientes) => ({ type: LISTAR_CLIENTES, payload: clientes });
@@ -32,6 +34,7 @@ const detalleClienteAction = (detalleClienteState) => ({ type: DETALLE_CLIENTE, 
 const updateClienteAction = (guardado) => ({ type: UPDATE_CLIENTE, payload: guardado })
 const deleteClienteAction = (guardado) => ({ type: DELETE_CLIENTE, payload: guardado })
 const listarNotificacionesAction = (notificaciones) => ({ type: LISTAR_NOTIFICACIONES, payload: notificaciones });
+const buscarNotificacionesAction = (notificaciones) => ({ type: BUSCAR_NOTIFICACIONES, payload: notificaciones });
 const totalNotificacionesAction = (total) => ({ type: TOTAL_NOTIFICACIONES, payload: total });
 
 export const fetchListarClientes = () => {
@@ -89,9 +92,7 @@ export const limpiarClienteSeleccionado = () => {
     return (dispatch) => {
          return dispatch(detalleClienteAction(null))
     }
-}
-
-
+};
 
 export const fetchAltaCliente = (email, nombre, responsable, numeroContratoVigente, tituloContrato, descripcion) => {
     return async (dispatch) => {
@@ -129,16 +130,27 @@ export const fetchdeleteCliente = (id) => {
     }
 };
 
-export const fetchListarNotificaciones = (id) => {
+//Notificaciones mensajes
+export const fetchListarNotificaciones = (a, snv , cant, idUsuario, sm) => {
     return (dispatch) => {
-        listarNotificaciones(id)
+        listarNotificaciones(a, snv, String(cant), idUsuario, sm)
             .then(res => {
-                if (res.stat === Number(0)) {
-                    window.localStorage.removeItem('usuario');
-                    window.location.href = window.location.protocol + "//" + window.location.host + '/admin/user/login'
-                } else {
-                    dispatch(listarNotificacionesAction(res.Notificaciones));
-                    dispatch(totalNotificacionesAction(res.Total));
+                if(res){
+                    dispatch(listarNotificacionesAction(res));
+                }
+            })
+            .catch(res => {
+                console.log(res);
+            })
+    }
+};
+
+export const fetchBuscarNotificaciones = (a, snv, cant, idUsuario, sm, q) => {    
+    return (dispatch) => {
+        buscarNotificaciones(a, snv, String(cant), idUsuario, sm, q)
+            .then(res => {
+                if(res){
+                    dispatch(buscarNotificacionesAction(res));
                 }
             })
             .catch(res => {
@@ -167,6 +179,8 @@ export default (state = initialState, action) => {
             return { ...state, notificaciones: action.payload };
         case TOTAL_NOTIFICACIONES:
             return { ...state, totalNotificaciones: action.payload };
+        case BUSCAR_NOTIFICACIONES:
+            return { ...state, notificaciones: action.payload };
         default:
             return { ...state };
     }

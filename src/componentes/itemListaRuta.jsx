@@ -1,5 +1,7 @@
 import React, { Fragment } from "react";
 import { Card, CardBody, Button } from "reactstrap";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowsUpDown } from '@fortawesome/free-solid-svg-icons';
 
 export const ItemListaRuta = ({ item, seleccionarRuta }) => {
   return (
@@ -22,8 +24,7 @@ export const ItemListaRuta = ({ item, seleccionarRuta }) => {
               </p>
               <div className="d-flex align-items-center">
                 <div className="handlebt border-left fecha pl-4">
-                  <div className="simple-icon-arrow-up" />
-                  <div className="simple-icon-arrow-down" />
+                  <FontAwesomeIcon icon={faArrowsUpDown} />
                 </div>
               </div>
             </CardBody>

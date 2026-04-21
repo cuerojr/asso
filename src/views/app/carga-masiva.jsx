@@ -1,4 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
+import { connect } from "react-redux";
+
 import { Row, Modal, ModalBody, ModalFooter, Button } from "reactstrap";
 import { Tarjeta } from "../../componentes/tarjeta";
 import { Wizard, Steps, Step } from "react-albus";
@@ -16,7 +18,6 @@ import {
   setearRutaSeleccionadaLabel,
   setearRutaSeleccionada,
 } from "../../reducers/cargas-masivas-reducer";
-import { connect } from "react-redux";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
 
@@ -220,6 +221,7 @@ const CargaMasivaDeControles = (props) => {
                 />
               </Tarjeta>
             </Step>
+
             <Step id="step2" name="Carga de controles">
               <CargaControles
                 clienteSeleccionadoLabel={clienteSeleccionadoLabel}
@@ -232,6 +234,7 @@ const CargaMasivaDeControles = (props) => {
                 setearCantidades={setearCantidades}
               />
             </Step>
+            
             <Step id="step3" name="Notificar Cliente">
               <Tarjeta titulo="">
                 <NotificarCLiente

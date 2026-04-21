@@ -13,7 +13,7 @@ const initialState = {
     totalInformes: 0,
     detalleInforme: null,
     informesEmpresaSeccionServicio: [],
-    modalCompartirInforme:false
+    modalCompartirInforme: false
 };
 
 const LISTAR_INFORMES = 'LISTAR_INFORMES';
@@ -26,15 +26,42 @@ const UPDATE_INFORME = 'UPDATE_INFORME';
 const FILTRAR_INFORMES = 'FILTRAR_INFORMES';
 const MODAL_COMPARTIR_INFORME = 'MODAL_COMPARTIR_INFORME'
 
-const listarInformesAction = (clientes) => ({ type: LISTAR_INFORMES, payload: clientes });
-const listarInformesEmpresaSeccionServicioAction = (informesEmpresaSeccionServicio) => ({ type: LISTAR_INFORMES_EMPRESA_SECCION_SERVICIO, payload: informesEmpresaSeccionServicio })
-const altaInformeAction = (guardado) => ({ type: ALTA_INFORME, payload: guardado })
-const detalleInformeAction = (detalleInforme) => ({ type: DETALLE_INFORME, payload: detalleInforme })
-const listarCantidadInformesAction = (totalInformes) => ({ type: LISTAR_CANTIDAD_INFORMES, payload: totalInformes })
-const deleteInformeAction = (guardado) => ({ type: DELETE_INFORME, payload: guardado })
-const updateInformeAction = (guardado) => ({ type: UPDATE_INFORME, payload: guardado })
-const filtrarInformesAction = (informes) => ({ type: FILTRAR_INFORMES, payload: informes })
-const modalCompartirInformeAction = (visibilidad) => ({type:MODAL_COMPARTIR_INFORME, payload:visibilidad})
+const listarInformesAction = (clientes) => ({
+    type: LISTAR_INFORMES,
+    payload: clientes
+});
+const listarInformesEmpresaSeccionServicioAction = (informesEmpresaSeccionServicio) => ({
+    type: LISTAR_INFORMES_EMPRESA_SECCION_SERVICIO,
+    payload: informesEmpresaSeccionServicio
+})
+const altaInformeAction = (guardado) => ({
+    type: ALTA_INFORME,
+    payload: guardado
+})
+const detalleInformeAction = (detalleInforme) => ({
+    type: DETALLE_INFORME,
+    payload: detalleInforme
+})
+const listarCantidadInformesAction = (totalInformes) => ({
+    type: LISTAR_CANTIDAD_INFORMES,
+    payload: totalInformes
+})
+const deleteInformeAction = (guardado) => ({
+    type: DELETE_INFORME,
+    payload: guardado
+})
+const updateInformeAction = (guardado) => ({
+    type: UPDATE_INFORME,
+    payload: guardado
+})
+const filtrarInformesAction = (informes) => ({
+    type: FILTRAR_INFORMES,
+    payload: informes
+})
+const modalCompartirInformeAction = (visibilidad) => ({
+    type: MODAL_COMPARTIR_INFORME,
+    payload: visibilidad
+})
 
 export const fetchlistarInformes = (idEmpresa) => {
     return (dispatch) => {
@@ -128,6 +155,7 @@ export const fetchgetDetalleInforme = (idEmpresa, idInforme) => {
 };
 
 export const fetchaltaInforme = (idEmpresa, idSeccion, idServicio, titulo, descripcion, fecha, file) => {
+
     return async (dispatch) => {
         return altaInforme(idEmpresa, idSeccion, idServicio, titulo, descripcion, fecha, file)
             .then(res => {
@@ -165,7 +193,7 @@ export const fetchaUpdateInforme = (idInforme, idEmpresa, idSeccion, idServicio,
 
 export const mostrarOcultarModalCompartir = (valor) => {
     return (dispatch) => {
-         return dispatch(modalCompartirInformeAction(valor))
+        return dispatch(modalCompartirInformeAction(valor))
     }
 }
 
@@ -175,25 +203,45 @@ export default (state = initialState, action) => {
         //en todos los casos regresamos un objeto nuevo en el cual incluimos todos las propiedades del objeto state con ...state
         case LISTAR_INFORMES:
             //cambiamos el valor de la propiedad post  
-            return { ...state, informes: action.payload };
+            return {
+                ...state, informes: action.payload
+            };
         case LISTAR_INFORMES_EMPRESA_SECCION_SERVICIO:
-            return { ...state, informesEmpresaSeccionServicio: action.payload };
+            return {
+                ...state, informesEmpresaSeccionServicio: action.payload
+            };
         case DETALLE_INFORME:
-            return { ...state, detalleInforme: action.payload };
+            return {
+                ...state, detalleInforme: action.payload
+            };
         case LISTAR_CANTIDAD_INFORMES:
-            return { ...state, totalInformes: action.payload };
+            return {
+                ...state, totalInformes: action.payload
+            };
         case ALTA_INFORME:
-            return { ...state, guardado: action.payload };
+            return {
+                ...state, guardado: action.payload
+            };
         case DELETE_INFORME:
-            return { ...state, guardado: action.payload };
+            return {
+                ...state, guardado: action.payload
+            };
         case UPDATE_INFORME:
-            return { ...state, guardado: action.payload };
+            return {
+                ...state, guardado: action.payload
+            };
         case FILTRAR_INFORMES:
-            return { ...state, informes: action.payload };
+            return {
+                ...state, informes: action.payload
+            };
         case MODAL_COMPARTIR_INFORME:
-            return { ...state, modalCompartirInforme: action.payload };
+            return {
+                ...state, modalCompartirInforme: action.payload
+            };
 
         default:
-            return { ...state };
+            return {
+                ...state
+            };
     }
 }

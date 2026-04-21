@@ -58,54 +58,10 @@ const NavegacionEquipo = ({
     scrollTop();
   };
 
-  const enviar = async (data) => {
-    console.log("🚀 ~ enviar ~ data:", data);
-    try {
-      setNavegacionCargando(true);
-      const resp = await cargaControlPorComponente(
-        data.idCargaMasiva,
-        data.fecha,
-        data.estadoId,
-        data.componente,
-        data.fallasValues,
-        data.observacion,
-        data.recomendacion,
-        data.file
-      );
-
-      if (resp && !resp.error) {
-        if (data.direccion !== "soloGuardar") {
-          tareasDespuesDeLlamarAlServer();
-        }
-        if (data.direccion === "soloGuardar" && data.index === 0) {
-          NotificationManager.success(
-            "El equipo se ha guardado correctamente",
-            "Hecho",
-            3000
-          );
-        }
-        return;
-      }
-      NotificationManager.error("Error al enviar el control", "Error", 3000);
-    } catch (error) {
-      console.error("Error al enviar:", error);
-      NotificationManager.error("Error al enviar el control", "Error", 3000);
-    } finally {
-      setNavegacionCargando(false);
-    }
-  };
-
   const siguienteEquipoYGuardar = async () => {
-    /*try {*/
-    //setNavegacionCargando(true);
-    //console.log("🚀 ~ abrirModal ~ equipoNoControlado:", equipoNoControlado);
-    console.log(
-      "🚀 ~ abrirModal ~ controlesDelEquipo:",
-      controlesDelEquipo.some((item) => item.file)
-    );
-
+    
     if (equipoNoControlado) {
-      await guardarEquipoNoControlado(
+      const res = await guardarEquipoNoControlado(
         equipoNoControlado.idCargaMasiva,
         equipoNoControlado.equipoSeleccionadoEnCargaMasiva,
         equipoNoControlado.motivoNoControlado,
@@ -113,10 +69,15 @@ const NavegacionEquipo = ({
         equipoNoControlado.fechaEquipoNoControlado
       );
 
+      if (res) {
+        console.log("🚀 ~ siguienteEquipoYGuardar ~ res:", res);
+      }
+
       if (direccion !== "soloGuardar") {
         setearEquipoNoControlado(null);
         tareasDespuesDeLlamarAlServer();
       }
+
       if (direccion === "soloGuardar") {
         NotificationManager.success(
           "El equipo se ha guardado correctamente",
@@ -124,60 +85,47 @@ const NavegacionEquipo = ({
           3000
         );
       }
-      //return;
-    }
+      
+    } else {
+        const promisesControledEquipment =controlesDelEquipo.map((control) => {
+          const {
+            fallasSeleccionada,
+            estado,
+            componente,
+            observacion,
+            recomendacion,
+            imagenes,
+            file,
+            fecha,
+            idCargaMasiva,
+          } = control;
+          let fallasValues = [];
+          if (fallasSeleccionada)
+            fallasValues = fallasSeleccionada.map((falla) =>
+              String(falla.value)
+            );
 
-    if (controlesDelEquipo.some((item) => item.file)) {
-      for (let index = 0; index < controlesDelEquipo.length; index++) {
-        const {
-          fallasSeleccionada,
-          estado,
-          componente,
-          observacion,
-          recomendacion,
-          file,
-          idCargaMasiva,
-          fecha,
-        } = controlesDelEquipo[index];
+          const estadoId = estado ? estado.id : null;
 
-        if (!file || file.length < 0) continue;
+          return cargaControlPorComponente(
+            idCargaMasiva,
+            moment(fecha).format("YYYY-MM-DD"),
+            estadoId,
+            componente,
+            JSON.stringify(fallasValues),
+            observacion,
+            recomendacion,
+            file
+          );
+        });
+
+        await Promise.all(promisesControledEquipment);
         
-        let fallasValues = fallasSeleccionada
-          ? fallasSeleccionada.map((falla) => String(falla.value))
-          : [];
+    }
 
-        const data = {
-          idCargaMasiva,
-          fecha: moment(fecha).format("YYYY-MM-DD"),
-          estadoId: estado.id,
-          componente,
-          fallasValues: JSON.stringify(fallasValues),
-          observacion,
-          recomendacion,
-          file,
-          direccion,
-          index,
-        };
-        await enviar(data);
-      }
-    }
-    if (direccion === "soloGuardar" && controlesDelEquipo.length === 0) {
-      NotificationManager.success(
-        "El equipo se ha guardado correctamente",
-        "Hecho",
-        3000
-      );
-      return;
-    }
-    // if (controlesDelEquipo.length === 0) {
     recorridoYDireccion("+");
     scrollTop();
-    // return;
-    //}
 
-    /*} finally {
-      setNavegacionCargando(false);
-    }*/
   };
 
   const anteriorEquipo = () => {

@@ -194,7 +194,9 @@ const EdicionGenerarConsulta = (props) => {
   };
 
   useEffect(() => {
+    //console.log("🚀 ~ EdicionGenerarConsulta ~ props.resultadoConsulta:", props.resultadoConsulta)
     if (props.resultadoConsulta) {
+
       setDesdeAnio(props.resultadoConsulta.desde.split("-")[1]);
       setDesdeMes(Number(props.resultadoConsulta.desde.split("-")[0]));
       setHastaAnio(props.resultadoConsulta.hasta.split("-")[1]);
@@ -224,7 +226,7 @@ const EdicionGenerarConsulta = (props) => {
       });
       handleChangeMulti(seccionasArray);
       let rutasArray = [];
-      props.resultadoConsulta.detalle_rutas.map((seccion) => {
+      props.resultadoConsulta.detalle_rutas?.map((seccion) => {
         rutasArray.push({
           value: seccion.id_seccion,
           label: (

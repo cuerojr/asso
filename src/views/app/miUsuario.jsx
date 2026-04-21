@@ -1,10 +1,13 @@
 import React,{Fragment,useEffect,useState} from 'react';
+import { connect } from 'react-redux';
+
 import { InputGroup, InputGroupAddon, Input, Row, Button } from "reactstrap";
+
+import AppLayout from "../../layout/AppLayout";
 import { fetchupdateUsuario } from '../../reducers/usuarios-reducer';
 import { fetchLogoutUser } from '../../reducers/profile';
 import { Tarjeta } from "../../componentes/tarjeta";
 import { getUsuario, actualizarPwd } from '../../lib/usuarios-api';
-import { connect } from 'react-redux';
 import { NotificationManager } from "../../components/common/react-notifications";
 
 const MiUsuario = (props) => {
@@ -65,7 +68,7 @@ const MiUsuario = (props) => {
     }
 
     return (
-        <Fragment>
+        <AppLayout>
             <Row>
 				<div className="col-md-12">
 					<h1>Mi Usuario</h1>
@@ -127,7 +130,7 @@ const MiUsuario = (props) => {
                     </div>
                 </Row>
             </Tarjeta>
-        </Fragment>
+        </AppLayout>
     );
 };
 
