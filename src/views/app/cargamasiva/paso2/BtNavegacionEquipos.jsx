@@ -7,10 +7,12 @@ import {
   setearEquipoNoControlado,
   setNavegacionCargando,
 } from "../../../../reducers/cargas-masivas-reducer";
+
 import {
   cargaControlPorComponente,
   guardarEquipoNoControlado,
 } from "../../../../lib/cargas-masivas-api";
+
 import { NotificationManager } from "../../../../components/common/react-notifications";
 import moment from "moment";
 
@@ -59,7 +61,6 @@ const NavegacionEquipo = ({
   };
 
   const siguienteEquipoYGuardar = async () => {
-    
     if (equipoNoControlado) {
       const res = await guardarEquipoNoControlado(
         equipoNoControlado.idCargaMasiva,
@@ -87,7 +88,8 @@ const NavegacionEquipo = ({
       }
       
     } else {
-        const promisesControledEquipment =controlesDelEquipo.map((control) => {
+      
+        const promisesControledEquipment = controlesDelEquipo.map((control) => {
           const {
             fallasSeleccionada,
             estado,
@@ -99,6 +101,7 @@ const NavegacionEquipo = ({
             fecha,
             idCargaMasiva,
           } = control;
+
           let fallasValues = [];
           if (fallasSeleccionada)
             fallasValues = fallasSeleccionada.map((falla) =>
@@ -118,8 +121,9 @@ const NavegacionEquipo = ({
             file
           );
         });
-
+        
         await Promise.all(promisesControledEquipment);
+        cleanControlesDelEquipo();
         
     }
 
@@ -134,6 +138,7 @@ const NavegacionEquipo = ({
   };
 
   const siguienteEquipo = () => {
+    console.log("siguiente equipo", controlesDelEquipo, equipoNoControlado);
     tareasDespuesDeLlamarAlServer();
   };
 

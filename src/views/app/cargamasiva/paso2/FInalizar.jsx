@@ -24,13 +24,12 @@ const FInalizar = ({
   equipoNoControlado,
   equipoSeleccionadoEnCargaMasiva,
 }) => {
-
   const [mostrarModal, setMostrarModal] = useState(false);
   const [detalleConfirmFinalizarCarga, setDetalleConfirmFinalizarCarga] =
     useState(null);
   const [imagenesPorComponente, setImagenesPorComponente] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const abrirModal = async () => {
     setIsLoading(true);
 
@@ -103,37 +102,74 @@ const FInalizar = ({
       }
     }*/
 
-      
-      const res3 = await confirmDetalleFinalizarCarga(cargaMasiva.id);
-      if (res3) {
-
-        setDetalleConfirmFinalizarCarga(res3);
-        setMostrarModal(true);
-        setIsLoading(false);
-      }
+    const res3 = await confirmDetalleFinalizarCarga(cargaMasiva.id);
+    if (res3) {
+      setDetalleConfirmFinalizarCarga(res3);
+      setMostrarModal(true);
+      setIsLoading(false);
+    }
   };
 
   const onClickNext = (goToNext, steps, step) => {
     goToNext();
   };
 
-  const finalizar = (next, steps, step) => {
-    finalizarCargaMasiva(cargaMasiva.id).then((res) => {
-      if (res.stat === 1) {
-        NotificationManager.success(
-          "La carga masiva se ha finalizado correctamente",
-          "Hecho",
-          3000,
-          null,
-          null,
-          ""
-        );
-        setearCantidadesFinalesAction(res);
-        onClickNext(next, steps, step);
-      } else {
-        NotificationManager.error(res.err, "Error");
-      }
-    });
+  const finalizar = async (next, steps, step) => {
+
+    // agregar cargaControlPorComponente para el equipo no controlado (si es que existe)
+    
+       /* const promisesControledEquipment = controlesDelEquipo.map((control) => {
+          const {
+            fallasSeleccionada,
+            estado,
+            componente,
+            observacion,
+            recomendacion,
+            imagenes,
+            file,
+            fecha,
+            idCargaMasiva,
+          } = control;
+
+          let fallasValues = [];
+          if (fallasSeleccionada)
+            fallasValues = fallasSeleccionada.map((falla) =>
+              String(falla.value)
+            );
+
+          const estadoId = estado ? estado.id : null;
+
+          return cargaControlPorComponente(
+            idCargaMasiva,
+            moment(fecha).format("YYYY-MM-DD"),
+            estadoId,
+            componente,
+            JSON.stringify(fallasValues),
+            observacion,
+            recomendacion,
+            file
+          );
+        });
+        
+        await Promise.all(promisesControledEquipment);
+        //console.log("🚀 ~ siguienteEquipoYGuardar ~ promisesControledEquipment:", promisesControledEquipment)
+        */
+
+    const res = await finalizarCargaMasiva(cargaMasiva.id);
+    if (res.stat === 1) {
+      NotificationManager.success(
+        "La carga masiva se ha finalizado correctamente",
+        "Hecho",
+        3000,
+        null,
+        null,
+        "",
+      );
+      setearCantidadesFinalesAction(res);
+      onClickNext(next, steps, step);
+    } else {
+      NotificationManager.error(res.err, "Error");
+    }
   };
 
   return (
@@ -165,11 +201,11 @@ const FInalizar = ({
               <Col className="border p-2 bg-black borde-gris" md="6">
                 FECHA DE INSPECCIÓN: ENTRE{" "}
                 {moment(detalleConfirmFinalizarCarga.primer_test).format(
-                  "DD/MM/YYYY"
+                  "DD/MM/YYYY",
                 )}{" "}
                 Y{" "}
                 {moment(detalleConfirmFinalizarCarga.ultimo_test).format(
-                  "DD/MM/YYYY"
+                  "DD/MM/YYYY",
                 )}
               </Col>
             </Row>
@@ -204,7 +240,7 @@ const FInalizar = ({
                       }}
                       className="ml-2"
                     >
-                      SI, FINALIZAR LA CARGA DE CONTROLES{" "}
+                      SI, FINALIZAR LA CARGA DE CONTROLESss{" "}
                       <i className="simple-icon-check" />
                     </Button>
                   )}
@@ -252,12 +288,12 @@ const FInalizar = ({
                                 {componente.tests.length > 0 &&
                                   equipo.noControlado !== 1 &&
                                   moment(componente.tests[0].fecha).format(
-                                    "DD/MM/YYYY"
+                                    "DD/MM/YYYY",
                                   )}
                                 {equipo.noControlado === 1 && (
                                   <span>
                                     {moment(equipo.fechaNoControlado).format(
-                                      "DD/MM/YYYY"
+                                      "DD/MM/YYYY",
                                     )}
                                   </span>
                                 )}
@@ -302,12 +338,10 @@ const FInalizar = ({
                                   componente.tests[0].recomendaciones}
                               </td>
                               <td>
-                                {componente.tests[0]?.imagenes[0]
-                                        ?.filename && (
+                                {componente.tests[0]?.imagenes[0]?.filename && (
                                   <img
                                     src={
-                                      componente.tests[0].imagenes[0]
-                                        ?.filename
+                                      componente.tests[0].imagenes[0]?.filename
                                     }
                                     alt="imagen"
                                     width="100"

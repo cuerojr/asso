@@ -29,7 +29,7 @@ import { listarEquiposEnCargaMasiva } from "../../lib/equipos-api";
 
 import moment from "moment";
 const CargaControles = (props) => {
-  const childRef = useRef(null);
+  //const childRef = useRef(null);
 
   const [equipoSeleccionado, setEquipoSeleccionado] = useState("");
   const [indiceEquipoSeleccionado, setIndiceEquipoSeleccionado] = useState(0);
@@ -126,6 +126,7 @@ const CargaControles = (props) => {
   }, [props.detalleDeComponentesYControles]);
 
   const seleccionarAnteriorSiguienteEquipo = (op) => {
+    console.log("seleccionar anterior/siguiente equipo", op);
     equipos.forEach((equipo, index) => {
       if (equipo.id == equipoSeleccionado) {
         if (op == "anterior") {
@@ -138,6 +139,7 @@ const CargaControles = (props) => {
   };
 
   const siguienteEquipoFormulario = (siguienteEquipoDesdeParent) => {
+    console.log("siguiente equipo formulario");
     if (equipoControlado) {
       let strMotivoNoControlado;
       if (otroMotivoNoControlado) {
@@ -168,6 +170,10 @@ const CargaControles = (props) => {
     archivo,
     componentes,
   ) => {
+    console.log(
+      "guardar desde parent",
+      props.detalleDeComponentesYControles.componentes,
+    );
     props.detalleDeComponentesYControles.componentes.forEach(
       (componente, index) => {
         cargaControlPorComponente(
@@ -185,6 +191,8 @@ const CargaControles = (props) => {
   };
 
   const confirmarFinalizar = () => {
+    
+    console.log("🚀 ~ confirmarFinalizar ~ confirmarFinalizar:")
     setavisarFinalizar(true);
     setTimeout(function () {
       confirmDetalleFinalizarCarga(props.idCargaMasiva).then((res) => {
@@ -309,7 +317,7 @@ const CargaControles = (props) => {
         <Fragment>
           <Row className="mt-3 mb-3"></Row>
           <FormularioCargaControles
-            ref={childRef}
+            //ref={childRef}
             guardar={guardar}
             seleccionarAnteriorSiguienteEquipo={
               seleccionarAnteriorSiguienteEquipo

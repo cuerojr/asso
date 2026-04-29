@@ -221,7 +221,6 @@ const CargaMasivaDeControles = (props) => {
                 />
               </Tarjeta>
             </Step>
-
             <Step id="step2" name="Carga de controles">
               <CargaControles
                 clienteSeleccionadoLabel={clienteSeleccionadoLabel}
@@ -234,7 +233,6 @@ const CargaMasivaDeControles = (props) => {
                 setearCantidades={setearCantidades}
               />
             </Step>
-            
             <Step id="step3" name="Notificar Cliente">
               <Tarjeta titulo="">
                 <NotificarCLiente
