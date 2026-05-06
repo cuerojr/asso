@@ -12,7 +12,7 @@ export default defineConfig({
   },
   build: {
     assetsDir: 'admin_static',
-    /*rollupOptions: {
+    rollupOptions: {
       output: {
         manualChunks: {
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
@@ -26,11 +26,11 @@ export default defineConfig({
           'vendor-ui': ['reactstrap', 'react-select', 'react-datepicker'],
         }
       }
-    }*/
+    }
   },
-  /*test: {
+  test: {
     environment: 'jsdom',
     globals: true,
     setupFiles: './src/setupTests.js',
-  }*/
+  }
 });
