@@ -135,7 +135,7 @@ const InformeResultado = (props) => {
                         equipo.fechaNoControlado && (
                           <>
                             {moment(equipo.fechaNoControlado).format(
-                              "DD/MM/YYYY"
+                              "DD/MM/YYYY",
                             )}
                           </>
                         )}
@@ -166,7 +166,7 @@ const InformeResultado = (props) => {
                                 color: pickTextColorBasedOnBgColorSimple(
                                   equipo.eq_color_estado,
                                   "#FFFFFF",
-                                  "#000000"
+                                  "#000000",
                                 ),
                               }}
                               className="estado-td-coloreado"
@@ -236,7 +236,7 @@ const InformeResultado = (props) => {
                                   color: pickTextColorBasedOnBgColorSimple(
                                     elcolor,
                                     "#FFFFFF",
-                                    "#000000"
+                                    "#000000",
                                   ),
                                   borderRadius: 20,
                                 }}
@@ -258,15 +258,16 @@ const InformeResultado = (props) => {
                           <td>{componente.observaciones}</td>
                           <td>{componente.recomendaciones}</td>
                           <td style={{ textAlign: "center" }}>
-                            {componente.files.map((img) => {
+                            {componente.files.map((img, index) => {
                               return (
                                 <img
+                                  key={img.id}
                                   onClick={() => {
                                     mostrarImagenModal(img.file);
                                   }}
                                   src={img.file}
                                   alt={""}
-                                  style={{ width: "150px", height: "auto" }}
+                                  style={{ width: "150px", height: "auto", cursor: "pointer" }}
                                 />
                               );
                             })}
