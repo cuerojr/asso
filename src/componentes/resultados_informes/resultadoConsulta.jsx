@@ -21,12 +21,19 @@ import {
   faFloppyDisk,
   faDownload,
   faPencil,
+  faFilePdf,
 } from "@fortawesome/free-solid-svg-icons";
+
+import { usePdfDownload, imageUrlToBase64 } from "../../hooks/usePdfDownload";
+
 import classnames from "classnames";
 import {
   introduccionInformeOnline,
   informeInformeOnline,
+  getFallas,
+  getResumenDeEstado,
 } from "../../lib/informe-online-api";
+
 import { transpose } from "../utils/utils";
 import moment from "moment";
 import "moment/locale/es";
@@ -34,6 +41,8 @@ moment.locale("es");
 window.moment = moment;
 
 const ResultadoConsulta = (props) => {
+  const { download, isGenerating, error } = usePdfDownload();
+
   const [currentTab, setCurrentTab] = useState(null);
   const [contenidoHTML, setContenidoHTML] = useState(null);
   const [menuTabs, setmenuTabs] = useState([
@@ -43,6 +52,9 @@ const ResultadoConsulta = (props) => {
     "resumen de administracion",
   ]);
   const [detalleInforme, setDetalleInforme] = useState(null);
+
+  const [datosPdf, setDatosPdf] = useState(null);
+  const [datosPdf2, setDatosPdf2] = useState(null);
 
   const [fechaDesde, setFechaDesde] = useState("");
   const [fechaHasta, setFechaHasta] = useState("");
@@ -55,7 +67,6 @@ const ResultadoConsulta = (props) => {
   const [fallasTab, setFallasTab] = useState(null);
   const [resumenTab, setResumenTab] = useState(null);
   const [administracionTab, setAdministracionTab] = useState(null);
-  
 
   //const datosUser = JSON.parse(window.localStorage.getItem('cliente'));
   const idEmpresa = props.idEmpresa;
@@ -68,8 +79,12 @@ const ResultadoConsulta = (props) => {
     const fechaDesde = new Date(res.desde.split("-")[0]);
     const fechaHasta = new Date(res.hasta.split("-")[0]);
 
-    setFechaDesde(`${capitalizeFirstLetter(fechaDesde.toLocaleString("es-ES", { month: "long" }))} ${res.desde.split("-")[1]}`);
-    setFechaHasta(`${capitalizeFirstLetter(fechaHasta.toLocaleString("es-ES", { month: "long" }))} ${res.hasta.split("-")[1]}`);
+    setFechaDesde(
+      `${capitalizeFirstLetter(fechaDesde.toLocaleString("es-ES", { month: "long" }))} ${res.desde.split("-")[1]}`,
+    );
+    setFechaHasta(
+      `${capitalizeFirstLetter(fechaHasta.toLocaleString("es-ES", { month: "long" }))} ${res.hasta.split("-")[1]}`,
+    );
 
     setControl(res.control);
     setEquipos(res.equipos);
@@ -80,7 +95,7 @@ const ResultadoConsulta = (props) => {
     setSecciones(
       Object.values(res.detalle_secciones)
         .map((item) => item.seccion)
-        .join(", ")
+        .join(", "),
     );
     setDetalleInforme(res.detalle_informe);
     if (props.informeYaGenerado && res.editable && res.editable == 1) {
@@ -112,11 +127,13 @@ const ResultadoConsulta = (props) => {
 
       informeInformeOnline(idEmpresa, props.idInforme).then((res) => {
         if (res) {
+          setDatosPdf(res);
           distruirDatos(res);
         }
       });
     } else {
       setCurrentTab("informe");
+
       distruirDatos(JSON.parse(props.resultadoConsulta.detalle));
       setFallasTab(JSON.parse(props.resultadoConsulta.fallas));
       setResumenTab(JSON.parse(props.resultadoConsulta.resumen));
@@ -138,12 +155,44 @@ const ResultadoConsulta = (props) => {
           }
         }
       });
+
       distruirDatos(JSON.parse(props.resultadoConsulta.detalle));
       setFallasTab(JSON.parse(props.resultadoConsulta.fallas));
       setResumenTab(JSON.parse(props.resultadoConsulta.resumen));
       setAdministracionTab(JSON.parse(props.resultadoConsulta.admin));
     }
   }, []);
+
+  const handleDownload = async () => {
+    const [introduccionRes, informeRes, resumenRes, fallasRes] =
+      await Promise.all([
+        introduccionInformeOnline(idEmpresa, props.idInforme),
+        informeInformeOnline(idEmpresa, props.idInforme),
+        getResumenDeEstado(idEmpresa, props.idInforme),
+        getFallas(idEmpresa, props.idInforme),
+      ]);
+
+    // Construí el objeto localmente, no dependas del estado
+    const datosPdfCompletos = {
+      ...(introduccionRes?.html ? { intro: introduccionRes.html } : {}),
+      ...(informeRes ?? {}),
+      ...(resumenRes ? { resumenRes } : {}),
+      ...(fallasRes ? { fallasRes } : {}),
+    };
+
+   
+    // Dentro de handleDownload, antes del download():
+    const logoBase64 = await imageUrlToBase64("/assets/images/logo.png");
+
+    // Ahora sí tenés todo junto para pasarlo al hook
+    download({
+      filename: `Informe Online - ${datosPdfCompletos.titulo}`,
+      title: `Informe Online - ${datosPdfCompletos.titulo}`,
+      logoBase64,
+      subtitle: "Actualizado al " + new Date().toLocaleDateString("es-AR"),
+      data: datosPdfCompletos,
+    });
+  };
 
   return (
     <>
@@ -186,7 +235,7 @@ const ResultadoConsulta = (props) => {
               </div>
             </div>
           </Col>
-          
+
           <Col xs="12" md="6" lg="8" className="mb-2">
             <p
               style={{
@@ -212,36 +261,37 @@ const ResultadoConsulta = (props) => {
             <h5>{control}</h5>
           </Col>
           <Col xs="12" md="6" lg="4" className="mb-2">
-              <p
-                style={{
-                  opacity: "70%",
-                  fontSize: ".75rem",
-                  marginBottom: ".25rem",
-                }}
-              >
-                EQUIPOS
-              </p>
-              <h5>{equipos}</h5>
-          </Col>
-          {props.mostrarbts && (
-            <Col
-              xs="12"
-              className="d-flex align-items-end justify-content-end"
+            <p
+              style={{
+                opacity: "70%",
+                fontSize: ".75rem",
+                marginBottom: ".25rem",
+              }}
             >
-              <Button
-                color="success"
-                className="mr-2"
-                onClick={() => {
-                  props.setMostrarModalGuarda(true);
-                }}
-              >
-                GUARDAR INFORME <FontAwesomeIcon icon={faFloppyDisk} />{" "}
-              </Button>
-              {/*<Button color="primary">EXPORTAR A XLS <FontAwesomeIcon icon={faDownload} /> </Button>*/}
-            </Col>
-          )}
-          {editable && (
-            <Col className="d-flex align-items-end justify-content-end" xs="12">
+              EQUIPOS
+            </p>
+            <h5>{equipos}</h5>
+          </Col>
+
+          <Col
+            xs="6"
+            className="ml-auto d-flex align-items-end justify-content-end"
+          >
+            {props.mostrarbts && (
+              <>
+                <Button
+                  color="success"
+                  className="mr-2"
+                  onClick={() => {
+                    props.setMostrarModalGuarda(true);
+                  }}
+                >
+                  GUARDAR INFORME <FontAwesomeIcon icon={faFloppyDisk} />{" "}
+                </Button>
+                {/*<Button color="primary">EXPORTAR A XLS <FontAwesomeIcon icon={faDownload} /> </Button>*/}
+              </>
+            )}
+            {editable && (
               <Button
                 color="success"
                 className="mr-2"
@@ -252,33 +302,40 @@ const ResultadoConsulta = (props) => {
               >
                 EDITAR <FontAwesomeIcon icon={faPencil} className="ml-2" />{" "}
               </Button>
-            </Col>
-          )}
+            )}
+            <Button
+              color="primary"
+              className="mr-2"
+              onClick={handleDownload}
+              disabled={isGenerating}
+            >
+              {isGenerating ? "Generando…" : `Descargar PDF`}
+              <FontAwesomeIcon icon={faFilePdf} className="ml-2" />{" "}
+            </Button>
+          </Col>
         </Row>
       </MiniTarjeta>
+
       <div className="container-fluid mt-4">
         <div className="row px-2">
           <Nav tabs>
-            {menuTabs?.map((menuItem, index) => {
-              return (
-                <NavItem key={index}>
-                  <NavLink
-                    className={classnames({
-                      active: currentTab === menuItem,
-                      "nav-link": true,
-                    })}
-                    onClick={() => {
-                      return setCurrentTab(menuItem);
-                    }}
-                  >
-                    <strong>{menuItem.toUpperCase()}</strong>
-                  </NavLink>
-                </NavItem>
-              );
-            })}
+            {menuTabs?.map((menuItem, index) => (
+              <NavItem key={index}>
+                <NavLink
+                  className={classnames({
+                    active: currentTab === menuItem,
+                    "nav-link": true,
+                  })}
+                  onClick={() => setCurrentTab(menuItem)}
+                >
+                  <strong>{menuItem.toUpperCase()}</strong>
+                </NavLink>
+              </NavItem>
+            ))}
           </Nav>
         </div>
       </div>
+
       <div className="mt-3 resultados-consulta">
         <TabContent activeTab={currentTab} className="mt-4 col-md-12">
           {contenidoHTML && (
@@ -286,6 +343,7 @@ const ResultadoConsulta = (props) => {
               <Introduccion contenidoHTML={contenidoHTML} />
             </TabPane>
           )}
+
           <TabPane tabId="resumen de estados">
             <Resumen
               idEmpresa={idEmpresa}
@@ -294,9 +352,11 @@ const ResultadoConsulta = (props) => {
               resumenTab={resumenTab}
             />
           </TabPane>
+
           <TabPane tabId="informe">
             <InformeResultado detalleInforme={detalleInforme} />
           </TabPane>
+
           <TabPane tabId="fallas">
             <FallasConsulta
               idEmpresa={idEmpresa}
@@ -305,6 +365,7 @@ const ResultadoConsulta = (props) => {
               fallasTab={fallasTab}
             />
           </TabPane>
+
           <TabPane tabId="resumen de administracion">
             <ResumenAdministracion
               idEmpresa={idEmpresa}
