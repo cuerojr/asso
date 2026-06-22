@@ -41,6 +41,8 @@ moment.locale("es");
 window.moment = moment;
 
 const ResultadoConsulta = (props) => {
+  console.log("🚀 ~ ResultadoConsulta ~ props:", props)
+  
   const { download, isGenerating, error } = usePdfDownload();
 
   const [currentTab, setCurrentTab] = useState(null);

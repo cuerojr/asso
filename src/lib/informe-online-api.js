@@ -42,8 +42,6 @@ export const informeInformeOnline = (idEmpresa, idInforme) => {
 };
 
 export const altaInformeTipoOnline = (idEmpresa, secciones, rutas, titulo, descripcion, mesDesde, anioDesde, mesHasta, anioHasta, controlId, introduccion, planta, atencionLinea1, atencionLinea2, atencionLinea3, referencia, firma, datosOpcionales, guardar, filtroFallas, filtroEstados) => {
-console.log("🚀 ~ altaInformeTipoOnline ~ filtroEstados:", filtroEstados)
-console.log("🚀 ~ altaInformeTipoOnline ~ filtroFallas:", filtroFallas)
 
 	const data = new FormData();
 	data.append('a', 'aio');
