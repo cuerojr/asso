@@ -1,0 +1,52 @@
+/* InformeResultado.css */
+.informe-multi-select .react-select__control {
+  background-color: #ffffff !important;
+  border-color: #ced4da !important;
+}
+
+.informe-multi-select .react-select__menu {
+  background-color: #ffffff !important;
+}
+
+.informe-multi-select .react-select__option {
+  background-color: #ffffff !important;
+  color: #212529 !important;
+}
+
+.informe-multi-select .react-select__option--is-focused {
+  background-color: #f0f0f0 !important;
+}
+
+.informe-multi-select .react-select__multi-value {
+  background-color: #e9ecef !important;
+}
+
+.informe-multi-select .react-select__multi-value__label {
+  color: #212529 !important;
+}
+
+.informe-multi-select .react-select__single-value {
+  color: #212529 !important;
+}
+
+.informe-multi-select .react-select__input input {
+  color: #212529 !important;
+}
+
+.informe-multi-select .react-select__placeholder {
+  color: #6c757d !important;
+}
+
+.informe-multi-select .react-select__value-container {
+  background-color: #ffffff !important;
+}
+
+.informe-multi-select .react-select__indicators {
+  background-color: #ffffff !important;
+}
+
+.input-group-text {
+  background-color: #ffffff !important;
+  color: #212529 !important;
+  border-color: #ced4da !important;
+}

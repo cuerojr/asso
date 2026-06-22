@@ -13,7 +13,11 @@ const initialState = {
     totalInformes: 0,
     detalleInforme: null,
     informesEmpresaSeccionServicio: [],
-    modalCompartirInforme: false
+    modalCompartirInforme: false,
+    filtrosInforme: {
+        selectedFallas: [],
+        selectedEstados: [],
+    },
 };
 
 const LISTAR_INFORMES = 'LISTAR_INFORMES';
@@ -26,10 +30,15 @@ const UPDATE_INFORME = 'UPDATE_INFORME';
 const FILTRAR_INFORMES = 'FILTRAR_INFORMES';
 const MODAL_COMPARTIR_INFORME = 'MODAL_COMPARTIR_INFORME'
 
+const SET_FILTROS_INFORME = 'SET_FILTROS_INFORME';
+const LIMPIAR_FILTROS_INFORME = 'LIMPIAR_FILTROS_INFORME';
+
+
 const listarInformesAction = (clientes) => ({
     type: LISTAR_INFORMES,
     payload: clientes
 });
+
 const listarInformesEmpresaSeccionServicioAction = (informesEmpresaSeccionServicio) => ({
     type: LISTAR_INFORMES_EMPRESA_SECCION_SERVICIO,
     payload: informesEmpresaSeccionServicio
@@ -62,6 +71,12 @@ const modalCompartirInformeAction = (visibilidad) => ({
     type: MODAL_COMPARTIR_INFORME,
     payload: visibilidad
 })
+
+// action creator
+const setFiltrosInformeAction = (filtros) => ({
+    type: SET_FILTROS_INFORME,
+    payload: filtros,
+});
 
 export const fetchlistarInformes = (idEmpresa) => {
     return (dispatch) => {
@@ -197,6 +212,18 @@ export const mostrarOcultarModalCompartir = (valor) => {
     }
 }
 
+export const setFiltrosInforme = (selectedFallas, selectedEstados) => (dispatch) => {
+    dispatch(setFiltrosInformeAction({
+        selectedFallas,
+        selectedEstados
+    }));
+};
+
+export const limpiarFiltrosInforme = () => (dispatch) => {
+    dispatch({
+        type: LIMPIAR_FILTROS_INFORME
+    });
+};
 
 export default (state = initialState, action) => {
     switch (action.type) {
@@ -237,6 +264,19 @@ export default (state = initialState, action) => {
         case MODAL_COMPARTIR_INFORME:
             return {
                 ...state, modalCompartirInforme: action.payload
+            };
+        case SET_FILTROS_INFORME:
+            return {
+                ...state,
+                filtrosInforme: action.payload,
+            };
+        case LIMPIAR_FILTROS_INFORME:
+            return {
+                ...state,
+                filtrosInforme: {
+                    selectedFallas: [],
+                    selectedEstados: [],
+                },
             };
 
         default:

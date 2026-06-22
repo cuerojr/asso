@@ -307,7 +307,7 @@ const DetalleEquipo = (props) => {
               <Input
                 type="select"
                 name="select"
-                id="exampleSelect"
+                id="exampleSelect1"
                 onChange={(e) => {
                   setSeccion(e.target.value);
                 }}
@@ -329,7 +329,7 @@ const DetalleEquipo = (props) => {
               <Input
                 type="select"
                 name="select"
-                id="exampleSelect"
+                id="exampleSelect2"
                 onChange={(e) => {
                   setRuta(e.target.value);
                 }}

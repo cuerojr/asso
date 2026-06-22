@@ -1,6 +1,25 @@
-import React, { Fragment, useState, useEffect } from "react";
-import { Row, Col, Button, Table } from "reactstrap";
+import React, { Fragment, useEffect } from "react";
+import "../../assets/css/informeResultado.css";
+
+import useInformeResultado from "../../hooks/useInformeResultado";
+import {
+  Row,
+  Col,
+  Button,
+  Table,
+  InputGroup,
+  InputGroupAddon,
+  Input,
+  InputGroupText,
+} from "reactstrap";
+import Select from "react-select";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import { connect } from "react-redux";
+import CustomSelectInput from "../../components/common/CustomSelectInput";
+
+import SelectMultiple from "../selectMultiple";
+
 import {
   faArrowRight,
   faArrowLeft,
@@ -12,55 +31,58 @@ import ReactTooltip from "react-tooltip";
 import ModalImagen from "./ModalImagen";
 import moment from "moment";
 
-const InformeResultado = (props) => {
-  const [mesesActivosState, setMesesActivosState] = useState([]);
-  const [equiposActivosState, setEquiposActivosState] = useState([]);
-  const [mostrarImagen, setMostrarImagen] = useState(false);
-  const [imagen, setImagen] = useState("");
+import { fetchlistarEstados } from "../../reducers/estados-reducer";
+import { fetchlistarFallas } from "../../reducers/fallas-reducer";
 
-  const meses = [
-    null,
-    "Enero",
-    "Febrero",
-    "Marzo",
-    "Abril",
-    "Mayo",
-    "Junio",
-    "Julio",
-    "Agosto",
-    "Septiembre",
-    "Octubre",
-    "Noviembre",
-    "Diciembre",
-  ];
-  const mesesActivos = [];
-  const equipos = [];
+const InformeResultado = ({
+  detalleInforme,
+  fallas,
+  estados,
+  idEmpresa,
+  idInforme,
+  fetchlistarEstados,
+  fetchlistarFallas,
+  filtroFallasIniciales,  
+  filtroEstadosIniciales,
+}) => {
+  const {
+    mesesActivosState,
+    equiposActivosState,
+    mesSeleccionado,
+    setMesSeleccionado,
 
-  useEffect(() => {
-    if (props.detalleInforme) {
-      props.detalleInforme.forEach((item) => {
-        const mesActivo = meses[Number(item.mes)] + " " + item.anio;
-        mesesActivos.push(mesActivo);
-        equipos.push(item.equipos);
-      });
+    mostrarImagenModal,
+    setMostrarImagen,
+    mostrarImagen,
+    imagen,
 
-      setMesesActivosState(mesesActivos);
-      setEquiposActivosState(equipos);
-    }
-  }, [props.detalleInforme]);
+    opcionesFallas,
+    opcionesEstados,
 
-  const [mesSeleccionado, setMesSeleccionado] = useState(0);
+    handleChangeMulti,
+    seleccionarEstado,
 
-  const mostrarImagenModal = (imagen) => {
-    setImagen(imagen);
-    setMostrarImagen(true);
-    console.log(imagen);
-  };
+    selectedFallas,
+    selectedEstados,
+
+    selectedFallasIds,
+
+    guardarInformeFiltrado,
+  } = useInformeResultado({
+    idEmpresa,
+    detalleInforme,
+    fallas,
+    estados,
+    fetchlistarFallas,
+    fetchlistarEstados,
+    filtroFallasIniciales: filtroFallasIniciales,
+    filtroEstadosIniciales: filtroEstadosIniciales,
+  });
 
   return (
     <Fragment>
-      <Row className="month-navigator overflow-hidden p-0">
-        <Col xs="6" sm="6" className="text-left">
+      <Row className="month-navigator overflow-hidden px-0 py-4 ">
+        <Col xs="4" sm="4" className="text-left">
           {mesSeleccionado < mesesActivosState.length - 1 && (
             <Button
               outline
@@ -74,8 +96,12 @@ const InformeResultado = (props) => {
             </Button>
           )}
         </Col>
-
-        <Col xs="6" sm="6" className="text-right">
+        <Col xs="4" sm="4" className="text-center">
+          <h4 className="font-weight-bold">
+            {mesesActivosState[mesSeleccionado]}
+          </h4>
+        </Col>
+        <Col xs="4" sm="4" className="text-right">
           {mesSeleccionado > 0 && (
             <Button
               outline
@@ -92,11 +118,52 @@ const InformeResultado = (props) => {
           )}
         </Col>
       </Row>
+
       <Row>
         <Col xs="12" className="text-center">
-          <h4 className="font-weight-bold">
-            {mesesActivosState[mesSeleccionado]}
-          </h4>
+          <h4 className="font-weight-bold">Fallas por sección y equipo</h4>
+          <p>
+            Filtros multi select para falla y estado, con un botón para limpiar
+            cada filtro y otro para limpiar ambos filtros. Estos filtros deben
+            afectar la información mostrada en la tabla, filtrando los
+            resultados según los criterios seleccionados.
+          </p>
+        </Col>
+        <Col xs="12" md="6">
+          <InputGroup className="mb-3">
+            <InputGroupText className="w-20" addonType="prepend">
+              ESTADOS
+            </InputGroupText>
+            <Select
+              components={{ Input: CustomSelectInput }}
+              className="react-select-fallas informe-multi-select w-80"
+              classNamePrefix="react-select"
+              isMulti
+              placeholder="Seleccione uno o varios estados"
+              name="form-field-name"
+              value={selectedEstados}
+              onChange={(el) => seleccionarEstado(el)}
+              options={opcionesEstados}
+            />
+          </InputGroup>
+        </Col>
+        <Col xs="12" md="6">
+          <InputGroup className="mb-3">
+            <InputGroupText className="w-15" addonType="prepend">
+              FALLAS
+            </InputGroupText>
+            <Select
+              components={{ Input: CustomSelectInput }}
+              className="react-select-fallas informe-multi-select w-85"
+              classNamePrefix="react-select"
+              isMulti
+              placeholder="Seleccione una o varias fallas"
+              name="form-field-name"
+              value={selectedFallas}
+              onChange={(el) => handleChangeMulti(el)}
+              options={opcionesFallas}
+            />
+          </InputGroup>
         </Col>
       </Row>
 
@@ -267,7 +334,11 @@ const InformeResultado = (props) => {
                                   }}
                                   src={img.file}
                                   alt={""}
-                                  style={{ width: "150px", height: "auto", cursor: "pointer" }}
+                                  style={{
+                                    width: "150px",
+                                    height: "auto",
+                                    cursor: "pointer",
+                                  }}
                                 />
                               );
                             })}
@@ -278,6 +349,14 @@ const InformeResultado = (props) => {
                 </Fragment>
               );
             })}
+
+          {equiposActivosState[mesSeleccionado]?.length === 0 && (
+            <tr>
+              <td colSpan={9} className="text-center">
+                No hay datos para mostrar
+              </td>
+            </tr>
+          )}
         </tbody>
       </Table>
       <ModalImagen
@@ -289,4 +368,18 @@ const InformeResultado = (props) => {
   );
 };
 
-export default InformeResultado;
+const mapStateToProps = (state) => {
+  return {
+    estados: state.estadosReducer.estados,
+    fallas: state.fallasReducer.fallas,
+  };
+};
+export default connect(
+  //función que mapea propiedades del state con propiedades del componente
+  mapStateToProps,
+  //mapeo de funciones
+  {
+    fetchlistarEstados,
+    fetchlistarFallas,
+  },
+)(InformeResultado);

@@ -136,9 +136,7 @@ export const useFormularioCargaControles = (props) => {
         archivosAMostrar.push(elem[0].imagenes);
       };
 
-      props.componentes.forEach((componente) => {
-        console.log("🚀 ~ useFormularioCargaControles ~ componente:", componente)
-        
+      props.componentes.forEach((componente) => {        
         if (componente.tests.length > 0) {
           fullfillDataComponente(componente.tests);
         } else if (componente.test_anterior) {
@@ -157,9 +155,11 @@ export const useFormularioCargaControles = (props) => {
 
       setStartDate(fechaIncio);
       setDropdownOpen(Array(props.componentes.length).fill(false));
+
       setEstadoSeleccionadoNombre(estadosSeleccionadosNombreAr);
       setEstadoSeleccionadoId(estadosSeleccionadosId);
       setEstadoSeleccionadoColor(estadosSeleccionadosColor);
+
       setSelectedFallas(fallasSelecionadasAmostrar);
       setSelectedFallasIds(fallasSeleccionadasAmostrarIds);
       setObservaciones(observacionesAMostrar);
@@ -246,8 +246,6 @@ export const useFormularioCargaControles = (props) => {
 
   const cargarArchivos = (laimg, index) => {
     let losarchivos = archivo;
-    console.log("🚀 ~ cargarArchivos ~ losarchivos:", losarchivos);
-
     if (losarchivos[index].length > 0) {
       losarchivos[index].push(laimg);
     } else {

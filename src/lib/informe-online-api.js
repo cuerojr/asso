@@ -1,15 +1,17 @@
-import { BASEURL } from './baseurl';
+import {
+	BASEURL
+} from './baseurl';
 
-export const introduccionInformeOnline= (idEmpresa, idInforme) => {
+export const introduccionInformeOnline = (idEmpresa, idInforme) => {
 
 	const params = {
-		a:'gdii',
-        e:idEmpresa,
-        i:idInforme
+		a: 'gdii',
+		e: idEmpresa,
+		i: idInforme
 	}
 	let u = new URLSearchParams(params).toString();
-	const url = BASEURL+'?'+u;
-	
+	const url = BASEURL + '?' + u;
+
 	const request = {
 		method: 'GET',
 	};
@@ -20,16 +22,16 @@ export const introduccionInformeOnline= (idEmpresa, idInforme) => {
 };
 
 
-export const informeInformeOnline= (idEmpresa, idInforme) => {
+export const informeInformeOnline = (idEmpresa, idInforme) => {
 
 	const params = {
-		a:'gdi',
-        e:idEmpresa,
-        i:idInforme
+		a: 'gdi',
+		e: idEmpresa,
+		i: idInforme
 	}
 	let u = new URLSearchParams(params).toString();
-	const url = BASEURL+'?'+u;
-	
+	const url = BASEURL + '?' + u;
+
 	const request = {
 		method: 'GET',
 	};
@@ -39,52 +41,59 @@ export const informeInformeOnline= (idEmpresa, idInforme) => {
 
 };
 
-export const altaInformeTipoOnline = (idEmpresa, secciones, rutas, titulo, descripcion, mesDesde, anioDesde, mesHasta, anioHasta, controlId, introduccion, planta, atencionLinea1, atencionLinea2, atencionLinea3, referencia, firma, datosOpcionales, guardar) => {
+export const altaInformeTipoOnline = (idEmpresa, secciones, rutas, titulo, descripcion, mesDesde, anioDesde, mesHasta, anioHasta, controlId, introduccion, planta, atencionLinea1, atencionLinea2, atencionLinea3, referencia, firma, datosOpcionales, guardar, filtroFallas, filtroEstados) => {
+console.log("🚀 ~ altaInformeTipoOnline ~ filtroEstados:", filtroEstados)
+console.log("🚀 ~ altaInformeTipoOnline ~ filtroFallas:", filtroFallas)
 
 	const data = new FormData();
 	data.append('a', 'aio');
 	data.append('e', idEmpresa);
-	data.append('sc', secciones);//array de secciones
-	data.append('rt', rutas);//array de rutas
-	if(titulo){
-		data.append('t', titulo);//obligatorio si va a guardar
+	data.append('sc', secciones); //array de secciones
+	data.append('rt', rutas); //array de rutas
+	if (titulo) {
+		data.append('t', titulo); //obligatorio si va a guardar
 	}
-	if(descripcion){
-		data.append('d', descripcion);//opcional
+	if (descripcion) {
+		data.append('d', descripcion); //opcional
 	}
-	data.append('dm', mesDesde);//formato MM
+	data.append('dm', mesDesde); //formato MM
 	data.append('da', anioDesde);
-	data.append('hm', mesHasta);//formato MM
+	data.append('hm', mesHasta); //formato MM
 	data.append('ha', anioHasta);
 	data.append('c', controlId);
 	//data.append('sv', tipoControl);
+
+	if (introduccion) {
+		data.append('i', introduccion); //obligatorio si va a guardar
+	}
+
+	if (planta) {
+		data.append('p', planta); //opcional
+	}
+	if (atencionLinea1) {
+		data.append('at1', atencionLinea1); //opcional
+	}
+	if (atencionLinea2) {
+		data.append('at2', atencionLinea2); //opcional
+	}
+	if (atencionLinea3) {
+		data.append('at3', atencionLinea3); //opcional
+	}
+	if (referencia) {
+		data.append('r', referencia); //opcional
+	}
+	if (firma) {
+		data.append('f', firma); //opcional
+	}
+	if (datosOpcionales) {
+		data.append('o', datosOpcionales); //opcional
+	}
+
+	data.append('ff', JSON.stringify(filtroFallas ?? [])) //opcional
+	data.append('fe',  JSON.stringify(filtroEstados ?? []) ) //opcional
 	
-	if(introduccion){
-		data.append('i', introduccion);//obligatorio si va a guardar
-	}
-	if(planta){
-	data.append('p', planta);//opcional
-	}
-	if(atencionLinea1){
-	data.append('at1', atencionLinea1);//opcional
-	}
-	if(atencionLinea2){
-	data.append('at2', atencionLinea2);//opcional
-	}
-	if(atencionLinea3){
-	data.append('at3', atencionLinea3);//opcional
-	}
-	if(referencia){
-	data.append('r', referencia);//opcional
-	}
-	if(firma){
-	data.append('f', firma);//opcional
-	}
-	if(datosOpcionales){
-	data.append('o', datosOpcionales);//opcional
-	}
-	data.append('s', guardar);//opcional 0/1
-	
+	data.append('s', guardar); //opcional 0/1
+
 	return fetch(BASEURL, {
 		method: 'POST',
 		body: data
@@ -92,50 +101,54 @@ export const altaInformeTipoOnline = (idEmpresa, secciones, rutas, titulo, descr
 };
 
 
-export const updateInformeTipoOnline = (idInforme, idEmpresa, secciones, titulo, descripcion, mesDesde, anioDesde, mesHasta, anioHasta, controlId, introduccion, planta, atencionLinea1, atencionLinea2, atencionLinea3, referencia, firma, datosOpcionales, guardar) => {
+export const updateInformeTipoOnline = (idInforme, idEmpresa, secciones, titulo, descripcion, mesDesde, anioDesde, mesHasta, anioHasta, controlId, introduccion, planta, atencionLinea1, atencionLinea2, atencionLinea3, referencia, firma, datosOpcionales, guardar, filtroFallas, filtroEstados) => {
 
 	const data = new FormData();
 	data.append('a', 'mio');
 	data.append('id', idInforme);
 	data.append('e', idEmpresa);
-	data.append('sc', secciones);//array de secciones
-	if(titulo){
-		data.append('t', titulo);//obligatorio si va a guardar
+	data.append('sc', secciones); //array de secciones
+	if (titulo) {
+		data.append('t', titulo); //obligatorio si va a guardar
 	}
-	if(descripcion){
-		data.append('d', descripcion);//opcional
+	if (descripcion) {
+		data.append('d', descripcion); //opcional
 	}
-	data.append('dm', mesDesde);//formato MM
+	data.append('dm', mesDesde); //formato MM
 	data.append('da', anioDesde);
-	data.append('hm', mesHasta);//formato MM
+	data.append('hm', mesHasta); //formato MM
 	data.append('ha', anioHasta);
 	data.append('c', controlId);
-	if(introduccion){
-		data.append('i', introduccion);//obligatorio si va a guardar
+	if (introduccion) {
+		data.append('i', introduccion); //obligatorio si va a guardar
 	}
-	if(planta){
-	data.append('p', planta);//opcional
+	if (planta) {
+		data.append('p', planta); //opcional
 	}
-	if(atencionLinea1){
-	data.append('at1', atencionLinea1);//opcional
+	if (atencionLinea1) {
+		data.append('at1', atencionLinea1); //opcional
 	}
-	if(atencionLinea2){
-	data.append('at2', atencionLinea2);//opcional
+	if (atencionLinea2) {
+		data.append('at2', atencionLinea2); //opcional
 	}
-	if(atencionLinea3){
-	data.append('at3', atencionLinea3);//opcional
+	if (atencionLinea3) {
+		data.append('at3', atencionLinea3); //opcional
 	}
-	if(referencia){
-	data.append('r', referencia);//opcional
+	if (referencia) {
+		data.append('r', referencia); //opcional
 	}
-	if(firma){
-	data.append('f', firma);//opcional
+	if (firma) {
+		data.append('f', firma); //opcional
 	}
-	if(datosOpcionales){
-	data.append('o', datosOpcionales);//opcional
+	if (datosOpcionales) {
+		data.append('o', datosOpcionales); //opcional
 	}
-	data.append('s', guardar);//opcional 0/1
 	
+	data.append('ff', JSON.stringify(filtroFallas ?? [])) //opcional
+	data.append('fe',  JSON.stringify(filtroEstados ?? []) ) //opcional
+
+	data.append('s', guardar); //opcional 0/1
+
 	return fetch(BASEURL, {
 		method: 'POST',
 		body: data
@@ -145,13 +158,13 @@ export const updateInformeTipoOnline = (idInforme, idEmpresa, secciones, titulo,
 
 export const getResumenDeEstado = (idEmpresa, idInforme) => {
 	const params = {
-		a:'gri',
-        e:idEmpresa,
-        i:idInforme
+		a: 'gri',
+		e: idEmpresa,
+		i: idInforme
 	}
 	let u = new URLSearchParams(params).toString();
-	const url = BASEURL+'?'+u;
-	
+	const url = BASEURL + '?' + u;
+
 	const request = {
 		method: 'GET',
 	};
@@ -162,13 +175,13 @@ export const getResumenDeEstado = (idEmpresa, idInforme) => {
 
 export const getResumenDeAdmin = (idEmpresa, idInforme) => {
 	const params = {
-		a:'grra',
-        e:idEmpresa,
-        i:idInforme
+		a: 'grra',
+		e: idEmpresa,
+		i: idInforme
 	}
 	let u = new URLSearchParams(params).toString();
-	const url = BASEURL+'?'+u;
-	
+	const url = BASEURL + '?' + u;
+
 	const request = {
 		method: 'GET',
 	};
@@ -179,13 +192,13 @@ export const getResumenDeAdmin = (idEmpresa, idInforme) => {
 
 export const getFallas = (idEmpresa, idInforme) => {
 	const params = {
-		a:'gfi',
-        e:idEmpresa,
-        i:idInforme
+		a: 'gfi',
+		e: idEmpresa,
+		i: idInforme
 	}
 	let u = new URLSearchParams(params).toString();
-	const url = BASEURL+'?'+u;
-	
+	const url = BASEURL + '?' + u;
+
 	const request = {
 		method: 'GET',
 	};
@@ -204,13 +217,13 @@ export const borrarInformeOnline = (idInforme) => {
 	}).then(response => response.json());
 }
 
-export const modificacionPublicShare = (idInforme, idEmpresa, ps) =>{
+export const modificacionPublicShare = (idInforme, idEmpresa, ps) => {
 	const data = new FormData();
 	data.append('a', 'mpsi');
 	data.append('id', idInforme);
 	data.append('e', idEmpresa);
 	data.append('ps', ps);
-	
+
 	return fetch(BASEURL, {
 		method: 'POST',
 		body: data
@@ -224,7 +237,7 @@ export const enviarInformePorEmail = (idInforme, idEmpresa, eMails) => {
 	data.append('id', idInforme);
 	data.append('e', idEmpresa);
 	data.append('em', eMails);
-	
+
 	return fetch(BASEURL, {
 		method: 'POST',
 		body: data

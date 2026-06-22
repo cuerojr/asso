@@ -15,6 +15,7 @@ import "react-quill/dist/quill.snow.css";
 import "react-quill/dist/quill.bubble.css";
 
 const GuardarInformeModal = (props) => {
+  
   const [inputs, setInputs] = useState({});
   const [introduccion, setIntroduccion] = useState("");
   const [quillKey, setQuillKey] = useState(0);
@@ -31,6 +32,8 @@ const GuardarInformeModal = (props) => {
       inputs.referencia,
       inputs.firma,
       inputs.opcionales,
+      inputs.filtroFallas,
+      inputs.filtroEstados
     );
   };
 

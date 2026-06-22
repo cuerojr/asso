@@ -14,9 +14,10 @@ import {
   altaInformeTipoOnline,
   updateInformeTipoOnline,
 } from "../../lib/informe-online-api";
+
 import { NotificationManager } from "../../components/common/react-notifications";
 import { agregarCero } from "../../componentes/utils/utils";
-import { mostrarOcultarModalCompartir } from "../../reducers/informes-reducer";
+import { mostrarOcultarModalCompartir, limpiarFiltrosInforme } from "../../reducers/informes-reducer";
 import CompartirModal from "../../componentes/resultados_informes/compartirModal";
 
 import { connect } from "react-redux";
@@ -33,7 +34,8 @@ const InformGenerado = (props) => {
   const [mostrarResultado, setMostrarResultado] = useState(true);
   const [resultadoConsulta, setResultadoConsulta] = useState(null);
   const [mantenerDatos, setMantenerDatos] = useState({});
-  const [resultadoConsultaEdicion, setResultadoConsultaEdicion] = useState(null);
+  const [resultadoConsultaEdicion, setResultadoConsultaEdicion] =
+    useState(null);
   const [titulo, setTitulo] = useState("");
   const [hps, setHps] = useState(null);
   const [introduccion, setIntroduccion] = useState("");
@@ -47,7 +49,7 @@ const InformGenerado = (props) => {
     desdeAnio,
     hastaMes,
     hastaAnio,
-    tipoTesteoSeleccionado
+    tipoTesteoSeleccionado,
   ) => {
     setMantenerDatos({
       idEmpresa,
@@ -94,6 +96,8 @@ const InformGenerado = (props) => {
     let hastaAnio;
     let tipoTesteoSeleccionado;
 
+    const { filtrosInforme } = props
+
     if (!mantenerDatos.idEmpresa) {
       idEmp = resultadoConsultaEdicion.idEmpresa;
       resultadoConsultaEdicion.detalle_secciones.forEach((s) => {
@@ -105,7 +109,7 @@ const InformGenerado = (props) => {
       hastaMes = resultadoConsultaEdicion.hasta.split("-")[0];
       hastaAnio = resultadoConsultaEdicion.hasta.split("-")[1];
       tipoTesteoSeleccionado = document.querySelector(
-        "select[name='tipoTesteos']"
+        "select[name='tipoTesteos']",
       ).value;
     } else {
       idEmp = mantenerDatos.idEmpresa;
@@ -136,13 +140,15 @@ const InformGenerado = (props) => {
       null,
       null,
       null,
-      1
+      1,      
+      filtrosInforme.selectedFallas.map(falla => falla.value),
+      filtrosInforme.selectedEstados.map(estado => estado.value),
     ).then((res) => {
       if (res.stat === 1) {
         NotificationManager.success(
           "El informe ha sido actualizado correctamente",
           "Informe guardado",
-          3000
+          3000,
         );
         navigate(`/app/clientes/editar-cliente/${idEmp}/informes`);
         document.body.classList.remove("pb-0");
@@ -233,7 +239,11 @@ const InformGenerado = (props) => {
                 <Button color="primary" onClick={terminarEdicion}>
                   CANCELAR
                 </Button>
-                <Button color="success" className="ml-2" onClick={finalmenteGuarda}>
+                <Button
+                  color="success"
+                  className="ml-2"
+                  onClick={finalmenteGuarda}
+                >
                   GUARDAR <FontAwesomeIcon icon={faFloppyDisk} />
                 </Button>
               </Col>
@@ -274,8 +284,9 @@ const InformGenerado = (props) => {
 
 const mapStateToProps = (state) => ({
   modalCompartirInforme: state.informesReducer.modalCompartirInforme,
+  filtrosInforme: state.informesReducer.filtrosInforme,
 });
 
-export default connect(mapStateToProps, { mostrarOcultarModalCompartir })(
-  InformGenerado
+export default connect(mapStateToProps, { mostrarOcultarModalCompartir, limpiarFiltrosInforme })(
+  InformGenerado,
 );

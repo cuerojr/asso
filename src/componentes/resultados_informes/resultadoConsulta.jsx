@@ -68,6 +68,9 @@ const ResultadoConsulta = (props) => {
   const [resumenTab, setResumenTab] = useState(null);
   const [administracionTab, setAdministracionTab] = useState(null);
 
+  const [filtroFallasIniciales, setFiltroFallasIniciales] = useState([]);
+  const [filtroEstadosIniciales, setFiltroEstadosIniciales] = useState([]);
+
   //const datosUser = JSON.parse(window.localStorage.getItem('cliente'));
   const idEmpresa = props.idEmpresa;
 
@@ -105,6 +108,13 @@ const ResultadoConsulta = (props) => {
     setResultadoConsultaEdicion(res);
     if (res.hps) {
       props.setHps(res.hps);
+    }
+
+    if (res.filtro_fallas?.length) {
+      setFiltroFallasIniciales(res.filtro_fallas.map((f) => f.id_falla));
+    }
+    if (res.filtro_estados?.length) {
+      setFiltroEstadosIniciales(res.filtro_estados.map((e) => e.id_estado));
     }
   };
 
@@ -180,7 +190,6 @@ const ResultadoConsulta = (props) => {
       ...(fallasRes ? { fallasRes } : {}),
     };
 
-   
     // Dentro de handleDownload, antes del download():
     const logoBase64 = await imageUrlToBase64("/assets/images/logo.png");
 
@@ -354,7 +363,13 @@ const ResultadoConsulta = (props) => {
           </TabPane>
 
           <TabPane tabId="informe">
-            <InformeResultado detalleInforme={detalleInforme} />
+            <InformeResultado
+              detalleInforme={detalleInforme}
+              idEmpresa={idEmpresa}
+              idInforme={props.idInforme}
+              filtroFallasIniciales={filtroFallasIniciales}
+              filtroEstadosIniciales={filtroEstadosIniciales}
+            />
           </TabPane>
 
           <TabPane tabId="fallas">

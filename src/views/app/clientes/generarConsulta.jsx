@@ -1,13 +1,15 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState } from "react";
 import { Row, Col } from "reactstrap";
-import ResultadoConsulta from '../../../componentes/resultados_informes/resultadoConsulta';
-import { altaInformeTipoOnline } from '../../../lib/informe-online-api';
+import ResultadoConsulta from "../../../componentes/resultados_informes/resultadoConsulta";
+import { altaInformeTipoOnline } from "../../../lib/informe-online-api";
 import { NotificationManager } from "../../../components/common/react-notifications";
-import GuardarInformeModal from '../../../componentes/resultados_informes/guardarInformeModal';
-import EdicionGenerarConsulta from '../../../componentes/resultados_informes/edicionGenerarConsulta';
+import GuardarInformeModal from "../../../componentes/resultados_informes/guardarInformeModal";
+import EdicionGenerarConsulta from "../../../componentes/resultados_informes/edicionGenerarConsulta";
 import { agregarCero } from "../../../componentes/utils/utils";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
+
+import { limpiarFiltrosInforme } from "../../../reducers/informes-reducer";
 
 const GenerarConsulta = (props) => {
   const [mostrarResultado, setMostrarResultado] = useState(false);
@@ -27,7 +29,7 @@ const GenerarConsulta = (props) => {
     desdeAnio,
     hastaMes,
     hastaAnio,
-    tipoTesteoSeleccionado
+    tipoTesteoSeleccionado,
   ) => {
     setLoadingSpinner(true);
     setMantenerDatos({
@@ -61,7 +63,7 @@ const GenerarConsulta = (props) => {
       null,
       null,
       null,
-      0
+      0,
     ).then((res) => {
       if (res.stat === 0) {
         NotificationManager.error(res.err, "Hubo un error", 3000);
@@ -83,8 +85,12 @@ const GenerarConsulta = (props) => {
     atencionLinea3,
     referencia,
     firma,
-    opcionales
+    opcionales,
+    filtroFallas,
+    filtroEstados,
   ) => {
+    const { filtrosInforme } = props
+
     altaInformeTipoOnline(
       mantenerDatos.idEmpresa,
       JSON.stringify(mantenerDatos.seccionesIds),
@@ -104,14 +110,21 @@ const GenerarConsulta = (props) => {
       referencia,
       firma,
       opcionales,
-      1
+      1,
+      filtrosInforme.selectedFallas.map(falla => falla.value),
+      filtrosInforme.selectedEstados.map(estado => estado.value),
+      
     ).then((res) => {
+      console.log("🚀 ~ finalmenteGuarda ~ res:", res)
+      
       if (res.stat === 1) {
+      props.limpiarFiltrosInforme();
         NotificationManager.success(
           "El informe ha sido guardado correctamente",
           "Informe guardado",
           3000
         );
+
         navigate(`/app/clientes/editar-cliente/${mantenerDatos.idEmpresa}/informes`);
       } else {
         NotificationManager.error(res.err, "Hubo un error", 3000);
@@ -125,13 +138,17 @@ const GenerarConsulta = (props) => {
         <Col xs="12">
           <h1 className="titulo-ruta">
             {props.detalleCliente && (
-              <Link to={`/app/clientes/editar-cliente/${props.detalleCliente.id}/equipos`}>
+              <Link
+                to={`/app/clientes/editar-cliente/${props.detalleCliente.id}/equipos`}
+              >
                 {props.detalleCliente.empresa}
               </Link>
             )}
             &gt;
             {props.detalleCliente && (
-              <Link to={`/app/clientes/editar-cliente/${props.detalleCliente.id}/informes`}>
+              <Link
+                to={`/app/clientes/editar-cliente/${props.detalleCliente.id}/informes`}
+              >
                 INFORMES
               </Link>
             )}
@@ -151,7 +168,10 @@ const GenerarConsulta = (props) => {
       <Row>
         <Col className="mt-4 resultados-al-vuelo position-relative">
           {loadingSpinner && (
-            <div className="loading position-absolute" style={{ top: "100px" }} />
+            <div
+              className="loading position-absolute"
+              style={{ top: "100px" }}
+            />
           )}
           {mostrarResultado && (
             <ResultadoConsulta
@@ -174,6 +194,10 @@ const GenerarConsulta = (props) => {
   );
 };
 
-export default connect((state) => ({
-  detalleCliente: state.clientesReducer.detalleClienteState,
-}))(GenerarConsulta);
+export default connect(
+  (state) => ({
+    detalleCliente: state.clientesReducer.detalleClienteState,
+    filtrosInforme: state.informesReducer.filtrosInforme,
+  }),
+  { limpiarFiltrosInforme },
+)(GenerarConsulta);
