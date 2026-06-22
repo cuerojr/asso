@@ -97,7 +97,6 @@ const DetalleInforme = ({
   const seleccionSeccion = (e) => {
     setSeccion(e.target.value);
     fetchListarServiciosPorSeccion(e.target.value);
-    setServicio(null);
   };
 
   useEffect(() => {

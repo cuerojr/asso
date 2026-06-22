@@ -25,7 +25,7 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import "./style.scss";
 
-const InformGenerado = (props) => {
+const InformeGenerado = (props) => {
   const { idEmpresa, idInforme } = useParams();
   const navigate = useNavigate();
 
@@ -288,5 +288,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, { mostrarOcultarModalCompartir, limpiarFiltrosInforme })(
-  InformGenerado,
+  InformeGenerado,
 );
