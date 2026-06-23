@@ -42,7 +42,7 @@ const InformeResultado = ({
   idInforme,
   fetchlistarEstados,
   fetchlistarFallas,
-  filtroFallasIniciales,  
+  filtroFallasIniciales,
   filtroEstadosIniciales,
 }) => {
   const {
@@ -118,9 +118,8 @@ const InformeResultado = ({
           )}
         </Col>
       </Row>
-
       <Row>
-        <Col xs="12" className="text-center">
+        <Col xs="12" lg="6" className="text-center mx-auto">
           <h4 className="font-weight-bold">Fallas por sección y equipo</h4>
           <p>
             Filtros multi select para falla y estado, con un botón para limpiar
@@ -129,6 +128,8 @@ const InformeResultado = ({
             resultados según los criterios seleccionados.
           </p>
         </Col>
+      </Row>
+      <Row>
         <Col xs="12" md="6">
           <InputGroup className="mb-3">
             <InputGroupText className="w-20" addonType="prepend">
