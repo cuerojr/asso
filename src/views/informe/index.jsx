@@ -254,6 +254,7 @@ const InformeGenerado = (props) => {
                   aplicarConsulta={aplicarConsulta}
                   idEmpresa={idEmpresa}
                   resultadoConsulta={resultadoConsultaEdicion}
+                  theme="light"
                 />
               </Col>
             </Row>
@@ -273,6 +274,7 @@ const InformeGenerado = (props) => {
                 setIntroduccion={setIntroduccion}
                 informeYaGeneradoYModificado={informeYaGeneradoYModificado}
                 idEmpresa={idEmpresa}
+                theme="light"
               />
             )}
           </Col>

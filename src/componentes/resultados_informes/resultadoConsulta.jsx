@@ -371,6 +371,7 @@ const ResultadoConsulta = (props) => {
               idInforme={props.idInforme}
               filtroFallasIniciales={filtroFallasIniciales}
               filtroEstadosIniciales={filtroEstadosIniciales}
+              theme={props.theme}
             />
           </TabPane>
 

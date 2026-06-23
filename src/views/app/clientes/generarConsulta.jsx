@@ -163,6 +163,7 @@ const GenerarConsulta = (props) => {
       <EdicionGenerarConsulta
         aplicarConsulta={aplicarConsulta}
         idEmpresa={cliente} // 👈 ahora pasamos desde useParams
+        
       />
 
       <Row>

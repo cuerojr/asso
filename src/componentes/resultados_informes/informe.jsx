@@ -44,6 +44,7 @@ const InformeResultado = ({
   fetchlistarFallas,
   filtroFallasIniciales,
   filtroEstadosIniciales,
+  theme = "dark",
 }) => {
   const {
     mesesActivosState,
@@ -80,7 +81,53 @@ const InformeResultado = ({
   });
 
   return (
-    <Fragment>
+    <div className={theme === "light" ? "informe-resultado--light" : ""}>
+      <Row>
+        <Col xs="12" md="4" className="mx-auto">
+          <h4 className="font-weight-bold">Fallas por sección y equipo</h4>
+          <p>
+            Filtrar resultados por Estado / fallas: Elige mostrar el resultado
+            de la tabla con equipos que tengan determinados estados y/o tipos de
+            fallas.
+          </p>
+        </Col>
+        <Col xs="12" md="4">
+          <InputGroup className="mb-3">
+            <InputGroupText className="w-20" addonType="prepend">
+              ESTADOS
+            </InputGroupText>
+            <Select
+              components={{ Input: CustomSelectInput }}
+              className="react-select-fallas informe-multi-select w-80"
+              classNamePrefix="react-select"
+              isMulti
+              placeholder="Seleccione uno o varios estados"
+              name="form-field-name"
+              value={selectedEstados}
+              onChange={(el) => seleccionarEstado(el)}
+              options={opcionesEstados}
+            />
+          </InputGroup>
+        </Col>
+        <Col xs="12" md="4">
+          <InputGroup className="mb-3">
+            <InputGroupText className="w-15" addonType="prepend">
+              FALLAS
+            </InputGroupText>
+            <Select
+              components={{ Input: CustomSelectInput }}
+              className="react-select-fallas informe-multi-select w-85"
+              classNamePrefix="react-select"
+              isMulti
+              placeholder="Seleccione una o varias fallas"
+              name="form-field-name"
+              value={selectedFallas}
+              onChange={(el) => handleChangeMulti(el)}
+              options={opcionesFallas}
+            />
+          </InputGroup>
+        </Col>
+      </Row>
       <Row className="month-navigator overflow-hidden px-0 py-4 ">
         <Col xs="4" sm="4" className="text-left">
           {mesSeleccionado < mesesActivosState.length - 1 && (
@@ -116,55 +163,6 @@ const InformeResultado = ({
               </Fragment>
             </Button>
           )}
-        </Col>
-      </Row>
-      <Row>
-        <Col xs="12" lg="6" className="text-center mx-auto">
-          <h4 className="font-weight-bold">Fallas por sección y equipo</h4>
-          <p>
-            Filtros multi select para falla y estado, con un botón para limpiar
-            cada filtro y otro para limpiar ambos filtros. Estos filtros deben
-            afectar la información mostrada en la tabla, filtrando los
-            resultados según los criterios seleccionados.
-          </p>
-        </Col>
-      </Row>
-      <Row>
-        <Col xs="12" md="6">
-          <InputGroup className="mb-3">
-            <InputGroupText className="w-20" addonType="prepend">
-              ESTADOS
-            </InputGroupText>
-            <Select
-              components={{ Input: CustomSelectInput }}
-              className="react-select-fallas informe-multi-select w-80"
-              classNamePrefix="react-select"
-              isMulti
-              placeholder="Seleccione uno o varios estados"
-              name="form-field-name"
-              value={selectedEstados}
-              onChange={(el) => seleccionarEstado(el)}
-              options={opcionesEstados}
-            />
-          </InputGroup>
-        </Col>
-        <Col xs="12" md="6">
-          <InputGroup className="mb-3">
-            <InputGroupText className="w-15" addonType="prepend">
-              FALLAS
-            </InputGroupText>
-            <Select
-              components={{ Input: CustomSelectInput }}
-              className="react-select-fallas informe-multi-select w-85"
-              classNamePrefix="react-select"
-              isMulti
-              placeholder="Seleccione una o varias fallas"
-              name="form-field-name"
-              value={selectedFallas}
-              onChange={(el) => handleChangeMulti(el)}
-              options={opcionesFallas}
-            />
-          </InputGroup>
         </Col>
       </Row>
 
@@ -365,7 +363,7 @@ const InformeResultado = ({
         setMostarImagen={setMostrarImagen}
         imagen={imagen}
       />
-    </Fragment>
+    </div>
   );
 };
 
