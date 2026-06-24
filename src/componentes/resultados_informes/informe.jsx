@@ -84,9 +84,9 @@ const InformeResultado = ({
     <div className={theme === "light" ? "informe-resultado--light" : ""}>
       <Row>
         <Col xs="12" md="4" className="mx-auto">
-          <h4 className="font-weight-bold">Fallas por sección y equipo</h4>
+          <h4 className="font-weight-bold">Filtrar resultados por estado/fallas.</h4>
           <p>
-            Filtrar resultados por Estado / fallas: Elige mostrar el resultado
+            Elige mostrar el resultado
             de la tabla con equipos que tengan determinados estados y/o tipos de
             fallas.
           </p>

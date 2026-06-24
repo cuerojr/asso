@@ -173,7 +173,7 @@ export default function useInformeResultado({
           }) ?? [];
 
         if (componentesFiltrados.length > 0) {
-          acc.push({ ...equipo, componentes: componentesFiltrados });
+          acc.push({ ...equipo });
         }
         return acc;
       }, []);
