@@ -15,13 +15,14 @@ import "react-quill/dist/quill.snow.css";
 import "react-quill/dist/quill.bubble.css";
 
 const GuardarInformeModal = (props) => {
-  
   const [inputs, setInputs] = useState({});
   const [introduccion, setIntroduccion] = useState("");
   const [quillKey, setQuillKey] = useState(0);
+  const [loading, setLoading] = useState(false);
 
-  const finalmenteGuardar = () => {
-    props.finalmenteGuarda(
+  const finalmenteGuardar = async () => {
+    setLoading(true);
+    await props.finalmenteGuarda(
       inputs.titulo,
       null,
       introduccion,
@@ -33,8 +34,9 @@ const GuardarInformeModal = (props) => {
       inputs.firma,
       inputs.opcionales,
       inputs.filtroFallas,
-      inputs.filtroEstados
+      inputs.filtroEstados,
     );
+    setLoading(false);
   };
 
   return (
@@ -51,7 +53,6 @@ const GuardarInformeModal = (props) => {
             props.setMostrarModalGuarda(false);
           }}
         >
-          
           <h2>GUARDAR INFORME</h2>
         </ModalHeader>
         <ModalBody>
@@ -181,8 +182,12 @@ const GuardarInformeModal = (props) => {
           >
             No, cancelar
           </Button>
-          <Button color="success" onClick={finalmenteGuardar}>
-            Guardar
+          <Button
+            color="success"
+            onClick={finalmenteGuardar}
+            disabled={loading}
+          >
+            {loading ? "Guardando..." : "Guardar"}
           </Button>
         </ModalFooter>
       </Modal>

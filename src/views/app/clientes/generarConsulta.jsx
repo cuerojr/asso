@@ -91,7 +91,7 @@ const GenerarConsulta = (props) => {
   ) => {
     const { filtrosInforme } = props
 
-    altaInformeTipoOnline(
+    return altaInformeTipoOnline(
       mantenerDatos.idEmpresa,
       JSON.stringify(mantenerDatos.seccionesIds),
       JSON.stringify(mantenerDatos.rutasIds),
