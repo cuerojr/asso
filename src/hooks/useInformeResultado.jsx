@@ -139,6 +139,7 @@ export default function useInformeResultado({
     aplicarFiltros(selectedFallas, el); // 👈 idem
   };
 
+  //filtramos equipos completos por estado pero tb por falla de componente 
   const aplicarFiltros = (
     fallasSel = selectedFallas,
     estadosSel = selectedEstados,
