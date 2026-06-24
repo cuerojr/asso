@@ -139,7 +139,6 @@ export default function useInformeResultado({
     aplicarFiltros(selectedFallas, el); // 👈 idem
   };
 
-  // Eliminá el useEffect que llama aplicarFiltros y cambiá la función así:
   const aplicarFiltros = (
     fallasSel = selectedFallas,
     estadosSel = selectedEstados,
@@ -153,30 +152,22 @@ export default function useInformeResultado({
     }
 
     const fallaIds = fallasSel.map((f) => f.value);
-    const estadoIds = estadosSel.map((e) => e.name);
+    const estadoNames = estadosSel.map((e) => e.name);
 
     const equiposFiltrados = equiposActivosState.map((equiposMes) => {
-      return equiposMes.reduce((acc, equipo) => {
-        const componentesFiltrados =
-          equipo.componentes?.filter((componente) => {
-            const pasaEstado = hayEstadosFiltrados
-              ? estadoIds.includes(componente.estado)
-              : true;
+      // 1. Filtrar equipos por estado
+      const equiposPorEstado = hayEstadosFiltrados
+        ? equiposMes.filter((equipo) => estadoNames.includes(equipo.eq_estado))
+        : equiposMes;
 
-            const pasaFalla = hayFallasFiltradas
-              ? componente.fallas?.some((falla) =>
-                  fallaIds.includes(falla.id_falla),
-                )
-              : true;
+      // 2. Filtrar equipos que tengan al menos 1 componente con la falla (equipo completo)
+      if (!hayFallasFiltradas) return equiposPorEstado;
 
-            return pasaEstado && pasaFalla;
-          }) ?? [];
-
-        if (componentesFiltrados.length > 0) {
-          acc.push({ ...equipo });
-        }
-        return acc;
-      }, []);
+      return equiposPorEstado.filter((equipo) =>
+        equipo.componentes?.some((componente) =>
+          componente.fallas?.some((falla) => fallaIds.includes(falla.id_falla)),
+        ),
+      );
     });
 
     setEquiposFiltradosState(equiposFiltrados);
