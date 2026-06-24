@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect } from "react";
 import "../../assets/css/informeResultado.css";
 
-import useInformeResultado from "../../hooks/useInformeResultado";
 import {
   Row,
   Col,
@@ -15,7 +14,6 @@ import {
 import Select from "react-select";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { connect } from "react-redux";
 import CustomSelectInput from "../../components/common/CustomSelectInput";
 
 import SelectMultiple from "../selectMultiple";
@@ -35,6 +33,7 @@ import { fetchlistarEstados } from "../../reducers/estados-reducer";
 import { fetchlistarFallas } from "../../reducers/fallas-reducer";
 
 const InformeResultado = ({
+  informeHook, 
   detalleInforme,
   fallas,
   estados,
@@ -51,34 +50,17 @@ const InformeResultado = ({
     equiposActivosState,
     mesSeleccionado,
     setMesSeleccionado,
-
     mostrarImagenModal,
     setMostrarImagen,
     mostrarImagen,
     imagen,
-
     opcionesFallas,
     opcionesEstados,
-
     handleChangeMulti,
     seleccionarEstado,
-
     selectedFallas,
     selectedEstados,
-
-    selectedFallasIds,
-
-    guardarInformeFiltrado,
-  } = useInformeResultado({
-    idEmpresa,
-    detalleInforme,
-    fallas,
-    estados,
-    fetchlistarFallas,
-    fetchlistarEstados,
-    filtroFallasIniciales: filtroFallasIniciales,
-    filtroEstadosIniciales: filtroEstadosIniciales,
-  });
+  } = informeHook;
 
   return (
     <div className={theme === "light" ? "informe-resultado--light" : ""}>
@@ -86,9 +68,7 @@ const InformeResultado = ({
         <Col xs="12" md="4" className="mx-auto">
           <h4 className="font-weight-bold">Filtrar resultados por estado/fallas.</h4>
           <p>
-            Elige mostrar el resultado
-            de la tabla con equipos que tengan determinados estados y/o tipos de
-            fallas.
+            Elige mostrar el resultado de la tabla con equipos que tengan determinados estados y/o tipos de fallas.
           </p>
         </Col>
         <Col xs="12" md="4">
@@ -367,18 +347,4 @@ const InformeResultado = ({
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    estados: state.estadosReducer.estados,
-    fallas: state.fallasReducer.fallas,
-  };
-};
-export default connect(
-  //función que mapea propiedades del state con propiedades del componente
-  mapStateToProps,
-  //mapeo de funciones
-  {
-    fetchlistarEstados,
-    fetchlistarFallas,
-  },
-)(InformeResultado);
+export default InformeResultado;

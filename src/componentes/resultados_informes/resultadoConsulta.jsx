@@ -26,6 +26,12 @@ import {
 
 import { usePdfDownload, imageUrlToBase64 } from "../../hooks/usePdfDownload";
 
+// Importás el hook y los reducers
+import useInformeResultado from "../../hooks/useInformeResultado";
+import { fetchlistarEstados } from "../../reducers/estados-reducer";
+import { fetchlistarFallas } from "../../reducers/fallas-reducer";
+import { connect } from "react-redux";
+
 import classnames from "classnames";
 import {
   introduccionInformeOnline,
@@ -41,8 +47,6 @@ moment.locale("es");
 window.moment = moment;
 
 const ResultadoConsulta = (props) => {
-  console.log("🚀 ~ ResultadoConsulta ~ props:", props)
-  
   const { download, isGenerating, error } = usePdfDownload();
 
   const [currentTab, setCurrentTab] = useState(null);
@@ -72,9 +76,21 @@ const ResultadoConsulta = (props) => {
 
   const [filtroFallasIniciales, setFiltroFallasIniciales] = useState([]);
   const [filtroEstadosIniciales, setFiltroEstadosIniciales] = useState([]);
-
   //const datosUser = JSON.parse(window.localStorage.getItem('cliente'));
-  const idEmpresa = props.idEmpresa;
+  const { idEmpresa, fallas, estados, fetchlistarFallas, fetchlistarEstados } =
+    props;
+
+  const informeHook = useInformeResultado({
+    idEmpresa,
+    detalleInforme,
+    fallas,
+    estados,
+    fetchlistarFallas,
+    fetchlistarEstados,
+    filtroFallasIniciales,
+    filtroEstadosIniciales,
+  });
+  console.log("🚀 ~ ResultadoConsulta ~ informeHook:", informeHook);
 
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -176,26 +192,31 @@ const ResultadoConsulta = (props) => {
   }, []);
 
   const handleDownload = async () => {
-    const [introduccionRes, informeRes, resumenRes, fallasRes] =
-      await Promise.all([
-        introduccionInformeOnline(idEmpresa, props.idInforme),
-        informeInformeOnline(idEmpresa, props.idInforme),
-        getResumenDeEstado(idEmpresa, props.idInforme),
-        getFallas(idEmpresa, props.idInforme),
-      ]);
+    const [introduccionRes, resumenRes, fallasRes] = await Promise.all([
+      introduccionInformeOnline(idEmpresa, props.idInforme),
+      getResumenDeEstado(idEmpresa, props.idInforme),
+      getFallas(idEmpresa, props.idInforme),
+    ]);
 
-    // Construí el objeto localmente, no dependas del estado
+    // Reconstruir detalle_informe con el formato que espera buildInforme
+    // pero reemplazando equipos con los filtrados del hook
+    const detalleInformeFiltrado = datosPdf?.detalle_informe?.map(
+      (mesData, idx) => ({
+        ...mesData,
+        equipos: informeHook.equiposActivosState[idx] ?? [],
+      }),
+    );
+
     const datosPdfCompletos = {
       ...(introduccionRes?.html ? { intro: introduccionRes.html } : {}),
-      ...(informeRes ?? {}),
+      ...datosPdf,
+      detalle_informe: detalleInformeFiltrado,
       ...(resumenRes ? { resumenRes } : {}),
       ...(fallasRes ? { fallasRes } : {}),
     };
 
-    // Dentro de handleDownload, antes del download():
     const logoBase64 = await imageUrlToBase64("/assets/images/logo.png");
 
-    // Ahora sí tenés todo junto para pasarlo al hook
     download({
       filename: `Informe Online - ${datosPdfCompletos.titulo}`,
       title: `Informe Online - ${datosPdfCompletos.titulo}`,
@@ -368,6 +389,7 @@ const ResultadoConsulta = (props) => {
             <InformeResultado
               detalleInforme={detalleInforme}
               idEmpresa={idEmpresa}
+              informeHook={informeHook}
               idInforme={props.idInforme}
               filtroFallasIniciales={filtroFallasIniciales}
               filtroEstadosIniciales={filtroEstadosIniciales}
@@ -398,4 +420,13 @@ const ResultadoConsulta = (props) => {
   );
 };
 
-export default ResultadoConsulta;
+// Agregás el connect acá también
+const mapStateToProps = (state) => ({
+  estados: state.estadosReducer.estados,
+  fallas: state.fallasReducer.fallas,
+});
+
+export default connect(mapStateToProps, {
+  fetchlistarEstados,
+  fetchlistarFallas,
+})(ResultadoConsulta);
