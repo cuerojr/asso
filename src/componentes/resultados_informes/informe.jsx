@@ -218,7 +218,7 @@ const InformeResultado = ({
                         </>
                       )}
                     </td>
-                    <td className="grayback position-relative">
+                    <td className="grayback position-relative" colSpan={5}>
                       {equipo.noControlado === 1 && (
                         <>
                           <p className="m-0">
@@ -249,10 +249,10 @@ const InformeResultado = ({
                           )}
                         </>
                       )}
-                    </td>
-                    <td className="grayback" colSpan={4}>
+                    </td>{/*
+                    <td className=""  colSpan={4}>
                       &nbsp;
-                    </td>
+                    </td>*/}
                   </tr>
                   {equipo.componentes &&
                     equipo.componentes.map((componente, vect) => {
