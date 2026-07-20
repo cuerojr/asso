@@ -241,6 +241,7 @@ const InformeResultado = ({
                                   "#FFFFFF",
                                   "#000000",
                                 ),
+                                fontWeight: "bold",
                               }}
                               className="estado-td-coloreado"
                             >
@@ -303,7 +304,7 @@ const InformeResultado = ({
                                 )}
                               </ReactTooltip>
                               <div
-                                className="p-2 pl-3"
+                                className="p-2 pt-1 pb-1 text-center"
                                 style={{
                                   backgroundColor: componente.color,
                                   color: pickTextColorBasedOnBgColorSimple(
@@ -312,6 +313,9 @@ const InformeResultado = ({
                                     "#000000",
                                   ),
                                   borderRadius: 20,
+                                  fontSize: "11px",
+                                  fontWeight: "bold",
+                                  width: "minmax(100px, 50%)",
                                 }}
                               >
                                 {componente.estado}
