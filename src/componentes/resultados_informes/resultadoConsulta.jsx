@@ -30,6 +30,7 @@ import { usePdfDownload, imageUrlToBase64 } from "../../hooks/usePdfDownload";
 import useInformeResultado from "../../hooks/useInformeResultado";
 import { fetchlistarEstados } from "../../reducers/estados-reducer";
 import { fetchlistarFallas } from "../../reducers/fallas-reducer";
+import { fetchlistarcomponentesPorEmpresa } from "../../reducers/componentes-reducer";
 import { connect } from "react-redux";
 
 import classnames from "classnames";
@@ -76,8 +77,9 @@ const ResultadoConsulta = (props) => {
 
   const [filtroFallasIniciales, setFiltroFallasIniciales] = useState([]);
   const [filtroEstadosIniciales, setFiltroEstadosIniciales] = useState([]);
+  const [filtroComponentesIniciales, setFiltroComponentesIniciales] = useState([]);
   //const datosUser = JSON.parse(window.localStorage.getItem('cliente'));
-  const { idEmpresa, fallas, estados, fetchlistarFallas, fetchlistarEstados } =
+  const { idEmpresa, fallas, estados, fetchlistarFallas, fetchlistarEstados, fetchlistarcomponentesPorEmpresa } =
     props;
 
   const informeHook = useInformeResultado({
@@ -85,10 +87,13 @@ const ResultadoConsulta = (props) => {
     detalleInforme,
     fallas,
     estados,
+    componentes: props.componentesPorEmpresa, // ✅
     fetchlistarFallas,
     fetchlistarEstados,
+    fetchlistarcomponentesPorEmpresa,
     filtroFallasIniciales,
     filtroEstadosIniciales,
+    filtroComponentesIniciales
   });
   console.log("🚀 ~ ResultadoConsulta ~ informeHook:", informeHook);
 
@@ -133,6 +138,9 @@ const ResultadoConsulta = (props) => {
     }
     if (res.filtro_estados?.length) {
       setFiltroEstadosIniciales(res.filtro_estados.map((e) => e.id_estado));
+    }
+    if (res.filtro_componentes?.length) {
+      setFiltroComponentesIniciales(res.filtro_componentes.map((c) => c.componente));
     }
   };
 
@@ -424,9 +432,11 @@ const ResultadoConsulta = (props) => {
 const mapStateToProps = (state) => ({
   estados: state.estadosReducer.estados,
   fallas: state.fallasReducer.fallas,
+  componentesPorEmpresa: state.componentesReducer.componentesPorEmpresa, // ✅
 });
 
 export default connect(mapStateToProps, {
   fetchlistarEstados,
   fetchlistarFallas,
+  fetchlistarcomponentesPorEmpresa,
 })(ResultadoConsulta);

@@ -17,6 +17,7 @@ const initialState = {
     filtrosInforme: {
         selectedFallas: [],
         selectedEstados: [],
+        selectedComponentes: [],
     },
 };
 
@@ -212,10 +213,11 @@ export const mostrarOcultarModalCompartir = (valor) => {
     }
 }
 
-export const setFiltrosInforme = (selectedFallas, selectedEstados) => (dispatch) => {
+export const setFiltrosInforme = (selectedFallas, selectedEstados, selectedComponentes) => (dispatch) => {
     dispatch(setFiltrosInformeAction({
         selectedFallas,
-        selectedEstados
+        selectedEstados,
+        selectedComponentes
     }));
 };
 
@@ -276,6 +278,7 @@ export default (state = initialState, action) => {
                 filtrosInforme: {
                     selectedFallas: [],
                     selectedEstados: [],
+                    selectedComponentes: [],
                 },
             };
 

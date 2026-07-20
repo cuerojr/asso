@@ -88,6 +88,7 @@ const GenerarConsulta = (props) => {
     opcionales,
     filtroFallas,
     filtroEstados,
+    filtroComponentes
   ) => {
     const { filtrosInforme } = props
 
@@ -113,7 +114,7 @@ const GenerarConsulta = (props) => {
       1,
       filtrosInforme.selectedFallas.map(falla => falla.value),
       filtrosInforme.selectedEstados.map(estado => estado.value),
-      
+      filtrosInforme.selectedComponentes.map(componente => componente.value)
     ).then((res) => {
       console.log("🚀 ~ finalmenteGuarda ~ res:", res)
       

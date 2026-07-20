@@ -97,6 +97,7 @@ const InformeGenerado = (props) => {
     let tipoTesteoSeleccionado;
 
     const { filtrosInforme } = props
+    console.log("🚀 ~ finalmenteGuarda ~ filtrosInforme:", filtrosInforme)
 
     if (!mantenerDatos.idEmpresa) {
       idEmp = resultadoConsultaEdicion.idEmpresa;
@@ -143,6 +144,7 @@ const InformeGenerado = (props) => {
       1,      
       filtrosInforme.selectedFallas.map(falla => falla.value),
       filtrosInforme.selectedEstados.map(estado => estado.value),
+      filtrosInforme.selectedComponentes.map(componente => componente.value)
     ).then((res) => {
       if (res.stat === 1) {
         NotificationManager.success(

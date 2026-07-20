@@ -35,6 +35,7 @@ const GuardarInformeModal = (props) => {
       inputs.opcionales,
       inputs.filtroFallas,
       inputs.filtroEstados,
+      inputs.filtroComponentes
     );
     setLoading(false);
   };

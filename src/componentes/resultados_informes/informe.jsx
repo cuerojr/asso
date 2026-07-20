@@ -31,6 +31,7 @@ import moment from "moment";
 
 import { fetchlistarEstados } from "../../reducers/estados-reducer";
 import { fetchlistarFallas } from "../../reducers/fallas-reducer";
+import { fetchlistarcomponentesPorEmpresa } from "../../reducers/componentes-reducer";
 
 const InformeResultado = ({
   informeHook, 
@@ -41,6 +42,7 @@ const InformeResultado = ({
   idInforme,
   fetchlistarEstados,
   fetchlistarFallas,
+  fetchlistarcomponentesPorEmpresa,
   filtroFallasIniciales,
   filtroEstadosIniciales,
   theme = "dark",
@@ -56,16 +58,19 @@ const InformeResultado = ({
     imagen,
     opcionesFallas,
     opcionesEstados,
+    opcionesComponentes,
     handleChangeMulti,
     seleccionarEstado,
+    seleccionarComponente,
     selectedFallas,
     selectedEstados,
+    selectedComponentes,
   } = informeHook;
 
   return (
     <div className={theme === "light" ? "informe-resultado--light" : ""}>
       <Row>
-        <Col xs="12" md="4" className="mx-auto">
+        <Col xs="12" md="12" className="mx-auto">
           <h4 className="font-weight-bold">Filtrar resultados por estado/fallas.</h4>
           <p>
             Elige mostrar el resultado de la tabla con equipos que tengan determinados estados y/o tipos de fallas.
@@ -104,6 +109,24 @@ const InformeResultado = ({
               value={selectedFallas}
               onChange={(el) => handleChangeMulti(el)}
               options={opcionesFallas}
+            />
+          </InputGroup>
+        </Col>
+        <Col xs="12" md="4">
+          <InputGroup className="mb-3">
+            <InputGroupText className="w-30" addonType="prepend">
+              COMPONENTES
+            </InputGroupText>
+            <Select
+              components={{ Input: CustomSelectInput }}
+              className="react-select-fallas informe-multi-select w-70"
+              classNamePrefix="react-select"
+              isMulti
+              placeholder="Seleccione uno o varios componentes"
+              name="form-field-name"
+              value={selectedComponentes}
+              onChange={(el) => seleccionarComponente(el)}
+              options={opcionesComponentes}
             />
           </InputGroup>
         </Col>

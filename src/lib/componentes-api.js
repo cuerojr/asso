@@ -23,6 +23,23 @@ export const listarComponentes = (idEmpresa, idEquipo) => {
     return promise;*/
 };
 
+export const listarComponentesPorEmpresa = (idEmpresa) => {
+
+	const params = {
+		a: 'lce',
+		e: idEmpresa
+	}
+	let u = new URLSearchParams(params).toString();
+	const url = BASEURL + '?' + u;
+
+	const request = {
+		method: 'GET',
+	};
+
+	return fetch(url, request).then(response => response.json());
+
+};
+
 export const altaComponente = (idEquipo, nombre, descripcion, bajaRPM) => {
 
 	const data = new FormData();

@@ -8,10 +8,13 @@ export default function useInformeResultado({
   idEmpresa,
   fallas,
   estados,
+  componentes,
   fetchlistarFallas,
   fetchlistarEstados,
+  fetchlistarcomponentesPorEmpresa,
   filtroFallasIniciales = [], // 👈
   filtroEstadosIniciales = [],
+  filtroComponentesIniciales = [],
 }) {
   const dispatch = useDispatch();
 
@@ -27,8 +30,11 @@ export default function useInformeResultado({
 
   const [selectedFallas, setSelectedFallas] = useState([]);
   const [selectedEstados, setSelectedEstados] = useState([]);
+  const [selectedComponentes, setSelectedComponentes] = useState([]);
+
   const [opcionesEstados, setOpcionesEstados] = useState([]);
   const [opcionesFallas, setOpcionesFallas] = useState([]);
+  const [opcionesComponentes, setOpcionesComponentes] = useState([]);
 
   const meses = [
     null,
@@ -51,6 +57,7 @@ export default function useInformeResultado({
   useEffect(() => {
     fetchlistarEstados(idEmpresa);
     fetchlistarFallas(idEmpresa);
+    fetchlistarcomponentesPorEmpresa(idEmpresa);
   }, [idEmpresa]);
 
   useEffect(() => {
@@ -86,6 +93,18 @@ export default function useInformeResultado({
     setOpcionesEstados(estadosArray);
   }, [estados]);
 
+  // 👈 nuevo: igual patrón que fallas, pero el value/filtro es el nombre
+  // (porque en equipo.componentes lo que tenemos para matchear es el nombre)
+  useEffect(() => {
+  if (!componentes) return;
+  const componentesArray = componentes.map((item) => ({
+    label: item.componente,
+    value: item.componente,
+    name: item.componente,
+  }));
+  setOpcionesComponentes(componentesArray);
+}, [componentes]);
+
   useEffect(() => {
     if (!opcionesFallas.length || !filtroFallasIniciales.length) return;
     const preseleccionadas = opcionesFallas.filter((o) =>
@@ -101,6 +120,15 @@ export default function useInformeResultado({
     );
     setSelectedEstados(preseleccionados);
   }, [opcionesEstados, filtroEstadosIniciales]);
+
+  // 👈 nuevo: preselección de componentes iniciales (por nombre)
+  useEffect(() => {
+    if (!opcionesComponentes.length || !filtroComponentesIniciales.length) return;
+    const preseleccionados = opcionesComponentes.filter((o) =>
+      filtroComponentesIniciales.includes(String(o.value)),
+    );
+    setSelectedComponentes(preseleccionados);
+  }, [opcionesComponentes, filtroComponentesIniciales]);
 
   useEffect(() => {
     if (!detalleInforme) return;
@@ -122,53 +150,74 @@ export default function useInformeResultado({
 
   useEffect(() => {
     aplicarFiltros();
-  }, [selectedFallas, selectedEstados, equiposActivosState]);
+  }, [selectedFallas, selectedEstados, selectedComponentes, equiposActivosState]);
 
   // ─── Handlers ────────────────────────────────────────────────────────────────
 
   // Y los handlers pasan los nuevos valores directamente
   const handleChangeMulti = (el) => {
     setSelectedFallas(el);
-    dispatch(setFiltrosInforme(el, selectedEstados));
-    aplicarFiltros(el, selectedEstados); // 👈 pasa el valor nuevo, no el del estado
+    dispatch(setFiltrosInforme(el, selectedEstados, selectedComponentes));
+    aplicarFiltros(el, selectedEstados, selectedComponentes); // 👈 pasa el valor nuevo, no el del estado
   };
 
   const seleccionarEstado = (el) => {
     setSelectedEstados(el);
-    dispatch(setFiltrosInforme(selectedFallas, el));
-    aplicarFiltros(selectedFallas, el); // 👈 idem
+    dispatch(setFiltrosInforme(selectedFallas, el, selectedComponentes));
+    aplicarFiltros(selectedFallas, el, selectedComponentes); // 👈 idem
   };
 
-  //filtramos equipos completos por estado pero tb por falla de componente 
+  // 👈 nuevo handler para componentes
+  const seleccionarComponente = (el) => {
+    setSelectedComponentes(el);
+    dispatch(setFiltrosInforme(selectedFallas, selectedEstados, el));
+    aplicarFiltros(selectedFallas, selectedEstados, el);
+  };
+
+  //filtramos equipos completos por estado pero tb por falla de componente
   const aplicarFiltros = (
     fallasSel = selectedFallas,
     estadosSel = selectedEstados,
+    componentesSel = selectedComponentes,
   ) => {
     const hayFallasFiltradas = fallasSel.length > 0;
     const hayEstadosFiltrados = estadosSel.length > 0;
+    const hayComponentesFiltrados = componentesSel.length > 0;
 
-    if (!hayFallasFiltradas && !hayEstadosFiltrados) {
+    if (!hayFallasFiltradas && !hayEstadosFiltrados && !hayComponentesFiltrados) {
       setEquiposFiltradosState(equiposActivosState);
       return;
     }
 
     const fallaIds = fallasSel.map((f) => f.value);
     const estadoNames = estadosSel.map((e) => e.name);
+    const componenteNames = componentesSel.map((c) => c.name);
 
     const equiposFiltrados = equiposActivosState.map((equiposMes) => {
       // 1. Filtrar equipos por estado
-      const equiposPorEstado = hayEstadosFiltrados
+      let resultado = hayEstadosFiltrados
         ? equiposMes.filter((equipo) => estadoNames.includes(equipo.eq_estado))
         : equiposMes;
 
-      // 2. Filtrar equipos que tengan al menos 1 componente con la falla (equipo completo)
-      if (!hayFallasFiltradas) return equiposPorEstado;
+      // 2. Filtrar equipos que tengan al menos 1 componente con el nombre buscado 👈 nuevo
+      if (hayComponentesFiltrados) {
+        resultado = resultado.filter((equipo) =>
+          equipo.componentes?.some((componente) =>
+            componenteNames.includes(componente.nombre),
+          ),
+        );
+      }
 
-      return equiposPorEstado.filter((equipo) =>
-        equipo.componentes?.some((componente) =>
-          componente.fallas?.some((falla) => fallaIds.includes(falla.id_falla)),
-        ),
-      );
+      // 3. Filtrar equipos que tengan al menos 1 componente con la falla (equipo completo)
+      if (hayFallasFiltradas) {
+        resultado = resultado.filter((equipo) =>
+          equipo.componentes?.some((componente) =>
+            componente.fallas?.some((falla) => fallaIds.includes(falla.id_falla)),
+          ),
+        );
+      }
+
+      return resultado;
     });
 
     setEquiposFiltradosState(equiposFiltrados);
@@ -177,6 +226,7 @@ export default function useInformeResultado({
   const limpiarFiltros = () => {
     setSelectedFallas([]);
     setSelectedEstados([]);
+    setSelectedComponentes([]);
     setEquiposFiltradosState(equiposActivosState);
   };
 
@@ -202,6 +252,9 @@ export default function useInformeResultado({
     filtro,
     opcionesFallas,
     opcionesEstados,
+    opcionesComponentes,
+    selectedComponentes,
+    seleccionarComponente,
     selectedFallas,
     selectedEstados,
     handleChangeMulti,

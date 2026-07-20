@@ -41,7 +41,7 @@ export const informeInformeOnline = (idEmpresa, idInforme) => {
 
 };
 
-export const altaInformeTipoOnline = (idEmpresa, secciones, rutas, titulo, descripcion, mesDesde, anioDesde, mesHasta, anioHasta, controlId, introduccion, planta, atencionLinea1, atencionLinea2, atencionLinea3, referencia, firma, datosOpcionales, guardar, filtroFallas, filtroEstados) => {
+export const altaInformeTipoOnline = (idEmpresa, secciones, rutas, titulo, descripcion, mesDesde, anioDesde, mesHasta, anioHasta, controlId, introduccion, planta, atencionLinea1, atencionLinea2, atencionLinea3, referencia, firma, datosOpcionales, guardar, filtroFallas, filtroEstados, filtroComponentes) => {
 
 	const data = new FormData();
 	data.append('a', 'aio');
@@ -89,7 +89,8 @@ export const altaInformeTipoOnline = (idEmpresa, secciones, rutas, titulo, descr
 
 	data.append('ff', JSON.stringify(filtroFallas ?? [])) //opcional
 	data.append('fe',  JSON.stringify(filtroEstados ?? []) ) //opcional
-	
+	data.append('fc', JSON.stringify(filtroComponentes ?? [])) //opcional
+
 	data.append('s', guardar); //opcional 0/1
 
 	return fetch(BASEURL, {
@@ -99,7 +100,7 @@ export const altaInformeTipoOnline = (idEmpresa, secciones, rutas, titulo, descr
 };
 
 
-export const updateInformeTipoOnline = (idInforme, idEmpresa, secciones, titulo, descripcion, mesDesde, anioDesde, mesHasta, anioHasta, controlId, introduccion, planta, atencionLinea1, atencionLinea2, atencionLinea3, referencia, firma, datosOpcionales, guardar, filtroFallas, filtroEstados) => {
+export const updateInformeTipoOnline = (idInforme, idEmpresa, secciones, titulo, descripcion, mesDesde, anioDesde, mesHasta, anioHasta, controlId, introduccion, planta, atencionLinea1, atencionLinea2, atencionLinea3, referencia, firma, datosOpcionales, guardar, filtroFallas, filtroEstados, filtroComponentes) => {
 
 	const data = new FormData();
 	data.append('a', 'mio');
@@ -144,6 +145,7 @@ export const updateInformeTipoOnline = (idInforme, idEmpresa, secciones, titulo,
 	
 	data.append('ff', JSON.stringify(filtroFallas ?? [])) //opcional
 	data.append('fe',  JSON.stringify(filtroEstados ?? []) ) //opcional
+	data.append('fc', JSON.stringify(filtroComponentes ?? [])) //opcional
 
 	data.append('s', guardar); //opcional 0/1
 
