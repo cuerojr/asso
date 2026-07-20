@@ -23,6 +23,7 @@ import {
   faArrowLeft,
   faPlusSquare,
   faComments,
+  faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import { pickTextColorBasedOnBgColorSimple } from "../utils/utils";
 import ReactTooltip from "react-tooltip";
@@ -34,7 +35,7 @@ import { fetchlistarFallas } from "../../reducers/fallas-reducer";
 import { fetchlistarcomponentesPorEmpresa } from "../../reducers/componentes-reducer";
 
 const InformeResultado = ({
-  informeHook, 
+  informeHook,
   detalleInforme,
   fallas,
   estados,
@@ -71,9 +72,12 @@ const InformeResultado = ({
     <div className={theme === "light" ? "informe-resultado--light" : ""}>
       <Row>
         <Col xs="12" md="12" className="mx-auto">
-          <h4 className="font-weight-bold">Filtrar resultados por estado/fallas.</h4>
+          <h4 className="font-weight-bold">
+            Filtrar resultados por estado/fallas.
+          </h4>
           <p>
-            Elige mostrar el resultado de la tabla con equipos que tengan determinados estados y/o tipos de fallas.
+            Elige mostrar el resultado de la tabla con equipos que tengan
+            determinados estados y/o tipos de fallas.
           </p>
         </Col>
         <Col xs="12" md="4">
@@ -329,19 +333,64 @@ const InformeResultado = ({
                           <td style={{ textAlign: "center" }}>
                             {componente.files.map((img, index) => {
                               return (
-                                <img
+                                <div
                                   key={img.id}
+                                  style={{
+                                    display: "inline-block",
+                                    margin: "5px",
+                                    position: "relative",
+                                    aspectRatio: "1/1",
+                                    width: "150px",
+                                    height: "150px",
+                                    overflow: "hidden",
+                                    cursor: "pointer",
+                                  }}
                                   onClick={() => {
                                     mostrarImagenModal(img.file);
                                   }}
-                                  src={img.file}
-                                  alt={""}
-                                  style={{
-                                    width: "150px",
-                                    height: "auto",
-                                    cursor: "pointer",
-                                  }}
-                                />
+                                >
+                                  <FontAwesomeIcon
+                                    icon={faMagnifyingGlass}
+                                    style={{
+                                      color: "white",
+                                      fontSize: "2rem",
+                                      position: "absolute",
+                                      top: "50%",
+                                      left: "50%",
+                                      transform: "translate(-50%, -50%)",
+                                      
+                                      zIndex: 3,
+                                    }}
+                                  />
+                                  <span
+                                    style={{
+                                      position: "absolute",
+                                      top: "0",
+                                      left: "0",
+                                      width: "100%",
+                                      height: "100%",
+                                      backgroundColor: "rgba(0, 0, 0, 0.5)",
+                                      zIndex: 2,
+                                    }}
+                                  ></span>
+                                  <img
+                                    src={img.file}
+                                    alt={"ASSO"}
+                                    style={{
+                                      width: "150px",
+                                      height: "auto",
+                                      objectFit: "cover",
+                                      height: "auto",
+                                      
+                                      position: "absolute",
+                                      top: "50%",
+                                      left: "50%",
+                                      transform: "translate(-50%, -50%)",
+                                      zIndex: 1,
+                                      backgroundColor: "#000000",
+                                    }}
+                                  />
+                                </div>
                               );
                             })}
                           </td>
