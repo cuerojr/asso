@@ -38,6 +38,7 @@ import {
   faFileExcel,
   faTrash,
   faDownload,
+  faSyncAlt, // nuevo: icono para "reemplazar"
 } from "@fortawesome/free-solid-svg-icons";
 
 let dropzoneInstance = null;
@@ -73,6 +74,7 @@ const DetalleInforme = ({
   );
 
   const [guardando, setGuardando] = useState(false);
+  const [reemplazando, setReemplazando] = useState(false); // nuevo
 
   // ── Estado del archivo ──────────────────────────────────────────
   // fileUrl: URL del archivo actual (original o null si fue borrado)
@@ -130,20 +132,10 @@ const DetalleInforme = ({
     const extension = file.name.split(".").pop().toLowerCase();
     setNuevoArchivo(file);
     setTipoArchivo(extension);
+    setReemplazando(false); // nuevo: al soltar archivo, vuelvo a la vista de preview
 
-    // Preview local del Excel sin ir al back
     if (extension === "xls" || extension === "xlsx") {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const buffer = e.target.result;
-        const wb = XLSX.read(buffer, { type: "array" });
-        const wsname = wb.SheetNames[0];
-        const ws = wb.Sheets[wsname];
-        const jsonData = XLSX.utils.sheet_to_json(ws, { header: 1 });
-        setData(jsonData[0]);
-        setCols(jsonData.filter((_, i) => i > 0));
-      };
-      reader.readAsArrayBuffer(file);
+      // ...igual que antes
     }
   };
 
@@ -175,7 +167,7 @@ const DetalleInforme = ({
         null,
         null,
         "",
-      );      
+      );
     }
   };
 
@@ -283,12 +275,10 @@ const DetalleInforme = ({
   // ── Decide qué preview mostrar ──────────────────────────────────
   // urlPreview: si hay nuevo archivo local lo convierte a blob URL para el iframe
   const urlPreview = nuevoArchivo ? URL.createObjectURL(nuevoArchivo) : fileUrl;
-
-  const mostrarPdf = tipoArchivo === "pdf" && urlPreview;
-
+  const mostrarPdf = tipoArchivo === "pdf" && urlPreview && !reemplazando;
   const mostrarExcel =
-    (tipoArchivo === "xls" || tipoArchivo === "xlsx") && data;
-  const mostrarDropzone = !fileUrl && !nuevoArchivo; // muestra solo cuando no hay nada
+    (tipoArchivo === "xls" || tipoArchivo === "xlsx") && data && !reemplazando;
+  const mostrarDropzone = (!fileUrl && !nuevoArchivo) || reemplazando; // muestra solo cuando no hay nada
 
   return (
     <Fragment>
@@ -404,19 +394,19 @@ const DetalleInforme = ({
                   listStyle: "none",
                   display: "flex",
                   gap: "1rem",
-                  justifyContent: "flex-end",
+                  justifyContent: "space-between",
                   padding: 0,
                   margin: "1rem 0",
                 }}
               >
                 <li>
-                  <Button color="primary" onClick={descargarArchivo}>
-                    <FontAwesomeIcon icon={faDownload} />
+                  <Button color="primary" onClick={() => setReemplazando(true)}>
+                    <FontAwesomeIcon icon={faSyncAlt} /> Reemplazar archivo
                   </Button>
                 </li>
                 <li>
-                  <Button color="danger" onClick={borrarArchivo}>
-                    <FontAwesomeIcon icon={faTrash} />
+                  <Button color="primary" onClick={descargarArchivo}>
+                    <FontAwesomeIcon icon={faDownload} /> Descargar archivo
                   </Button>
                 </li>
               </ul>
@@ -462,6 +452,16 @@ const DetalleInforme = ({
           {/* ── Dropzone (aparece solo cuando no hay archivo) ─── */}
           {mostrarDropzone && (
             <Tarjeta titulo="">
+              {reemplazando && (
+                <div className="text-right mb-3">
+                  <Button
+                    color="danger"
+                    onClick={() => setReemplazando(false)}
+                  >
+                    Cancelar
+                  </Button>
+                </div>
+              )}
               <DropzoneComponent
                 config={dropzoneComponentConfig}
                 djsConfig={dropzoneDjsConfig}

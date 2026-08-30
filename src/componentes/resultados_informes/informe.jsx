@@ -95,6 +95,9 @@ const InformeResultado = ({
               value={selectedEstados}
               onChange={(el) => seleccionarEstado(el)}
               options={opcionesEstados}
+              styles={{
+                menu: (provided) => ({ ...provided, zIndex: 5 }),
+              }}
             />
           </InputGroup>
         </Col>
@@ -113,6 +116,9 @@ const InformeResultado = ({
               value={selectedFallas}
               onChange={(el) => handleChangeMulti(el)}
               options={opcionesFallas}
+              styles={{
+                menu: (provided) => ({ ...provided, zIndex: 5 }),
+              }}
             />
           </InputGroup>
         </Col>
@@ -131,10 +137,14 @@ const InformeResultado = ({
               value={selectedComponentes}
               onChange={(el) => seleccionarComponente(el)}
               options={opcionesComponentes}
+              styles={{
+                menu: (provided) => ({ ...provided, zIndex: 5 }),
+              }}
             />
           </InputGroup>
         </Col>
       </Row>
+      
       <Row className="month-navigator overflow-hidden px-0 py-4 ">
         <Col xs="4" sm="4" className="text-left">
           {mesSeleccionado < mesesActivosState.length - 1 && (
@@ -384,7 +394,6 @@ const InformeResultado = ({
                                       width: "150px",
                                       height: "auto",
                                       objectFit: "cover",
-                                      height: "auto",
                                       
                                       position: "absolute",
                                       top: "50%",

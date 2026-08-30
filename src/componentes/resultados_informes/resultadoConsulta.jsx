@@ -79,7 +79,7 @@ const ResultadoConsulta = (props) => {
   const [filtroEstadosIniciales, setFiltroEstadosIniciales] = useState([]);
   const [filtroComponentesIniciales, setFiltroComponentesIniciales] = useState([]);
   //const datosUser = JSON.parse(window.localStorage.getItem('cliente'));
-  const { idEmpresa, fallas, estados, fetchlistarFallas, fetchlistarEstados, fetchlistarcomponentesPorEmpresa } =
+  const { idEmpresa, fallas, estados, componentesPorEmpresa, fetchlistarFallas, fetchlistarEstados, fetchlistarcomponentesPorEmpresa } =
     props;
 
   const informeHook = useInformeResultado({
@@ -87,7 +87,7 @@ const ResultadoConsulta = (props) => {
     detalleInforme,
     fallas,
     estados,
-    componentes: props.componentesPorEmpresa, // ✅
+    componentes: componentesPorEmpresa,
     fetchlistarFallas,
     fetchlistarEstados,
     fetchlistarcomponentesPorEmpresa,
@@ -95,7 +95,6 @@ const ResultadoConsulta = (props) => {
     filtroEstadosIniciales,
     filtroComponentesIniciales
   });
-  console.log("🚀 ~ ResultadoConsulta ~ informeHook:", informeHook);
 
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);

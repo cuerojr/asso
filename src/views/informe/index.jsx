@@ -97,7 +97,6 @@ const InformeGenerado = (props) => {
     let tipoTesteoSeleccionado;
 
     const { filtrosInforme } = props
-    console.log("🚀 ~ finalmenteGuarda ~ filtrosInforme:", filtrosInforme)
 
     if (!mantenerDatos.idEmpresa) {
       idEmp = resultadoConsultaEdicion.idEmpresa;
