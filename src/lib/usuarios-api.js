@@ -1,4 +1,6 @@
-import { BASEURL } from './baseurl';
+import {
+	BASEURL
+} from './baseurl';
 
 export const listarUsuarios = () => {
 
@@ -17,7 +19,7 @@ export const listarUsuarios = () => {
 
 };
 
-export const altaUsuario = (email,clave,nombre) => {
+export const altaUsuario = (email, clave, nombre) => {
 	const data = new FormData();
 	data.append('a', 'au');
 	data.append('e', email);
@@ -41,7 +43,7 @@ export const deleteUsuario = (idUsuario) => {
 	}).then(response => response.json());
 }
 
-export const updateUsuario = (id,email,nombre, firma) => {
+export const updateUsuario = (id, email, nombre, firma) => {
 	const data = new FormData();
 	data.append('a', 'mu');
 	data.append('id', id);
@@ -59,7 +61,7 @@ export const getUsuario = (id) => {
 
 	const params = {
 		a: 'gdusr',
-		id:id
+		id: id
 	}
 	let u = new URLSearchParams(params).toString();
 	const url = BASEURL + '?' + u;
@@ -69,12 +71,6 @@ export const getUsuario = (id) => {
 	};
 
 	return fetch(url, request).then(response => response.json());
-
-    /*let promise = new Promise(function(resolve, reject) {
-        return resolve({"id":"1","nombre":"Jacinto Lopez","email":"jacinto@gmail.com", "firma": "Mi nombre y ocupación para firmar informes"});
-    });
-    return promise;*/
-
 };
 
 export const actualizarPwd = (clave) => {
@@ -88,10 +84,10 @@ export const actualizarPwd = (clave) => {
 	}).then(response => response.json());
 }
 
-export const listarUsuariosEmpleados = (idEmpresa) =>{
+export const listarUsuariosEmpleados = (idEmpresa) => {
 	const params = {
 		a: 'lue',
-		u:idEmpresa
+		u: idEmpresa
 	}
 	let u = new URLSearchParams(params).toString();
 	const url = BASEURL + '?' + u;
@@ -102,4 +98,47 @@ export const listarUsuariosEmpleados = (idEmpresa) =>{
 
 	return fetch(url, request)
 		.then(response => response.json());
+}
+
+export const getUsuarioEmpresa = (id) => {
+	const params = {
+		a: 'gdue',
+		id: id
+	}
+	let u = new URLSearchParams(params).toString();
+	const url = BASEURL + '?' + u;
+
+	const request = {
+		method: 'GET',
+	};
+
+	return fetch(url, request).then(response => response.json());
+};
+
+export const updateUsuarioEmpresa = ({
+	id,
+	email,
+	nombre,
+	acccesoInformes,
+	accesoMensajes,
+	accesoNotificaciones,
+	secciones,
+	servicios
+}) => {
+
+	const data = new FormData();
+	data.append('a', 'mue');
+	data.append('id', id);
+	data.append('e', email);
+	data.append('n', nombre);
+	data.append('i', acccesoInformes);
+	data.append('m', accesoMensajes);
+	data.append('t', accesoNotificaciones);
+	data.append('s', JSON.stringify(secciones));
+	data.append('sv', JSON.stringify(servicios));
+
+	return fetch(BASEURL, {
+		method: 'POST',
+		body: data
+	}).then(response => response.json());
 }

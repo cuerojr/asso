@@ -6,8 +6,8 @@ import ItemListaEmpleado from "../../componentes/itemListaEmpleado";
 import { Col, Row } from "reactstrap";
 
 const Empleados = (props) => {
+  const { detalleCliente } = props;
   const [empleados, setEmpleados] = useState(null);
-  const detalleCliente = props.detalleCliente;
   useEffect(() => {
     if (detalleCliente) {
       listarUsuariosEmpleados(detalleCliente.id).then((data) => {        
@@ -17,8 +17,8 @@ const Empleados = (props) => {
   }, [detalleCliente]);
 
   return (
-    <Col>
-      <Row>
+    <>
+      <Row className="mb-4 mt-4">
         <Col>
           <h2>Listado de usuarios "empleado" creados por el cliente:</h2>
         </Col>
@@ -34,10 +34,10 @@ const Empleados = (props) => {
         {empleados &&
           empleados.length > 0 &&
           empleados.map((empleado, index) => {
-            return <ItemListaEmpleado key={index} item={empleado} />;
+            return <ItemListaEmpleado key={index} item={empleado} cliente={detalleCliente.id} />;
           })}
       </Row>
-    </Col>
+    </>
   );
 };
 

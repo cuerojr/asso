@@ -7,6 +7,7 @@ import AppLayout from "../../../layout/AppLayout";
 const ListaCliente = React.lazy(() => import("./lista-clientes"));
 const AltaCliente = React.lazy(() => import("./alta-cliente"));
 const EditarCliente = React.lazy(() => import("./editar-cliente"));
+const EditarEmpleado = React.lazy(() => import("./editar-empleado"));
 const GenerarConsulta = React.lazy(() => import("./generarConsulta"));
 
 const Clientes = ({ abrirModal }) => {
@@ -36,6 +37,10 @@ const Clientes = ({ abrirModal }) => {
         <Route
           path="editar-cliente/:cliente/:seccion"
           element={<EditarCliente abrirModal={abrirModal} />}
+        />
+        <Route
+          path="editar-empleado/:cliente/empleado/:empresa"
+          element={<EditarEmpleado />}
         />
         <Route
           path="nuevo-informe/:cliente/generar-consulta"
