@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect } from "react";
 import {
   InputGroup,
   InputGroupAddon,
@@ -30,6 +30,7 @@ import Empleados from "./empleados";
 import { useNavigate } from "react-router-dom";
 
 const InfoCliente = (props) => {
+  const { idEmpresa, detalleCliente } = props;
   const navigate = useNavigate();
 
   const [nombre, setNombre] = useState("");
@@ -46,13 +47,13 @@ const InfoCliente = (props) => {
 
   useEffect(() => {
     if (props.currentTab === "info") {
-      props.fetchDetalleCliente(props.idEmpresa);
+      props.fetchDetalleCliente(idEmpresa);
     }
   }, [props.currentTab]);
 
   useEffect(() => {
-    if (props.detalleCliente) {
-      const cliente = props.detalleCliente;
+    if (detalleCliente) {
+      const cliente = detalleCliente;
       setClienteId(cliente.id);
       setNombre(cliente.empresa);
       setResponsable(cliente.responsable);
@@ -62,7 +63,7 @@ const InfoCliente = (props) => {
       setTituloContrato(cliente.titulo);
       setHabilitacion(Number(cliente.habilitado));
     }
-  }, [props.detalleCliente]);
+  }, [detalleCliente]);
 
   const cambiarTab = (e, tab) => {
     e.preventDefault();
@@ -72,7 +73,7 @@ const InfoCliente = (props) => {
   const habDeshab = () => {
     const h = habilitacion === 1 ? 0 : 1;
     setHabilitacion(h);
-    habilitarDeshabilitarCliente(props.detalleCliente.id, h);
+    habilitarDeshabilitarCliente(detalleCliente.id, h);
   };
 
   const actualizarCliente = (
@@ -104,7 +105,16 @@ const InfoCliente = (props) => {
             null,
             ""
           );
-          props.fetchDetalleCliente(props.idEmpresa);
+          props.fetchDetalleCliente(idEmpresa);
+        } else {
+          NotificationManager.error(
+            res.payload.err ? res.payload.err : "Error al actualizar la información del cliente",
+            "Error",
+            3000,
+            null,
+            null,
+            ""
+          );
         }
       });
   };
