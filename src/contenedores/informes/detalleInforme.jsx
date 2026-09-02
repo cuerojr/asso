@@ -131,11 +131,22 @@ const DetalleInforme = ({
   const onArchivoAgregado = (file) => {
     const extension = file.name.split(".").pop().toLowerCase();
     setNuevoArchivo(file);
+    console.log("🚀 ~ onArchivoAgregado ~ file:", file)
     setTipoArchivo(extension);
     setReemplazando(false); // nuevo: al soltar archivo, vuelvo a la vista de preview
 
     if (extension === "xls" || extension === "xlsx") {
-      // ...igual que antes
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const buffer = e.target.result;
+        const wb = XLSX.read(buffer, { type: "array" });
+        const wsname = wb.SheetNames[0];
+        const ws = wb.Sheets[wsname];
+        const jsonData = XLSX.utils.sheet_to_json(ws, { header: 1 });
+        setData(jsonData[0]);
+        setCols(jsonData.filter((_, i) => i > 0));
+      };
+      reader.readAsArrayBuffer(file);
     }
   };
 
@@ -186,7 +197,7 @@ const DetalleInforme = ({
       titulo,
       descripcion,
       fecha,
-      fileUrl ?? nuevoArchivo, // null si fue borrado, URL original si no se tocó
+      nuevoArchivo ?? fileUrl, // null si fue borrado, URL original si no se tocó
       // nuevoArchivo  ← descomentar cuando el back lo soporte
     )
       .then((res) => {
@@ -454,10 +465,7 @@ const DetalleInforme = ({
             <Tarjeta titulo="">
               {reemplazando && (
                 <div className="text-right mb-3">
-                  <Button
-                    color="danger"
-                    onClick={() => setReemplazando(false)}
-                  >
+                  <Button color="danger" onClick={() => setReemplazando(false)}>
                     Cancelar
                   </Button>
                 </div>
