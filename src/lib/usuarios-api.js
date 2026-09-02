@@ -123,9 +123,8 @@ export const updateUsuarioEmpresa = ({
 	accesoMensajes,
 	accesoNotificaciones,
 	secciones,
-	servicios
+	servicios = ["54"]
 }) => {
-
 	const data = new FormData();
 	data.append('a', 'mue');
 	data.append('id', id);
@@ -135,7 +134,7 @@ export const updateUsuarioEmpresa = ({
 	data.append('m', accesoMensajes);
 	data.append('t', accesoNotificaciones);
 	data.append('s', JSON.stringify(secciones));
-	data.append('sv', JSON.stringify(servicios));
+	data.append('sv', JSON.stringify(["54"]));
 
 	return fetch(BASEURL, {
 		method: 'POST',

@@ -4,6 +4,7 @@ import {
     deleteUsuario,
     updateUsuario,
     getUsuarioEmpresa,
+    updateUsuarioEmpresa
 } from '../lib/usuarios-api';
 
 const initialState = {
@@ -16,6 +17,7 @@ const LISTAR_USUARIOS = 'LISTAR_USUARIOS';
 const ALTA_USUARIO = 'ALTA_USUARIO';
 const DELETE_USUARIO = 'DELETE_USUARIO';
 const UPDATE_USUARIO = 'UPDATE_USUARIO';
+const UPDATE_USUARIO_EMPLEADO = 'UPDATE_USUARIO_EMPLEADO';
 const LISTAR_USUARIOS_EMPRESA = 'LISTAR_USUARIOS_EMPRESA';
 
 const listarUsuariosAction = (usuarios) => ({
@@ -32,6 +34,10 @@ const deleteUsuarioAction = (guardado) => ({
 });
 const updateUsuarioAction = (guardado) => ({
     type: UPDATE_USUARIO,
+    payload: guardado
+});
+const updateUsuarioEmpleadoAction = (guardado) => ({
+    type: UPDATE_USUARIO_EMPLEADO,
     payload: guardado
 });
 
@@ -111,6 +117,7 @@ export const fetchUpdateUsuarioEmpresa = ({
     secciones,
     servicios
 }) => {
+
     return async (dispatch) => {
         return updateUsuarioEmpresa({
                 id,
@@ -123,7 +130,7 @@ export const fetchUpdateUsuarioEmpresa = ({
                 servicios
             })
             .then(res => {
-                return dispatch(updateUsuarioAction(res));
+                return dispatch(updateUsuarioEmpleadoAction(res));
             })
             .catch(res => {
                 console.log(res);
@@ -152,6 +159,10 @@ export default (state = initialState, action) => {
         case LISTAR_USUARIOS_EMPRESA:
             return {
                 ...state, usuariosEmpresa: action.payload
+            };
+        case UPDATE_USUARIO_EMPLEADO:
+            return {
+                ...state, guardado: action.payload
             };
         default:
             return {
