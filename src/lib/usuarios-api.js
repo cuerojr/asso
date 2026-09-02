@@ -134,7 +134,7 @@ export const updateUsuarioEmpresa = ({
 	data.append('m', accesoMensajes);
 	data.append('t', accesoNotificaciones);
 	data.append('s', JSON.stringify(secciones));
-	data.append('sv', JSON.stringify(["54"]));
+	data.append('sv', JSON.stringify(servicios));
 
 	return fetch(BASEURL, {
 		method: 'POST',
