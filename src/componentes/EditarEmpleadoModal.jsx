@@ -1,5 +1,5 @@
-/*import { Fragment, useState, useEffect } from "react";
-
+/*
+import { Fragment, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   Row,
@@ -365,7 +365,8 @@ export default connect(mapStateToProps, {
   fetchDetalleCliente,
   fetchlistarSecciones, // CAMBIO: nuevo
   fetchUpdateUsuarioEmpleado, // CAMBIO: nuevo
-})(EditarEmpleado);*/
+})(EditarEmpleado);
+*/
 
 import { Fragment, useState, useEffect } from "react";
 import {
@@ -383,12 +384,12 @@ import {
 import Select from "react-select";
 import { connect } from "react-redux";
 
-import { fetchUsuarioEmpleado, fetchUpdateUsuarioEmpleado } from "../../../reducers/usuarios-reducer";
-import { fetchDetalleCliente } from "../../../reducers/clientes-reducer";
-import { fetchlistarSecciones } from "../../../reducers/secciones-reducer";
-import { listarUsuariosEmpleados } from "../../../lib/usuarios-api";
-import CustomSelectInput from "../../../components/common/CustomSelectInput";
-import { NotificationManager } from "../../../components/common/react-notifications";
+import { fetchUsuarioEmpleado, fetchUpdateUsuarioEmpleado } from "../reducers/usuarios-reducer";
+import { fetchDetalleCliente } from "../reducers/clientes-reducer";
+import { fetchlistarSecciones } from "../reducers/secciones-reducer";
+import { listarUsuariosEmpleados } from "../lib/usuarios-api";
+import CustomSelectInput from "../components/common/CustomSelectInput";
+import { NotificationManager } from "../components/common/react-notifications";
 
 
 // CAMBIO: el componente ahora es un modal controlado.
@@ -411,6 +412,8 @@ const EditarEmpleadoModal = ({
   usuarioEmpresa,
   fetchUpdateUsuarioEmpleado,
 }) => {
+  console.log("🚀 ~ EditarEmpleadoModal ~ empresa:", empresa)
+  
   const customStyles = {
     option: (provided) => ({
       ...provided,
@@ -436,9 +439,9 @@ const EditarEmpleadoModal = ({
   // CAMBIO: los fetch de datos ahora dependen de `isOpen`, no se disparan
   // apenas se monta el componente (el modal puede estar montado pero cerrado).
   useEffect(() => {
-    if (!isOpen || !empresa) return;
-    fetchlistarSecciones(empresa);
-  }, [isOpen, empresa, fetchlistarSecciones]);
+    if (!isOpen || !cliente) return;
+    fetchlistarSecciones(cliente);
+  }, [isOpen, cliente, fetchlistarSecciones]);
 
   useEffect(() => {
     const opciones = [];
@@ -510,6 +513,8 @@ const EditarEmpleadoModal = ({
           null,
           "",
         );
+        // CAMBIO: en vez de navegar, cerramos el modal al no poder editar
+        toggle();
       }
     });
   }, [isOpen, empresa, fetchUsuarioEmpleado]);

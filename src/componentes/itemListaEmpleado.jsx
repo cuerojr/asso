@@ -1,13 +1,12 @@
 import { Fragment } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { Card, CardBody, Col, Row, Button } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 
-const itemListaEmpleado = ({ item, cliente }) => {
-  
-  const navigate = useNavigate();
+// CAMBIO: se quitó `useNavigate` — ahora recibe `onEditar` como prop
+// y delega en el padre (Empleados) la apertura del modal.
+const itemListaEmpleado = ({ item, cliente, onEditar }) => {
   return (
     <Fragment>
       <div className="col-md-12 estados" id={"empleado-" + item.id}>
@@ -25,11 +24,7 @@ const itemListaEmpleado = ({ item, cliente }) => {
                   >
                     <div>
                       <Button
-                        onClick={() =>
-                          navigate(
-                            `/app/clientes/editar-empleado/${cliente}/empleado/${item.id}`,
-                          )
-                        }
+                        onClick={() => onEditar(item.id)}
                         color="link"
                         className="p-0 m-0"
                       >
@@ -46,15 +41,7 @@ const itemListaEmpleado = ({ item, cliente }) => {
                     <Button
                       color="primary"
                       className="mr-2"
-                      onClick={() => {
-                        // Aquí puedes agregar la lógica para editar el empleado
-                        console.log(
-                          `Editar empleado con ID: ${JSON.stringify(item)}`,
-                        );
-                        navigate(
-                          `/app/clientes/editar-empleado/${cliente}/empleado/${item.id}`,
-                        );
-                      }}
+                      onClick={() => onEditar(item.id)}
                     >
                       Editar
                     </Button>
