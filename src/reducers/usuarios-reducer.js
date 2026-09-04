@@ -4,12 +4,12 @@ import {
     deleteUsuario,
     updateUsuario,
     getUsuarioEmpresa,
-    updateUsuarioEmpresa
+    updateUsuarioEmpleado
 } from '../lib/usuarios-api';
 
 const initialState = {
     usuarios: [],
-    usuariosEmpresa: [],
+    usuariosEmpleado: [],
     guardado: 0
 };
 
@@ -18,7 +18,7 @@ const ALTA_USUARIO = 'ALTA_USUARIO';
 const DELETE_USUARIO = 'DELETE_USUARIO';
 const UPDATE_USUARIO = 'UPDATE_USUARIO';
 const UPDATE_USUARIO_EMPLEADO = 'UPDATE_USUARIO_EMPLEADO';
-const LISTAR_USUARIOS_EMPRESA = 'LISTAR_USUARIOS_EMPRESA';
+const LISTAR_USUARIOS_EMPLEADO = 'LISTAR_USUARIOS_EMPLEADO';
 
 const listarUsuariosAction = (usuarios) => ({
     type: LISTAR_USUARIOS,
@@ -41,9 +41,9 @@ const updateUsuarioEmpleadoAction = (guardado) => ({
     payload: guardado
 });
 
-const listarUsuariosEmpresaAction = (usuariosEmpresa) => ({
-    type: LISTAR_USUARIOS_EMPRESA,
-    payload: usuariosEmpresa
+const listarUsuariosEmpleadoAction = (usuariosEmpleado) => ({
+    type: LISTAR_USUARIOS_EMPLEADO,
+    payload: usuariosEmpleado
 });
 
 
@@ -95,11 +95,11 @@ export const fetchupdateUsuario = (idUsuario, email, nombre, firma) => {
     }
 };
 
-export const fetchUsuarioEmpresa = (id) => {
+export const fetchUsuarioEmpleado = (id) => {
     return async (dispatch) => {
         return getUsuarioEmpresa(id)
             .then(res => {
-                return dispatch(listarUsuariosEmpresaAction(res));
+                return dispatch(listarUsuariosEmpleadoAction(res));
             })
             .catch(res => {
                 console.log(res);
@@ -107,7 +107,7 @@ export const fetchUsuarioEmpresa = (id) => {
     }
 };
 
-export const fetchUpdateUsuarioEmpresa = ({
+export const fetchUpdateUsuarioEmpleado = ({
     id,
     email,
     nombre,
@@ -119,7 +119,7 @@ export const fetchUpdateUsuarioEmpresa = ({
 }) => {
 
     return async (dispatch) => {
-        return updateUsuarioEmpresa({
+        return updateUsuarioEmpleado({
                 id,
                 email,
                 nombre,
@@ -156,9 +156,9 @@ export default (state = initialState, action) => {
             return {
                 ...state, guardado: action.payload
             };
-        case LISTAR_USUARIOS_EMPRESA:
+        case LISTAR_USUARIOS_EMPLEADO:
             return {
-                ...state, usuariosEmpresa: action.payload
+                ...state, usuariosEmpleado: action.payload
             };
         case UPDATE_USUARIO_EMPLEADO:
             return {

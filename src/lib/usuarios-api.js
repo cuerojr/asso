@@ -115,7 +115,7 @@ export const getUsuarioEmpresa = (id) => {
 	return fetch(url, request).then(response => response.json());
 };
 
-export const updateUsuarioEmpresa = ({
+export const updateUsuarioEmpleado = ({
 	id,
 	email,
 	nombre,

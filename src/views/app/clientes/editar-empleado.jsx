@@ -16,7 +16,7 @@ import Select from "react-select"; // CAMBIO: nuevo, para el multi-select de sec
 import { connect } from "react-redux";
 
 import { Tarjeta } from "../../../componentes/tarjeta";
-import { fetchUsuarioEmpresa, fetchUpdateUsuarioEmpresa } from "../../../reducers/usuarios-reducer";
+import { fetchUsuarioEmpleado, fetchUpdateUsuarioEmpleado } from "../../../reducers/usuarios-reducer";
 import { fetchDetalleCliente } from "../../../reducers/clientes-reducer";
 import { fetchlistarSecciones } from "../../../reducers/secciones-reducer"; // CAMBIO: nuevo, trae el catálogo de secciones de la empresa
 import { NotificationManager } from "../../../components/common/react-notifications";
@@ -27,14 +27,14 @@ import CustomSelectInput from "../../../components/common/CustomSelectInput"; //
 
 const EditarEmpleado = ({
   detalleCliente,
-  fetchUsuarioEmpresa,
+  fetchUsuarioEmpleado,
   fetchDetalleCliente,
   fetchlistarSecciones, // CAMBIO: nueva prop, viene del connect
   secciones: seccionesDelState, // CAMBIO: nueva prop (catálogo completo desde el store), renombrada para no chocar con el estado local "secciones"
   listarUsuariosEmpleados,
   usuarioEmpresa,
   abrirModal,
-  fetchUpdateUsuarioEmpresa 
+  fetchUpdateUsuarioEmpleado 
 }) => {
   const { cliente, empresa } = useParams();
   const navigate = useNavigate();
@@ -109,7 +109,7 @@ const EditarEmpleado = ({
     setSecciones(seleccionadas);
   }, [seccionesOpciones, seccionesIdsEmpleado]);
 
-  // CAMBIO: nuevo. Antes el primer useEffect (fetchUsuarioEmpresa) no hacía nada con la
+  // CAMBIO: nuevo. Antes el primer useEffect (fetchUsuarioEmpleado) no hacía nada con la
   // respuesta ("Aquí cargar los datos..." quedaba vacío). Ahora esta función carga
   // todos los campos del empleado en el formulario.
   const cargarEmpleadoEnFormulario = (usuario) => {
@@ -139,7 +139,7 @@ const EditarEmpleado = ({
   };
 
   useEffect(() => {
-    fetchUsuarioEmpresa(empresa).then((res) => {
+    fetchUsuarioEmpleado(empresa).then((res) => {
       // console.log("🚀 ~ EditarEmpleado ~ res:", res) // CAMBIO: se quitó este log
       if (res && res.payload && res.payload.stat !== 0) {
         // CAMBIO: antes este bloque estaba vacío ("Aquí cargar los datos en el formulario...")
@@ -157,7 +157,7 @@ const EditarEmpleado = ({
         // navigate("/app/clientes/editar-cliente/" + cliente + "/info"); // (ya estaba comentado en el original)
       }
     });
-  }, [empresa, fetchUsuarioEmpresa]);
+  }, [empresa, fetchUsuarioEmpleado]);
 
   useEffect(() => {
     fetchDetalleCliente(cliente);
@@ -214,7 +214,7 @@ const EditarEmpleado = ({
     };
     try {
       setGuardando(true);
-      const res = await fetchUpdateUsuarioEmpresa(payload);
+      const res = await fetchUpdateUsuarioEmpleado(payload);
       
       if (res && res.payload && res.payload.stat !== 0) {
         NotificationManager.success(
@@ -385,14 +385,14 @@ const EditarEmpleado = ({
 
 const mapStateToProps = (state) => ({
   detalleCliente: state.clientesReducer.detalleClienteState,
-  usuarioEmpresa: state.usuariosReducer.usuariosEmpresa,
+  usuarioEmpresa: state.usuariosReducer.usuariosEmpleado,
   secciones: state.seccionesReducer.secciones, // CAMBIO: nuevo
 });
 
 export default connect(mapStateToProps, {
-  fetchUsuarioEmpresa,
+  fetchUsuarioEmpleado,
   listarUsuariosEmpleados,
   fetchDetalleCliente,
   fetchlistarSecciones, // CAMBIO: nuevo
-  fetchUpdateUsuarioEmpresa, // CAMBIO: nuevo
+  fetchUpdateUsuarioEmpleado, // CAMBIO: nuevo
 })(EditarEmpleado);
