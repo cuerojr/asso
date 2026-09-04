@@ -10,6 +10,8 @@ const SelectMultiple = (props) => {
         const fallasSelecionadasAmostrar = []
         fallasSelecionadasAmostrar.push({ value: 999999999999, label: <span dangerouslySetInnerHTML={{ __html: `<div class="falla-color-wrapper">Todas las ${props.placeholderPlural}</div>` }} /> })
         props.items && props.items.forEach((item) => {
+            console.log("🚀 ~ SelectMultiple ~ item:", item)
+            
             let fallita = { value: item.id, label: <span dangerouslySetInnerHTML={{ __html: '<div class="falla-color-wrapper">' + item.nombre + '</div>' }} /> }
             fallasSelecionadasAmostrar.push(fallita)
         })
