@@ -79,7 +79,7 @@ const EditarCargarControl = (props) => {
   };
 
   useEffect(() => {
-    console.log("🚀 ~ EditarCargarControl ~ controlSeleccionado:", controlSeleccionado)
+    //console.log("🚀 ~ EditarCargarControl ~ controlSeleccionado:", controlSeleccionado)
     if (controlSeleccionado) {
 
       // porque está editando

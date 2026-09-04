@@ -192,7 +192,7 @@ const CargaControles = (props) => {
 
   const confirmarFinalizar = () => {
     
-    console.log("🚀 ~ confirmarFinalizar ~ confirmarFinalizar:")
+    //console.log("🚀 ~ confirmarFinalizar ~ confirmarFinalizar:")
     setavisarFinalizar(true);
     setTimeout(function () {
       confirmDetalleFinalizarCarga(props.idCargaMasiva).then((res) => {

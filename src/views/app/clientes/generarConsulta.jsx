@@ -116,7 +116,7 @@ const GenerarConsulta = (props) => {
       filtrosInforme.selectedEstados.map(estado => estado.value),
       filtrosInforme.selectedComponentes.map(componente => componente.value)
     ).then((res) => {
-      console.log("🚀 ~ finalmenteGuarda ~ res:", res)
+      //console.log("🚀 ~ finalmenteGuarda ~ res:", res)
       
       if (res.stat === 1) {
       props.limpiarFiltrosInforme();

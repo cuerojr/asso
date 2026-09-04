@@ -210,7 +210,7 @@ const EditarEmpleado = ({
       accesoMensajes: empleadoMensajes ? 1 : 0,
       accesoNotificaciones: empleadoNotificaciones ? 1 : 0,
       secciones: secciones.map((s) => ( s.value )), 
-      servicios: [1], // el label es JSX, no se manda
+      servicios: ['1'], // el label es JSX, no se manda
     };
     try {
       setGuardando(true);

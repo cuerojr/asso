@@ -104,7 +104,7 @@ const FormularioCargaControles = (props) => {
           }
           onClick={() => {
             props.siguienteEquipoFormulario(siguienteEquipo);
-            console.log("🚀 ~ FormularioCargaControles ~ props.detalleDeComponentesYControles.componentes:", props.detalleDeComponentesYControles.componentes)
+            //console.log("🚀 ~ FormularioCargaControles ~ props.detalleDeComponentesYControles.componentes:", props.detalleDeComponentesYControles.componentes)
           }}
           disabled={props.desahabilitarSiguiente}
         >
