@@ -210,12 +210,11 @@ const EditarEmpleado = ({
       accesoMensajes: empleadoMensajes ? 1 : 0,
       accesoNotificaciones: empleadoNotificaciones ? 1 : 0,
       secciones: secciones.map((s) => ( s.value )), 
-      servicios: servicios.map((s) => ( s.value )), // el label es JSX, no se manda
+      servicios: [1], // el label es JSX, no se manda
     };
     try {
       setGuardando(true);
       const res = await fetchUpdateUsuarioEmpresa(payload);
-      console.log("🚀 ~ handleSubmit ~ res:", res)
       
       if (res && res.payload && res.payload.stat !== 0) {
         NotificationManager.success(
