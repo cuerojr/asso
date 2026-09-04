@@ -124,6 +124,7 @@ const EditarEmpleadoModal = ({
         const usuario = res.payload.data || res.payload;
         cargarEmpleadoEnFormulario(usuario);
       } else {
+        toggle();
         NotificationManager.error(
           "No puede editar este usuario empleado",
           "Error",
@@ -133,7 +134,6 @@ const EditarEmpleadoModal = ({
           "",
         );
         // CAMBIO: en vez de navegar, cerramos el modal al no poder editar
-        //toggle();
       }
     });
   }, [isOpen, empresa, fetchUsuarioEmpleado]);
