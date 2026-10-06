@@ -131,7 +131,6 @@ const DetalleInforme = ({
   const onArchivoAgregado = (file) => {
     const extension = file.name.split(".").pop().toLowerCase();
     setNuevoArchivo(file);
-    //console.log("🚀 ~ onArchivoAgregado ~ file:", file)
     setTipoArchivo(extension);
     setReemplazando(false); // nuevo: al soltar archivo, vuelvo a la vista de preview
 

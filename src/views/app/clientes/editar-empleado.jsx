@@ -472,6 +472,7 @@ const EditarEmpleadoModal = ({
   }, [seccionesOpciones, seccionesIdsEmpleado]);
 
   const cargarEmpleadoEnFormulario = (usuario) => {
+    
     setId(usuario?.id ?? null);
     setNombre(usuario?.nombre ?? "");
     setEmail(usuario?.email ?? "");
@@ -499,7 +500,7 @@ const EditarEmpleadoModal = ({
     if (!isOpen || !empresa) return;
     fetchUsuarioEmpleado(empresa).then((res) => {
       if (res && res.payload && res.payload.stat !== 0) {
-        const usuario = res.payload.data || res.payload;
+        const usuario = res.payload.data || res.payload;        
         cargarEmpleadoEnFormulario(usuario);
       } else {
         NotificationManager.error(

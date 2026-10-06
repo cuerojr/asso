@@ -36,6 +36,7 @@ const EditarEmpleadoModal = ({
   toggle,
   cliente,
   empresa,
+  empleado,
   detalleCliente,
   fetchUsuarioEmpleado,
   fetchDetalleCliente,
@@ -45,7 +46,6 @@ const EditarEmpleadoModal = ({
   usuarioEmpresa,
   fetchUpdateUsuarioEmpleado,
 }) => {
-
   const customStyles = {
     option: (provided) => ({
       ...provided,
@@ -59,6 +59,7 @@ const EditarEmpleadoModal = ({
   const [id, setId] = useState(null);
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
+  const [telefono, setTelefono] = useState("");
   const [empleadoInformes, setEmpleadoInformes] = useState(false);
   const [empleadoMensajes, setEmpleadoMensajes] = useState(false);
   const [empleadoNotificaciones, setEmpleadoNotificaciones] = useState(false);
@@ -68,6 +69,12 @@ const EditarEmpleadoModal = ({
   const [servicios, setServicios] = useState([]);
   const [guardando, setGuardando] = useState(false);
 
+  // NUEVO: precarga el form con el empleado que llega por props.
+  // El fetch de más abajo sigue corriendo y pisa estos datos con los completos.
+  useEffect(() => {
+    if (!isOpen || !empleado) return;
+    cargarEmpleadoEnFormulario(empleado);
+  }, [isOpen, empleado]);
   // CAMBIO: los fetch de datos ahora dependen de `isOpen`, no se disparan
   // apenas se monta el componente (el modal puede estar montado pero cerrado).
   useEffect(() => {
@@ -76,23 +83,36 @@ const EditarEmpleadoModal = ({
   }, [isOpen, cliente, fetchlistarSecciones]);
 
   useEffect(() => {
-    setSeccionesOpciones(seccionesDelState);    
+    setSeccionesOpciones(seccionesDelState);
   }, [seccionesDelState]);
 
   useEffect(() => {
-    if (seccionesOpciones.length === 0 || seccionesIdsEmpleado.length === 0)
-      return;
-    const seleccionadas = seccionesOpciones.filter((op) =>
-      seccionesIdsEmpleado.includes(op.value),
+    if (!seccionesOpciones || seccionesOpciones.length === 0) return;
+    const ids = seccionesIdsEmpleado.map(String);
+    setSecciones(
+      seccionesOpciones
+        // NUEVO: los items crudos tienen `id`, no `value`
+        .filter((item) => ids.includes(String(item.id)))
+        // NUEVO: los mapeamos a la misma forma que arma SelectMultiple
+        .map((item) => ({
+          value: item.id,
+          label: (
+            <span
+              dangerouslySetInnerHTML={{
+                __html:
+                  '<div class="falla-color-wrapper">' + item.nombre + "</div>",
+              }}
+            />
+          ),
+        })),
     );
-    console.log("🚀 ~ EditarEmpleadoModal ~ seleccionadas:", seleccionadas)
-    setSecciones(seleccionadas);
   }, [seccionesOpciones, seccionesIdsEmpleado]);
 
-  const cargarEmpleadoEnFormulario = (usuario) => {    
+  const cargarEmpleadoEnFormulario = (usuario) => {
     setId(usuario?.id ?? null);
     setNombre(usuario?.nombre ?? "");
     setEmail(usuario?.email ?? "");
+    setTelefono(usuario?.telefono ?? "");
     setEmpleadoInformes(
       usuario?.empleado_informes === "1" || usuario?.empleado_informes === 1,
     );
@@ -114,15 +134,17 @@ const EditarEmpleadoModal = ({
   };
 
   useEffect(() => {
-    console.log("🚀 ~ EditarEmpleadoModal ~ empresa:", empresa)
     if (!isOpen || !empresa) return;
+    let cancelado = false; // NUEVO: ignora respuestas de una apertura anterior
 
     fetchUsuarioEmpleado(empresa).then((res) => {
-      
+      if (cancelado) return;
       if (res && res.payload && res.payload.stat !== 0) {
-
         const usuario = res.payload.data || res.payload;
-        cargarEmpleadoEnFormulario(usuario);
+        const usuarioFetch = Array.isArray(usuario) ? usuario[0] : usuario;
+        // NUEVO: mezcla con el empleado de la lista. Si la respuesta no trae
+        // un campo, queda el valor de la lista en vez de pisarlo con vacío.
+        cargarEmpleadoEnFormulario({ ...empleado, ...usuarioFetch });
       } else {
         toggle();
         NotificationManager.error(
@@ -133,15 +155,18 @@ const EditarEmpleadoModal = ({
           null,
           "",
         );
-        // CAMBIO: en vez de navegar, cerramos el modal al no poder editar
       }
     });
-  }, [isOpen, empresa, fetchUsuarioEmpleado]);
+
+    return () => {
+      cancelado = true; // NUEVO
+    };
+  }, [isOpen, empresa]);
 
   useEffect(() => {
     if (!isOpen || !cliente) return;
     fetchDetalleCliente(cliente);
-  }, [isOpen, cliente, fetchDetalleCliente]);
+  }, [isOpen, cliente]);
 
   const validarFormulario = () => {
     if (!nombre.trim()) {
@@ -177,11 +202,12 @@ const EditarEmpleadoModal = ({
       id,
       nombre,
       email,
+      telefono,
       acccesoInformes: empleadoInformes ? 1 : 0,
       accesoMensajes: empleadoMensajes ? 1 : 0,
       accesoNotificaciones: empleadoNotificaciones ? 1 : 0,
       secciones: secciones.map((s) => s.value),
-      servicios: ["1"],
+      servicios: [1],
     };
     try {
       setGuardando(true);
@@ -251,6 +277,15 @@ const EditarEmpleadoModal = ({
                 onChange={(e) => setEmail(e.target.value)}
               />
             </InputGroup>
+            <InputGroup className="mb-3">
+              <InputGroupText>Teléfono</InputGroupText>
+              <Input
+                type="text"
+                placeholder="Número de teléfono"
+                value={telefono}
+                onChange={(e) => setTelefono(e.target.value)}
+              />
+            </InputGroup>
 
             <FormGroup className="mb-3">
               <Label className="d-block">Permisos</Label>
@@ -293,7 +328,6 @@ const EditarEmpleadoModal = ({
               <Label className="d-block">Secciones</Label>
 
               <SelectMultiple
-              
                 name="secciones"
                 items={seccionesOpciones}
                 handleChangeMulti={handleChangeMulti}

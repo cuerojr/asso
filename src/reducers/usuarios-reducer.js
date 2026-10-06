@@ -111,6 +111,7 @@ export const fetchUpdateUsuarioEmpleado = ({
     id,
     email,
     nombre,
+    telefono,
     acccesoInformes,
     accesoMensajes,
     accesoNotificaciones,
@@ -122,6 +123,7 @@ export const fetchUpdateUsuarioEmpleado = ({
         return updateUsuarioEmpleado({
                 id,
                 email,
+                telefono,
                 nombre,
                 acccesoInformes,
                 accesoMensajes,

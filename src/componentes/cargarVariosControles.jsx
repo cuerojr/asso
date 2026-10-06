@@ -41,7 +41,6 @@ import { listarEquiposEnCargaMasiva } from "../lib/equipos-api";
 import moment from "moment";
 
 const CargarVariosControles = (props) => {
-  //console.log("🚀 ~ CargarVariosControles ~ props:", props)
 
   const [fechaEquipoNoControlado, setFechaEquipoNoControlado] =
     useState(moment());
@@ -69,8 +68,6 @@ const CargarVariosControles = (props) => {
 
   useEffect(() => {
     props.fetchlistarEquipos(props.detalleCliente.id);
-    //console.log("🚀 ~ CargarVariosControles ~ props:", props)
-    
   }, [props.controles]);
 
   useEffect(() => {

@@ -115,9 +115,7 @@ const GenerarConsulta = (props) => {
       filtrosInforme.selectedFallas.map(falla => falla.value),
       filtrosInforme.selectedEstados.map(estado => estado.value),
       filtrosInforme.selectedComponentes.map(componente => componente.value)
-    ).then((res) => {
-      //console.log("🚀 ~ finalmenteGuarda ~ res:", res)
-      
+    ).then((res) => {      
       if (res.stat === 1) {
       props.limpiarFiltrosInforme();
         NotificationManager.success(

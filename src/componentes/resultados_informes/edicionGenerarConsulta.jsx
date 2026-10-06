@@ -196,7 +196,6 @@ const EdicionGenerarConsulta = (props) => {
   };
 
   useEffect(() => {
-    //console.log("🚀 ~ EdicionGenerarConsulta ~ props.resultadoConsulta:", props.resultadoConsulta)
     if (props.resultadoConsulta) {
 
       setDesdeAnio(props.resultadoConsulta.desde.split("-")[1]);

@@ -343,7 +343,6 @@ describe("App Component", () => {
 
     // Cerrar modal (click en el botón de cerrar del ModalHeader)
     const closeButton = screen.getByTestId("modal");
-    //console.log("🚀 ~ closeButton:", container.querySelectorAll(".close"))
     
     if (closeButton) {
       //screen.debug();

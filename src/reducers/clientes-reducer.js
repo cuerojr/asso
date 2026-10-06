@@ -13,8 +13,8 @@ const initialState = {
     clientes: [],
     detalleClienteState: null,
     totalClientes: 0,
-    totalNotificaciones:null,
-    notificaciones:[]
+    totalNotificaciones: null,
+    notificaciones: []
 };
 
 const LISTAR_CLIENTES = 'LISTAR_CLIENTES';
@@ -27,15 +27,42 @@ const LISTAR_NOTIFICACIONES = 'LISTAR_NOTIFICACIONES';
 const BUSCAR_NOTIFICACIONES = 'BUSCAR_NOTIFICACIONES';
 const TOTAL_NOTIFICACIONES = 'TOTAL_NOTIFICACIONES';
 
-const listarClientesAction = (clientes) => ({ type: LISTAR_CLIENTES, payload: clientes });
-const listarTotalClientesAction = (totalClientes) => ({ type: LISTAR_TOTAL_CLIENTES, payload: totalClientes });
-const altaCLienteAction = (guardado) => ({ type: ALTA_CLIENTE, payload: guardado })
-const detalleClienteAction = (detalleClienteState) => ({ type: DETALLE_CLIENTE, payload: detalleClienteState })
-const updateClienteAction = (guardado) => ({ type: UPDATE_CLIENTE, payload: guardado })
-const deleteClienteAction = (guardado) => ({ type: DELETE_CLIENTE, payload: guardado })
-const listarNotificacionesAction = (notificaciones) => ({ type: LISTAR_NOTIFICACIONES, payload: notificaciones });
-const buscarNotificacionesAction = (notificaciones) => ({ type: BUSCAR_NOTIFICACIONES, payload: notificaciones });
-const totalNotificacionesAction = (total) => ({ type: TOTAL_NOTIFICACIONES, payload: total });
+const listarClientesAction = (clientes) => ({
+    type: LISTAR_CLIENTES,
+    payload: clientes
+});
+const listarTotalClientesAction = (totalClientes) => ({
+    type: LISTAR_TOTAL_CLIENTES,
+    payload: totalClientes
+});
+const altaCLienteAction = (guardado) => ({
+    type: ALTA_CLIENTE,
+    payload: guardado
+})
+const detalleClienteAction = (detalleClienteState) => ({
+    type: DETALLE_CLIENTE,
+    payload: detalleClienteState
+})
+const updateClienteAction = (guardado) => ({
+    type: UPDATE_CLIENTE,
+    payload: guardado
+})
+const deleteClienteAction = (guardado) => ({
+    type: DELETE_CLIENTE,
+    payload: guardado
+})
+const listarNotificacionesAction = (notificaciones) => ({
+    type: LISTAR_NOTIFICACIONES,
+    payload: notificaciones
+});
+const buscarNotificacionesAction = (notificaciones) => ({
+    type: BUSCAR_NOTIFICACIONES,
+    payload: notificaciones
+});
+const totalNotificacionesAction = (total) => ({
+    type: TOTAL_NOTIFICACIONES,
+    payload: total
+});
 
 export const fetchListarClientes = () => {
     return (dispatch) => {
@@ -62,7 +89,7 @@ export const fetchListarTotalClientes = () => {
                     window.localStorage.removeItem('usuario');
                     window.location.href = window.location.protocol + "//" + window.location.host + '/admin/user/login'
                 } else {
-                 dispatch(listarTotalClientesAction(res.total_empresas));
+                    dispatch(listarTotalClientesAction(res.total_empresas));
                 }
             })
             .catch(res => {
@@ -79,7 +106,7 @@ export const fetchDetalleCliente = (idEmpresa) => {
                     window.localStorage.removeItem('usuario');
                     window.location.href = window.location.protocol + "//" + window.location.host + '/admin/user/login'
                 } else {
-                dispatch(detalleClienteAction(res));
+                    dispatch(detalleClienteAction(res));
                 }
             })
             .catch(res => {
@@ -90,7 +117,7 @@ export const fetchDetalleCliente = (idEmpresa) => {
 
 export const limpiarClienteSeleccionado = () => {
     return (dispatch) => {
-         return dispatch(detalleClienteAction(null))
+        return dispatch(detalleClienteAction(null))
     }
 };
 
@@ -106,9 +133,9 @@ export const fetchAltaCliente = (email, nombre, responsable, numeroContratoVigen
     }
 };
 
-export const fetchUpdateCliente = (id, email, nombre, responsable, numeroContratoVigente, tituloContrato, descripcion) => {
+export const fetchUpdateCliente = (id, email, telefono, nombre, responsable, numeroContratoVigente, tituloContrato, descripcion) => {
     return async (dispatch) => {
-        return updateCliente(id, email, nombre, responsable, numeroContratoVigente, tituloContrato, descripcion)
+        return updateCliente(id, email, telefono, nombre, responsable, numeroContratoVigente, tituloContrato, descripcion)
             .then(res => {
                 return dispatch(updateClienteAction(res));
             })
@@ -131,11 +158,11 @@ export const fetchdeleteCliente = (id) => {
 };
 
 //Notificaciones mensajes
-export const fetchListarNotificaciones = (a, snv , cant, idUsuario, sm) => {
+export const fetchListarNotificaciones = (a, snv, cant, idUsuario, sm) => {
     return (dispatch) => {
         listarNotificaciones(a, snv, String(cant), idUsuario, sm)
             .then(res => {
-                if(res){
+                if (res) {
                     dispatch(listarNotificacionesAction(res));
                 }
             })
@@ -145,11 +172,11 @@ export const fetchListarNotificaciones = (a, snv , cant, idUsuario, sm) => {
     }
 };
 
-export const fetchBuscarNotificaciones = (a, snv, cant, idUsuario, sm, q) => {    
+export const fetchBuscarNotificaciones = (a, snv, cant, idUsuario, sm, q) => {
     return (dispatch) => {
         buscarNotificaciones(a, snv, String(cant), idUsuario, sm, q)
             .then(res => {
-                if(res){
+                if (res) {
                     dispatch(buscarNotificacionesAction(res));
                 }
             })
@@ -164,24 +191,44 @@ export default (state = initialState, action) => {
     switch (action.type) {
         //en todos los casos regresamos un objeto nuevo en el cual incluimos todos las propiedades del objeto state con ...state
         case LISTAR_CLIENTES:
-            return { ...state, clientes: action.payload };
+            return {
+                ...state, clientes: action.payload
+            };
         case LISTAR_TOTAL_CLIENTES:
-            return { ...state, totalClientes: action.payload };
+            return {
+                ...state, totalClientes: action.payload
+            };
         case DETALLE_CLIENTE:
-            return { ...state, detalleClienteState: action.payload };
+            return {
+                ...state, detalleClienteState: action.payload
+            };
         case ALTA_CLIENTE:
-            return { ...state, guardado: action.payload };
+            return {
+                ...state, guardado: action.payload
+            };
         case UPDATE_CLIENTE:
-            return { ...state, guardado: action.payload };
+            return {
+                ...state, guardado: action.payload
+            };
         case DELETE_CLIENTE:
-            return { ...state, guardado: action.payload };
+            return {
+                ...state, guardado: action.payload
+            };
         case LISTAR_NOTIFICACIONES:
-            return { ...state, notificaciones: action.payload };
+            return {
+                ...state, notificaciones: action.payload
+            };
         case TOTAL_NOTIFICACIONES:
-            return { ...state, totalNotificaciones: action.payload };
+            return {
+                ...state, totalNotificaciones: action.payload
+            };
         case BUSCAR_NOTIFICACIONES:
-            return { ...state, notificaciones: action.payload };
+            return {
+                ...state, notificaciones: action.payload
+            };
         default:
-            return { ...state };
+            return {
+                ...state
+            };
     }
 }

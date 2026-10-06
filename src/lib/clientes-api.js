@@ -74,13 +74,14 @@ export const altaCliente = (email, nombre, responsable, numeroContratoVigente, t
 };
 
 
-export const updateCliente = (id, email, nombre, responsable, numeroContratoVigente, tituloContrato, descripcion) => {
+export const updateCliente = (id, email, telefono, nombre, responsable, numeroContratoVigente, tituloContrato, descripcion) => {
 
 	const data = new FormData();
 	data.append('a', 'me');
 	data.append('id', id);
 	data.append('e', email);
 	data.append('n', nombre);
+	data.append('tel', telefono);
 	data.append('r', responsable);
 	data.append('c', numeroContratoVigente);
 	data.append('t', tituloContrato);

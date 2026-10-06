@@ -15,6 +15,7 @@ const Empleados = (props) => {
   // como prop `empresa` por como estaba armado el fetch original, aunque
   // en realidad es el id de empleado, no de empresa).
   const [empleadoIdEditando, setEmpleadoIdEditando] = useState(null);
+  const [empleadoEditando, setEmpleadoEditando] = useState(null);
   const [modalAbierto, setModalAbierto] = useState(false);
 
   const cargarEmpleados = () => {
@@ -32,6 +33,9 @@ const Empleados = (props) => {
 
   const abrirModalEdicion = (empleadoId) => {
     setEmpleadoIdEditando(empleadoId);
+    setEmpleadoEditando(
+      empleados?.find((e) => String(e.id) === String(empleadoId)) ?? null,
+    );
     setModalAbierto(true);
   };
 
@@ -75,10 +79,12 @@ const Empleados = (props) => {
       {/* CAMBIO: el modal vive acá, a nivel página, y se muestra/oculta según el estado */}
       {empleadoIdEditando && (
         <EditarEmpleadoModal
+          key={empleadoIdEditando} // NUEVO: remonta el modal al cambiar de empleado
           isOpen={modalAbierto}
           toggle={toggleModal}
           cliente={detalleCliente.id}
           empresa={empleadoIdEditando}
+          empleado={empleadoEditando} // NUEVO
         />
       )}
     </>

@@ -93,13 +93,6 @@ const Equipos = ({
       setEquiposFiltrados([]);
     }
   }, [idEmpresa, currentTab]);
-
-  /*useEffect(()=> {
-    recargarEstadosEquipo(idEmpresa);
-    console.log("🚀 ~ Equipos ~ idEmpresa:", idEmpresa)
-    
-  },[currentTab]);*/
-
   // Determinar la lista a mostrar según filtros
   const equiposAMostrar = equiposFiltrados.length ? equiposFiltrados : equipos;
 

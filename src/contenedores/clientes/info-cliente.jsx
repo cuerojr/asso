@@ -30,13 +30,14 @@ import Empleados from "./empleados";
 import { useNavigate } from "react-router-dom";
 
 const InfoCliente = (props) => {
-  const { idEmpresa, detalleCliente } = props;
+  const { idEmpresa, detalleCliente, fetchUpdateCliente, fetchDetalleCliente } = props;
   const navigate = useNavigate();
 
   const [nombre, setNombre] = useState("");
   const [clienteId, setClienteId] = useState("");
   const [responsable, setResponsable] = useState("");
   const [email, setEmail] = useState("");
+  const [telefono, setTelefono] = useState("");
   const [numero, setNumero] = useState("");
   const [tituloContrato, setTituloContrato] = useState("");
   const [descripcion, setDescripcion] = useState("");
@@ -47,7 +48,7 @@ const InfoCliente = (props) => {
 
   useEffect(() => {
     if (props.currentTab === "info") {
-      props.fetchDetalleCliente(idEmpresa);
+      fetchDetalleCliente(idEmpresa);
     }
   }, [props.currentTab]);
 
@@ -58,10 +59,12 @@ const InfoCliente = (props) => {
       setNombre(cliente.empresa);
       setResponsable(cliente.responsable);
       setEmail(cliente.email);
+      setTelefono(cliente.telefono);
       setNumero(cliente.contrato_vigente_nro);
       setDescripcion(cliente.descripcion);
       setTituloContrato(cliente.titulo);
       setHabilitacion(Number(cliente.habilitado));
+      setTelefono(cliente.telefono);
     }
   }, [detalleCliente]);
 
@@ -79,16 +82,17 @@ const InfoCliente = (props) => {
   const actualizarCliente = (
     id,
     email,
+    telefono,
     nombre,
     responsable,
     numeroContratoVigente,
     tituloContrato,
     descripcion
   ) => {
-    props
-      .fetchUpdateCliente(
+    fetchUpdateCliente(
         id,
         email,
+        telefono,
         nombre,
         responsable,
         numeroContratoVigente,
@@ -246,6 +250,7 @@ const InfoCliente = (props) => {
                   actualizarCliente(
                     clienteId,
                     email,
+                    telefono,
                     nombre,
                     responsable,
                     numero,
@@ -306,6 +311,14 @@ const InfoCliente = (props) => {
                   placeholder="email@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                />
+              </InputGroup>
+              <InputGroup className="mb-3">
+                <InputGroupAddon addonType="prepend">Teléfono</InputGroupAddon>
+                <Input
+                  placeholder="3412345678"
+                  value={telefono}
+                  onChange={(e) => setTelefono(e.target.value)}
                 />
               </InputGroup>
             </Tarjeta>

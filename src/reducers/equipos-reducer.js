@@ -87,9 +87,7 @@ export const seleccionarEquipoCargaIndividual = (equipo) => {
 }
 
 export const mostrarOcultarFiltros = (visibilidad) => {
-    return (dispatch) => {
-       // console.log("🚀 ~ mostrarOcultarFiltros ~ dispatch:", dispatch)
-        
+    return (dispatch) => {        
         return dispatch(mostrarOcultarFiltrosAction(visibilidad));
     }
 }

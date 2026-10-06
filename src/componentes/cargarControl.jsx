@@ -38,7 +38,6 @@ import ReactDOMServer from "react-dom/server";
 import { set } from "react-hook-form";
 
 const EditarCargarControl = (props) => {
-  //console.log("🚀 ~ EditarCargarControl ~ props:", props);
   const {
     controlSeleccionado,
     tiposControles,
@@ -70,10 +69,6 @@ const EditarCargarControl = (props) => {
   };
 
   useEffect(() => {
-    /*console.log(
-      "🚀 ~ EditarCargarControl ~ controlSeleccionado:",
-      controlSeleccionado,
-    );*/
     if (controlSeleccionado) {
       // porque está editando
       fetchSetControlIndividualSeleccionado(controlSeleccionado);
@@ -133,10 +128,6 @@ const EditarCargarControl = (props) => {
   }, []);
 
   useEffect(() => {
-    /*console.log(
-      "🚀 ~ EditarCargarControl ~ controlSeleccionado:",
-      controlSeleccionado,
-    );*/
     if (controlIndividualSeleccionado) {
       // porque está editando
       //fetchSetControlIndividualSeleccionado(controlSeleccionado);

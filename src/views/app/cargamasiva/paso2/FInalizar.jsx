@@ -152,7 +152,6 @@ const FInalizar = ({
         });
         
         await Promise.all(promisesControledEquipment);
-        //console.log("🚀 ~ siguienteEquipoYGuardar ~ promisesControledEquipment:", promisesControledEquipment)
         */
 
     const res = await finalizarCargaMasiva(cargaMasiva.id);

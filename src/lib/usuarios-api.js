@@ -118,17 +118,19 @@ export const getUsuarioEmpresa = (id) => {
 export const updateUsuarioEmpleado = ({
 	id,
 	email,
+	telefono,
 	nombre,
 	acccesoInformes,
 	accesoMensajes,
 	accesoNotificaciones,
 	secciones,
-	servicios = ["54"]
+	servicios = [1]
 }) => {
 	const data = new FormData();
 	data.append('a', 'mue');
 	data.append('id', id);
 	data.append('e', email);
+	data.append('tel', telefono);
 	data.append('n', nombre);
 	data.append('i', acccesoInformes);
 	data.append('m', accesoMensajes);
