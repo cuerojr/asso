@@ -12,8 +12,9 @@ import moment from "moment";
 const useNotificacion = (cargaMasiva) => {
   const [enviandoNotificacion, setEnviandoNotificacion] = useState(false);
   const [clienteNotificado, setClienteNotificado] = useState(false);
-const data1 = "owa_k1_3953e69318c07a4cf04bef61aa505e1f3b7dea4b841f9f3808a774e54c12ebe7";
-const data2 = "https://wa.rojodev.com.ar/";
+  const data1 =
+    "owa_k1_3953e69318c07a4cf04bef61aa505e1f3b7dea4b841f9f3808a774e54c12ebe7";
+  const data2 = "https://wa.rojodev.com.ar/";
 
   const volverAlInicio = (push) => {
     push("step1");
@@ -40,21 +41,17 @@ const data2 = "https://wa.rojodev.com.ar/";
 
   const getSessionId = async () => {
     try {
-      const response = await fetch(
-        `${data2}/api/sessions`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "X-API-Key":
-              data1,
-          },
+      const response = await fetch(`${data2}/api/sessions`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-Key": data1,
         },
-      );
+      });
       if (!response.ok) {
         throw new Error("Error al obtener el sessionId");
       }
-      const data = await response.json();      
+      const data = await response.json();
       return data[0].id;
     } catch (error) {
       console.error("Error al obtener el sessionId:", error);
@@ -62,10 +59,19 @@ const data2 = "https://wa.rojodev.com.ar/";
     }
   };
 
-  const notificarAlClienteViaWhatsapp = async () => {
+  const notificarAlClienteViaWhatsapp = async (phoneNumber) => {
     try {
       // console.log("cargaMasiva", cargaMasiva);
-      const numero = "5493415807001";
+      const numero = cargaMasiva.clienteSeleccionado?.telefono || phoneNumber;
+
+      if (!numero) {
+        NotificationManager.error(
+          "No se pudo obtener el número de teléfono",
+          "Error",
+        );
+        return;
+      }
+
       const sessionId = await getSessionId();
 
       if (!sessionId) {
@@ -80,8 +86,7 @@ const data2 = "https://wa.rojodev.com.ar/";
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "X-API-Key":
-              data1,
+            "X-API-Key": data1,
           },
           body: JSON.stringify({
             chatId: `${numero}@c.us`,
@@ -161,8 +166,8 @@ const Paso3 = ({ cantidadesFinal, cargaMasiva, setearCargaMasiva }) => {
         <Col>
           <Col md="12">
             {!enviandoNotificacion && !clienteNotificado && (
-              <Button color="warning" onClick={notificarAlCliente}>
-                NOTIFICAR AL CLIENTE{" "}
+              <Button className="mb-2" color="warning" onClick={notificarAlCliente}>
+                NOTIFICAR AL CLIENTE POR EMAIL
                 <i className="ml-3 simple-icon-paper-plane"></i>
               </Button>
             )}
@@ -191,11 +196,14 @@ const Paso3 = ({ cantidadesFinal, cargaMasiva, setearCargaMasiva }) => {
             <Button
               color="success"
               className="mt-2"
-              onClick={notificarAlClienteViaWhatsapp}
-            >
-              NOTIFICAR POR WHATSAPP{" "}
+              onClick={() => notificarAlClienteViaWhatsapp()}
+              >
+              NOTIFICAR POR WHATSAPP
               <i className="ml-3 simple-icon-paper-plane"></i>
             </Button>
+              <p className="mt-2">
+                Se enviará un mensaje de WhatsApp al cliente para notificar la carga de un informe de equipos controlados y sus estados. (El número de teléfono se obtiene del cliente seleccionado en la carga masiva).
+              </p>
           </Col>
           <Col md="12"></Col>
         </Col>
@@ -205,11 +213,12 @@ const Paso3 = ({ cantidadesFinal, cargaMasiva, setearCargaMasiva }) => {
               render={({ push }) => (
                 <Button
                   color="success"
+                  className="mb-2"
                   onClick={() => {
                     volverAlInicio(push);
                   }}
                 >
-                  CARGAR OTRA RUTA{" "}
+                  CARGAR OTRA RUTA
                   <i className="ml-3 simple-icon-cloud-upload"></i>
                 </Button>
               )}
@@ -223,8 +232,8 @@ const Paso3 = ({ cantidadesFinal, cargaMasiva, setearCargaMasiva }) => {
               <Link
                 to={`/app/clientes/nuevo-informe/${cargaMasiva.clienteSeleccionado.value}/generar-consulta`}
               >
-                <Button color="primary">
-                  GENERAR UN INFORME <i className="ml-3 simple-icon-doc"></i>
+                <Button color="primary" className="mb-2">
+                  GENERAR UN INFORME
                 </Button>
               </Link>
             </Col>
@@ -236,8 +245,8 @@ const Paso3 = ({ cantidadesFinal, cargaMasiva, setearCargaMasiva }) => {
         <Col md="12"> Terminé por ahora: </Col>
         <Col md="12">
           <Link to="/app/clientes">
-            <Button color="secondary">
-              LISTO <i className="ml-3 simple-icon-check"></i>
+            <Button color="secondary" className="mt-2">
+              LISTO
             </Button>
           </Link>
         </Col>
