@@ -8,6 +8,9 @@ import { NotificationManager } from "../../../../components/common/react-notific
 import { setearCargaMasiva } from "../../../../reducers/cargas-masivas-reducer";
 import { connect } from "react-redux";
 import moment from "moment";
+import ModalNotificacionWhatsapp from "../../../../componentes/ModalNotificacionWhatsapp";
+import { setMostrarModalWhatsapp } from "../../../../reducers/notificacionesWhatsapp-reducer";
+import { fetchUsuarioEmpleado } from "../../../../reducers/usuarios-reducer";
 
 const useNotificacion = (cargaMasiva) => {
   const [enviandoNotificacion, setEnviandoNotificacion] = useState(false);
@@ -122,7 +125,7 @@ const useNotificacion = (cargaMasiva) => {
   };
 };
 
-const Paso3 = ({ cantidadesFinal, cargaMasiva, setearCargaMasiva }) => {
+const Paso3 = ({ cantidadesFinal, cargaMasiva, setearCargaMasiva, setMostrarModalWhatsapp, usuariosEmpleado, fetchUsuarioEmpleado }) => {
   const {
     enviandoNotificacion,
     clienteNotificado,
@@ -130,6 +133,7 @@ const Paso3 = ({ cantidadesFinal, cargaMasiva, setearCargaMasiva }) => {
     notificarAlClienteViaWhatsapp,
     volverAlInicio,
   } = useNotificacion(cargaMasiva);
+
 
   return (
     <Fragment>
@@ -196,7 +200,7 @@ const Paso3 = ({ cantidadesFinal, cargaMasiva, setearCargaMasiva }) => {
             <Button
               color="success"
               className="mt-2"
-              onClick={() => notificarAlClienteViaWhatsapp()}
+              onClick={() => setMostrarModalWhatsapp(true)}
               >
               NOTIFICAR POR WHATSAPP
               <i className="ml-3 simple-icon-paper-plane"></i>
@@ -251,6 +255,7 @@ const Paso3 = ({ cantidadesFinal, cargaMasiva, setearCargaMasiva }) => {
           </Link>
         </Col>
       </Row>
+      <ModalNotificacionWhatsapp mostrarModalWhatsapp={false} detalleCliente={cargaMasiva?.clienteSeleccionado.value} />
     </Fragment>
   );
 };
@@ -258,7 +263,10 @@ const Paso3 = ({ cantidadesFinal, cargaMasiva, setearCargaMasiva }) => {
 const mapStateToProps = (state) => {
   return {
     cargaMasiva: state.cargasMasivasReducer.cargaMasiva,
+    mostrarModalWhatsapp:
+    state.notificacionesWhatsappReducer.mostrarModalWhatsapp,
     cantidadesFinal: state.cargasMasivasReducer.cantidadesFinal,
+    usuariosEmpleado: state.usuariosReducer.usuariosEmpleado,
   };
 };
-export default connect(mapStateToProps, { setearCargaMasiva })(Paso3);
+export default connect(mapStateToProps, { setearCargaMasiva, setMostrarModalWhatsapp, fetchUsuarioEmpleado })(Paso3);

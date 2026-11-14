@@ -4,12 +4,14 @@ import {
     deleteUsuario,
     updateUsuario,
     getUsuarioEmpresa,
-    updateUsuarioEmpleado
+    updateUsuarioEmpleado,
+    listarUsuariosEmpleados
 } from '../lib/usuarios-api';
 
 const initialState = {
     usuarios: [],
     usuariosEmpleado: [],
+    listaUsuariosEmpleados: [],
     guardado: 0
 };
 
@@ -19,6 +21,7 @@ const DELETE_USUARIO = 'DELETE_USUARIO';
 const UPDATE_USUARIO = 'UPDATE_USUARIO';
 const UPDATE_USUARIO_EMPLEADO = 'UPDATE_USUARIO_EMPLEADO';
 const LISTAR_USUARIOS_EMPLEADO = 'LISTAR_USUARIOS_EMPLEADO';
+const LISTAR_USUARIOS_EMPLEADOS = 'LISTAR_USUARIOS_EMPLEADOS';
 
 const listarUsuariosAction = (usuarios) => ({
     type: LISTAR_USUARIOS,
@@ -44,6 +47,11 @@ const updateUsuarioEmpleadoAction = (guardado) => ({
 const listarUsuariosEmpleadoAction = (usuariosEmpleado) => ({
     type: LISTAR_USUARIOS_EMPLEADO,
     payload: usuariosEmpleado
+});
+
+const listarUsuariosEmpleadosAction = (listaUsuariosEmpleados) => ({
+    type: LISTAR_USUARIOS_EMPLEADOS,
+    payload: listaUsuariosEmpleados
 });
 
 
@@ -140,6 +148,18 @@ export const fetchUpdateUsuarioEmpleado = ({
     }
 };
 
+export const fetchListarUsuariosEmpleados = (idEmpresa) => {
+    return async (dispatch) => {
+        return listarUsuariosEmpleados(idEmpresa)
+            .then(res => {
+                return dispatch(listarUsuariosEmpleadosAction(res));
+            })
+            .catch(res => {
+                console.log(res);
+            })
+    }
+}
+
 export default (state = initialState, action) => {
     switch (action.type) {
         case LISTAR_USUARIOS:
@@ -165,6 +185,10 @@ export default (state = initialState, action) => {
         case UPDATE_USUARIO_EMPLEADO:
             return {
                 ...state, guardado: action.payload
+            };
+        case LISTAR_USUARIOS_EMPLEADOS:
+            return {
+                ...state, listaUsuariosEmpleados: action.payload
             };
         default:
             return {

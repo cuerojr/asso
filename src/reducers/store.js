@@ -17,6 +17,7 @@ import controlesReducer from './controles-reducer';
 import fallasReducer from './fallas-reducer';
 import cargasMasivasReducer from './cargas-masivas-reducer';
 import autocompletarReducer from './autocompletar-reducer'
+import notificacionesWhatsappReducer from './notificacionesWhatsapp-reducer';
 
 //creamos un reducer principal que combina todos los reducer que realicemos
 const objReducer = {
@@ -33,7 +34,8 @@ const objReducer = {
   controlesReducer:controlesReducer,
   fallasReducer:fallasReducer,
   cargasMasivasReducer: cargasMasivasReducer,
-  autocompletarReducer:autocompletarReducer
+  autocompletarReducer:autocompletarReducer,
+  notificacionesWhatsappReducer: notificacionesWhatsappReducer
 }
 const mainReducer = combineReducers(objReducer);
 
