@@ -26,11 +26,15 @@ import {
 
 import { usePdfDownload, imageUrlToBase64 } from "../../hooks/usePdfDownload";
 
+import ModalNotificacionWhatsapp from "../../componentes/ModalNotificacionWhatsapp";
+import { setMostrarModalWhatsapp } from "../../reducers/notificacionesWhatsapp-reducer";
+
 // Importás el hook y los reducers
 import useInformeResultado from "../../hooks/useInformeResultado";
 import { fetchlistarEstados } from "../../reducers/estados-reducer";
 import { fetchlistarFallas } from "../../reducers/fallas-reducer";
 import { fetchlistarcomponentesPorEmpresa } from "../../reducers/componentes-reducer";
+import { fetchUsuarioEmpleado } from "../../reducers/usuarios-reducer";
 import { connect } from "react-redux";
 
 import classnames from "classnames";
@@ -48,6 +52,7 @@ moment.locale("es");
 window.moment = moment;
 
 const ResultadoConsulta = (props) => {
+  
   const { download, isGenerating, error } = usePdfDownload();
 
   const [currentTab, setCurrentTab] = useState(null);
@@ -77,10 +82,20 @@ const ResultadoConsulta = (props) => {
 
   const [filtroFallasIniciales, setFiltroFallasIniciales] = useState([]);
   const [filtroEstadosIniciales, setFiltroEstadosIniciales] = useState([]);
-  const [filtroComponentesIniciales, setFiltroComponentesIniciales] = useState([]);
+  const [filtroComponentesIniciales, setFiltroComponentesIniciales] = useState(
+    [],
+  );
   //const datosUser = JSON.parse(window.localStorage.getItem('cliente'));
-  const { idEmpresa, fallas, estados, componentesPorEmpresa, fetchlistarFallas, fetchlistarEstados, fetchlistarcomponentesPorEmpresa } =
-    props;
+  const {
+    idEmpresa,
+    fallas,
+    estados,
+    componentesPorEmpresa,
+    fetchlistarFallas,
+    fetchlistarEstados,
+    fetchlistarcomponentesPorEmpresa,
+  } = props;
+  console.log("🚀 ~ ResultadoConsulta ~ idEmpresa:", idEmpresa)
 
   const informeHook = useInformeResultado({
     idEmpresa,
@@ -93,7 +108,7 @@ const ResultadoConsulta = (props) => {
     fetchlistarcomponentesPorEmpresa,
     filtroFallasIniciales,
     filtroEstadosIniciales,
-    filtroComponentesIniciales
+    filtroComponentesIniciales,
   });
 
   const capitalizeFirstLetter = (string) => {
@@ -139,7 +154,9 @@ const ResultadoConsulta = (props) => {
       setFiltroEstadosIniciales(res.filtro_estados.map((e) => e.id_estado));
     }
     if (res.filtro_componentes?.length) {
-      setFiltroComponentesIniciales(res.filtro_componentes.map((c) => c.componente));
+      setFiltroComponentesIniciales(
+        res.filtro_componentes.map((c) => c.componente),
+      );
     }
   };
 
@@ -330,6 +347,13 @@ const ResultadoConsulta = (props) => {
                 {/*<Button color="primary">EXPORTAR A XLS <FontAwesomeIcon icon={faDownload} /> </Button>*/}
               </>
             )}
+            <Button
+              color="success"
+              className="mt-2 mr-2"
+              onClick={() => props.setMostrarModalWhatsapp(true)}
+            >NOTIFICAR POR WHATSAPP
+              <i className="m-3 simple-icon-paper-plane"></i>
+            </Button>
             {editable && (
               <Button
                 color="success"
@@ -423,6 +447,10 @@ const ResultadoConsulta = (props) => {
           </TabPane>
         </TabContent>
       </div>
+      <ModalNotificacionWhatsapp
+        mostrarModalWhatsapp={false}
+        detalleCliente={idEmpresa}
+      />
     </>
   );
 };
@@ -431,11 +459,16 @@ const ResultadoConsulta = (props) => {
 const mapStateToProps = (state) => ({
   estados: state.estadosReducer.estados,
   fallas: state.fallasReducer.fallas,
-  componentesPorEmpresa: state.componentesReducer.componentesPorEmpresa, // ✅
+  componentesPorEmpresa: state.componentesReducer.componentesPorEmpresa, 
+  mostrarModalWhatsapp:
+    state.notificacionesWhatsappReducer.mostrarModalWhatsapp,
+    usuariosEmpleado: state.usuariosReducer.usuariosEmpleado,
 });
 
 export default connect(mapStateToProps, {
   fetchlistarEstados,
   fetchlistarFallas,
   fetchlistarcomponentesPorEmpresa,
+  setMostrarModalWhatsapp,
+  fetchUsuarioEmpleado
 })(ResultadoConsulta);
