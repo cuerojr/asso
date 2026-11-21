@@ -2,24 +2,34 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useWhatsappNotification } from "./useWhatsappNotification";
 import { NotificationManager } from "../components/common/react-notifications";
 
-const limpiarTelefono = (valor = "") => valor.replace(/\D/g, "");
+const MENSAJE_DEFAULT =
+  "Hola! Tenemos novedades para vos en ASSO. Ingresá a tu cuenta para verlas.";
+
+const limpiarTelefono = (valor = "") => String(valor ?? "").replace(/\D/g, "");
+
+// Argentina: deja el número como 549 + área + número (sin 0 ni 15)
+const normalizarTelefono = (valor = "") => {
+  let tel = limpiarTelefono(valor).replace(/^0+/, "");
+  if (tel.startsWith("549")) return tel;
+  if (tel.startsWith("54")) return `549${tel.slice(2)}`;
+  return `549${tel}`;
+};
+
+const telefonoValido = (tel) => tel.length >= 12 && tel.length <= 15;
 
 export const useModalNotificacionWhatsapp = ({
   email = "",
   abierto = false,
   usuarios = [], // [{ id, nombre, telefono }]
+  mensaje = MENSAJE_DEFAULT,
   onCerrar,
   onEnviado,
 } = {}) => {
-  const { notificarAlClienteViaWhatsapp } = useWhatsappNotification();
+  const { enviarMensajes } = useWhatsappNotification();
 
   const [phoneNumber, setPhoneNumber] = useState("");
   const [usuariosSeleccionados, setUsuariosSeleccionados] = useState([]);
   const [enviando, setEnviando] = useState(false);
-
-  /**
-   * necesito ver si hay numero en la db para activar el modal, si no hay numero se activa el modal y se le pide al usuario que ingrese un numero de telefono, si hay numero en la db no se activa el modal.
-   */
 
   // Evita setState si el componente se desmontó mientras se esperaba el fetch
   const montado = useRef(true);
@@ -49,16 +59,17 @@ export const useModalNotificacionWhatsapp = ({
     );
   }, []);
 
-  // Junta los teléfonos de los usuarios tildados + el número manual (sin duplicados)
+  // Junta teléfonos de usuarios tildados + número manual, normalizados y sin duplicados
   const validar = useCallback(() => {
     const telefonos = new Set();
 
     usuarios
       .filter((u) => usuariosSeleccionados.includes(u.id))
-      .forEach((u) => telefonos.add(limpiarTelefono(u.telefono)));
+      .forEach((u) => telefonos.add(normalizarTelefono(u.telefono)));
 
-    const manual = limpiarTelefono(phoneNumber);
-    if (manual) telefonos.add(manual);
+    if (limpiarTelefono(phoneNumber)) {
+      telefonos.add(normalizarTelefono(phoneNumber));
+    }
 
     const lista = [...telefonos];
 
@@ -69,7 +80,7 @@ export const useModalNotificacionWhatsapp = ({
       return null;
     }
 
-    if (lista.some((t) => t.length < 10 || t.length > 15)) {
+    if (!lista.every(telefonoValido)) {
       NotificationManager.warning("Hay un número de celular inválido");
       return null;
     }
@@ -83,34 +94,28 @@ export const useModalNotificacionWhatsapp = ({
     const telefonos = validar();
     if (!telefonos) return;
 
+    setEnviando(true);
     try {
-      setEnviando(true);
-
-      const resultados = await Promise.allSettled(
-        telefonos.map((telefono) =>
-          notificarAlClienteViaWhatsapp({ phoneNumber: telefono }),
-        ),
-      );
-
-      const fallidos = resultados.filter((r) => r.status === "rejected");
+      const { enviados, fallidos } = await enviarMensajes(telefonos, mensaje);
 
       if (fallidos.length === 0) {
         NotificationManager.success("Notificaciones enviadas por WhatsApp");
         onEnviado?.();
         cerrar();
-      } else if (fallidos.length === telefonos.length) {
-        console.error("Error al enviar notificaciones:", fallidos);
+      } else if (enviados === 0) {
         NotificationManager.error("No se pudo enviar la notificación");
       } else {
-        console.error("Envíos fallidos:", fallidos);
         NotificationManager.warning(
-          `Se enviaron ${telefonos.length - fallidos.length} de ${telefonos.length} notificaciones`,
+          `Se enviaron ${enviados} de ${telefonos.length}. Fallaron: ${fallidos.join(", ")}`,
         );
       }
+    } catch (error) {
+      console.error("Error al enviar notificaciones:", error);
+      NotificationManager.error("No se pudo conectar con WhatsApp");
     } finally {
       if (montado.current) setEnviando(false);
     }
-  }, [enviando, validar, notificarAlClienteViaWhatsapp, onEnviado, cerrar]);
+  }, [enviando, validar, enviarMensajes, mensaje, onEnviado, cerrar]);
 
   return {
     email,

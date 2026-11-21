@@ -10,11 +10,14 @@ import { connect } from "react-redux";
 import moment from "moment";
 import ModalNotificacionWhatsapp from "../../../../componentes/ModalNotificacionWhatsapp";
 import { setMostrarModalWhatsapp } from "../../../../reducers/notificacionesWhatsapp-reducer";
-import { fetchUsuarioEmpleado } from "../../../../reducers/usuarios-reducer";
 import { useNotificacion } from "../../../../hooks/useNotification";
 
-
-const Paso3 = ({ cantidadesFinal, cargaMasiva, setearCargaMasiva, setMostrarModalWhatsapp, usuariosEmpleado, fetchUsuarioEmpleado }) => {
+const Paso3 = ({
+  cantidadesFinal,
+  cargaMasiva,
+  setearCargaMasiva,
+  setMostrarModalWhatsapp,
+}) => {
   const {
     enviandoNotificacion,
     clienteNotificado,
@@ -22,7 +25,6 @@ const Paso3 = ({ cantidadesFinal, cargaMasiva, setearCargaMasiva, setMostrarModa
     notificarAlClienteViaWhatsapp,
     volverAlInicio,
   } = useNotificacion(cargaMasiva);
-
 
   return (
     <Fragment>
@@ -59,7 +61,11 @@ const Paso3 = ({ cantidadesFinal, cargaMasiva, setearCargaMasiva, setMostrarModa
         <Col>
           <Col md="12">
             {!enviandoNotificacion && !clienteNotificado && (
-              <Button className="mb-2" color="warning" onClick={notificarAlCliente}>
+              <Button
+                className="mb-2"
+                color="warning"
+                onClick={notificarAlCliente}
+              >
                 NOTIFICAR AL CLIENTE POR EMAIL
                 <i className="ml-3 simple-icon-paper-plane"></i>
               </Button>
@@ -90,13 +96,16 @@ const Paso3 = ({ cantidadesFinal, cargaMasiva, setearCargaMasiva, setMostrarModa
               color="success"
               className="mt-2"
               onClick={() => setMostrarModalWhatsapp(true)}
-              >
+            >
               NOTIFICAR POR WHATSAPP
               <i className="ml-3 simple-icon-paper-plane"></i>
             </Button>
-              <p className="mt-2">
-                Se enviará un mensaje de WhatsApp al cliente para notificar la carga de un informe de equipos controlados y sus estados. (El número de teléfono se obtiene del cliente seleccionado en la carga masiva).
-              </p>
+            <p className="mt-2">
+              Se enviará un mensaje de WhatsApp al cliente para notificar la
+              carga de un informe de equipos controlados y sus estados. (El
+              número de teléfono se obtiene del cliente seleccionado en la carga
+              masiva).
+            </p>
           </Col>
           <Col md="12"></Col>
         </Col>
@@ -144,7 +153,10 @@ const Paso3 = ({ cantidadesFinal, cargaMasiva, setearCargaMasiva, setMostrarModa
           </Link>
         </Col>
       </Row>
-      <ModalNotificacionWhatsapp mostrarModalWhatsapp={false} detalleCliente={cargaMasiva?.clienteSeleccionado.value} />
+      <ModalNotificacionWhatsapp
+        mostrarModalWhatsapp={false}
+        detalleCliente={cargaMasiva?.clienteSeleccionado.value}
+      />
     </Fragment>
   );
 };
@@ -153,9 +165,11 @@ const mapStateToProps = (state) => {
   return {
     cargaMasiva: state.cargasMasivasReducer.cargaMasiva,
     mostrarModalWhatsapp:
-    state.notificacionesWhatsappReducer.mostrarModalWhatsapp,
+      state.notificacionesWhatsappReducer.mostrarModalWhatsapp,
     cantidadesFinal: state.cargasMasivasReducer.cantidadesFinal,
-    usuariosEmpleado: state.usuariosReducer.usuariosEmpleado,
   };
 };
-export default connect(mapStateToProps, { setearCargaMasiva, setMostrarModalWhatsapp, fetchUsuarioEmpleado })(Paso3);
+export default connect(mapStateToProps, {
+  setearCargaMasiva,
+  setMostrarModalWhatsapp,
+})(Paso3);

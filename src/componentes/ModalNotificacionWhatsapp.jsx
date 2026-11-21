@@ -24,18 +24,24 @@ const tieneTelefonoValido = (usuario) => {
 
 const ModalNotificacionWhatsapp = ({
   mostrarModalWhatsapp,
+  clienteId: clienteIdProp,
   detalleCliente,
   setMostrarModalWhatsapp,
   usuariosEmpleado,
   listaUsuariosEmpleados,
   fetchListarUsuariosEmpleados,
   cargaMasiva,
+  mensaje,
 }) => {
-  const clienteId = cargaMasiva?.clienteSeleccionado?.value;
+ const clienteId =
+    clienteIdProp ?? detalleCliente?.id ?? cargaMasiva?.clienteSeleccionado?.value;
 
   useEffect(() => {
     if (!mostrarModalWhatsapp || !clienteId) return;
-    fetchListarUsuariosEmpleados(clienteId);
+    console.log("🚀 ~ ModalNotificacionWhatsapp ~ listaUsuariosEmpleados:", listaUsuariosEmpleados)
+    if (!listaUsuariosEmpleados || listaUsuariosEmpleados.length === 0) {
+      fetchListarUsuariosEmpleados(clienteId);
+    }
   }, [mostrarModalWhatsapp, clienteId, fetchListarUsuariosEmpleados]);
 
   const {
@@ -50,6 +56,7 @@ const ModalNotificacionWhatsapp = ({
     email: detalleCliente?.email ?? "",
     abierto: mostrarModalWhatsapp,
     usuarios: listaUsuariosEmpleados,
+    mensaje,
     onCerrar: () => setMostrarModalWhatsapp(false),
   });
 
@@ -67,6 +74,7 @@ const ModalNotificacionWhatsapp = ({
       </ModalHeader>
       <ModalBody className="h-full">
         <div className="card-body">
+          <p className="mb-2">Se enviará un mensaje de WhatsApp al cliente para notificar la carga de un informe de equipos controlados y sus estados. (El número de teléfono se obtiene del cliente seleccionado en la carga masiva).</p>
           <p className="mb-2 font-weight-bold">Usuarios a notificar</p>
           <div
             className="p-3 mb-3"
@@ -90,7 +98,7 @@ const ModalNotificacionWhatsapp = ({
                       opacity: sinTelefono ? 0.6 : 1,
                     }}
                   >
-                    <span>
+                    <span className="font-weight-bold font-size-14 font-white">
                       <Input
                         type="checkbox"
                         disabled={sinTelefono}

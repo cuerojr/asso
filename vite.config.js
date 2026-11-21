@@ -33,5 +33,13 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: './src/setupTests.js',
-  }
+  },
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://clientes.assoconsultores.ar",
+        changeOrigin: true,
+      },
+    },
+  },
 });

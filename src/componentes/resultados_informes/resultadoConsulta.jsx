@@ -1,4 +1,5 @@
 import React, { useEffect, Fragment, useState } from "react";
+import { connect } from "react-redux";
 import {
   Row,
   Input,
@@ -31,11 +32,13 @@ import { setMostrarModalWhatsapp } from "../../reducers/notificacionesWhatsapp-r
 
 // Importás el hook y los reducers
 import useInformeResultado from "../../hooks/useInformeResultado";
+import { useNotificacion } from "../../hooks/useNotification";
+import { useWhatsappMessages } from "../../hooks/useWhatsappMessages";
+
 import { fetchlistarEstados } from "../../reducers/estados-reducer";
 import { fetchlistarFallas } from "../../reducers/fallas-reducer";
 import { fetchlistarcomponentesPorEmpresa } from "../../reducers/componentes-reducer";
 import { fetchUsuarioEmpleado } from "../../reducers/usuarios-reducer";
-import { connect } from "react-redux";
 
 import classnames from "classnames";
 import {
@@ -52,8 +55,8 @@ moment.locale("es");
 window.moment = moment;
 
 const ResultadoConsulta = (props) => {
-  
   const { download, isGenerating, error } = usePdfDownload();
+  const { getNewReportMessage } = useWhatsappMessages();
 
   const [currentTab, setCurrentTab] = useState(null);
   const [contenidoHTML, setContenidoHTML] = useState(null);
@@ -95,7 +98,7 @@ const ResultadoConsulta = (props) => {
     fetchlistarEstados,
     fetchlistarcomponentesPorEmpresa,
   } = props;
-  console.log("🚀 ~ ResultadoConsulta ~ idEmpresa:", idEmpresa)
+  console.log("🚀 ~ ResultadoConsulta ~ idEmpresa:", idEmpresa);
 
   const informeHook = useInformeResultado({
     idEmpresa,
@@ -351,7 +354,8 @@ const ResultadoConsulta = (props) => {
               color="success"
               className="mt-2 mr-2"
               onClick={() => props.setMostrarModalWhatsapp(true)}
-            >NOTIFICAR POR WHATSAPP
+            >
+              NOTIFICAR POR WHATSAPP
               <i className="m-3 simple-icon-paper-plane"></i>
             </Button>
             {editable && (
@@ -449,7 +453,8 @@ const ResultadoConsulta = (props) => {
       </div>
       <ModalNotificacionWhatsapp
         mostrarModalWhatsapp={false}
-        detalleCliente={idEmpresa}
+        clienteId={idEmpresa}
+        mensaje={getNewReportMessage({ titulo: datosPdf?.titulo })}
       />
     </>
   );
@@ -459,10 +464,10 @@ const ResultadoConsulta = (props) => {
 const mapStateToProps = (state) => ({
   estados: state.estadosReducer.estados,
   fallas: state.fallasReducer.fallas,
-  componentesPorEmpresa: state.componentesReducer.componentesPorEmpresa, 
+  componentesPorEmpresa: state.componentesReducer.componentesPorEmpresa,
   mostrarModalWhatsapp:
     state.notificacionesWhatsappReducer.mostrarModalWhatsapp,
-    usuariosEmpleado: state.usuariosReducer.usuariosEmpleado,
+  usuariosEmpleado: state.usuariosReducer.usuariosEmpleado,
 });
 
 export default connect(mapStateToProps, {
@@ -470,5 +475,5 @@ export default connect(mapStateToProps, {
   fetchlistarFallas,
   fetchlistarcomponentesPorEmpresa,
   setMostrarModalWhatsapp,
-  fetchUsuarioEmpleado
+  fetchUsuarioEmpleado,
 })(ResultadoConsulta);
