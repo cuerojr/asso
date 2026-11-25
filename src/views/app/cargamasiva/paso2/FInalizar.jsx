@@ -239,7 +239,7 @@ const FInalizar = ({
                       }}
                       className="ml-2"
                     >
-                      SI, FINALIZAR LA CARGA DE CONTROLESss{" "}
+                      SI, FINALIZAR LA CARGA DE CONTROLES{" "}
                       <i className="simple-icon-check" />
                     </Button>
                   )}
@@ -271,10 +271,10 @@ const FInalizar = ({
                     {detalleConfirmFinalizarCarga.equipos.map((equipo) => (
                       <Fragment key={equipo.id}>
                         <tr>
-                          <td style={{ background: "#000" }}>
+                          <td style={{ background: "#000", color: "#fff" }}>
                             {equipo.seccion}
                           </td>
-                          <td colSpan="7" style={{ background: "#000" }}>
+                          <td colSpan="7" style={{ background: "#000", color: "#fff" }}>
                             <strong>{equipo.nombre_equipo}</strong>
                           </td>
                         </tr>

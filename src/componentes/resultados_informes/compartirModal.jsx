@@ -37,7 +37,7 @@ const CompartirModal = (props) => {
         if (bool) {
             modificacionPublicShare(props.idInforme, props.idEmpresa, 1).then((res) => {
                 if (res.stat === 1) {
-                    setLinkPublico(`h${urlPrincipal}#${res.h}`)
+                    setLinkPublico(`${urlPrincipal}#${res.h}`)
                 }
             })
 

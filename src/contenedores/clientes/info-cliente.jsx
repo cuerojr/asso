@@ -59,12 +59,12 @@ const InfoCliente = (props) => {
       setNombre(cliente.empresa);
       setResponsable(cliente.responsable);
       setEmail(cliente.email);
-      setTelefono(cliente.telefono);
+      setTelefono(cliente.wsp);
       setNumero(cliente.contrato_vigente_nro);
       setDescripcion(cliente.descripcion);
       setTituloContrato(cliente.titulo);
       setHabilitacion(Number(cliente.habilitado));
-      setTelefono(cliente.telefono);
+      
     }
   }, [detalleCliente]);
 

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState, useCallback } from "react";
+import { Fragment, useEffect, useState, useCallback, useRef } from "react";
 import {
   NavItem,
   Modal,
@@ -84,7 +84,7 @@ const quillModules = {
     matchers: [["BR", lineBreakMatcher]],
     matchVisual: false,
   },
-  keyboard: {
+  /*keyboard: {
     bindings: {
       linebreak: {
         key: 13,
@@ -103,7 +103,7 @@ const quillModules = {
         },
       },
     },
-  },
+  },*/
 };
 
 const dropzoneComponentConfig = {
@@ -158,7 +158,7 @@ const dropzoneConfig = {
         {" "}
         <FontAwesomeIcon icon={faTrashCan} />{" "}
       </a>
-    </div>
+    </div>,
   ),
   headers: { "My-Awesome-Header": "header value" },
 };
@@ -172,6 +172,49 @@ const Notificaciones = (props) => {
   const [archivo, setArchivo] = useState("");
   const [estadoEnviado, setEstadoEnviado] = useState(false);
   const [quillKey, setQuillKey] = useState(0); // Key para forzar re-render del editor
+
+  const quillRef = useRef(null);
+
+  useEffect(() => {
+    // quillKey cambia al hacer "volver", así que hay que re-registrar
+    if (!quillRef.current || !mostrarModalNotificaciones) return;
+    const quill = quillRef.current.getEditor();
+    const keyboard = quill.keyboard;
+
+    keyboard.addBinding(
+      { key: 13, shiftKey: null }, // Enter y Shift+Enter
+      (range, context) => {
+        // Si estás en lista, título, bloque de código o cita, dejá el comportamiento normal
+        if (
+          context.format.list ||
+          context.format.header ||
+          context.format["code-block"] ||
+          context.format.blockquote
+        ) {
+          return true;
+        }
+
+        if (range.length > 0) {
+          quill.deleteText(range.index, range.length, "user");
+        }
+
+        const [nextLeaf] = quill.getLeaf(range.index + 1);
+        const [currentLeaf] = quill.getLeaf(range.index);
+
+        quill.insertEmbed(range.index, "break", true, "user");
+        // Al final del editor o de la línea hace falta un segundo <br>
+        if (nextLeaf === null || currentLeaf.parent !== nextLeaf.parent) {
+          quill.insertEmbed(range.index, "break", true, "user");
+        }
+        quill.setSelection(range.index + 1, Quill.sources.SILENT);
+        return false;
+      },
+    );
+
+    // Mover nuestro binding al principio para que corra antes que el de Quill
+    const enterBindings = keyboard.bindings[13];
+    enterBindings.unshift(enterBindings.pop());
+  }, [quillKey, mostrarModalNotificaciones]);
 
   const mostrarNotificaciones = () => {
     setMostrarModalNotificaciones(true);
@@ -194,7 +237,7 @@ const Notificaciones = (props) => {
       clienteSeleccionado,
       asunto,
       textQuillStandart,
-      archivo
+      archivo,
     ).then((res) => {
       console.log(res);
       if (res.stat === 1) {
@@ -208,7 +251,7 @@ const Notificaciones = (props) => {
     setAsunto("");
     setArchivo("");
     setEstadoEnviado(false);
-    setQuillKey(prev => prev + 1); // Forzar re-render del editor
+    setQuillKey((prev) => prev + 1); // Forzar re-render del editor
   };
 
   const finalizar = () => {
@@ -251,7 +294,7 @@ const Notificaciones = (props) => {
           <i className="simple-icon-bell" /> Enviar mensajes
         </NavLink>
       )}
-      
+
       {props.mostrarBt && (
         <Button
           color="primary"
@@ -312,6 +355,7 @@ const Notificaciones = (props) => {
                     backgroundColor: "white",
                   }}
                   key={quillKey}
+                  ref={quillRef}
                   id="mensaje"
                   theme="snow"
                   value={textQuillStandart}
@@ -335,7 +379,7 @@ const Notificaciones = (props) => {
                         3000,
                         null,
                         null,
-                        ""
+                        "",
                       );
                     });
                   },
@@ -385,5 +429,5 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, { fetchListarClientes })(
-  Notificaciones
+  Notificaciones,
 );

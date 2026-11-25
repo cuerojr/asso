@@ -112,7 +112,7 @@ const EditarEmpleadoModal = ({
     setId(usuario?.id ?? null);
     setNombre(usuario?.nombre ?? "");
     setEmail(usuario?.email ?? "");
-    setTelefono(usuario?.telefono ?? "");
+    setTelefono(usuario?.wsp ?? "");
     setEmpleadoInformes(
       usuario?.empleado_informes === "1" || usuario?.empleado_informes === 1,
     );
@@ -202,7 +202,7 @@ const EditarEmpleadoModal = ({
       id,
       nombre,
       email,
-      telefono,
+      wsp: telefono,
       acccesoInformes: empleadoInformes ? 1 : 0,
       accesoMensajes: empleadoMensajes ? 1 : 0,
       accesoNotificaciones: empleadoNotificaciones ? 1 : 0,
