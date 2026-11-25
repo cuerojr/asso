@@ -18,7 +18,7 @@ import { fetchListarUsuariosEmpleados } from "../reducers/usuarios-reducer";
 const limpiarTelefono = (valor = "") => String(valor ?? "").replace(/\D/g, "");
 
 const tieneTelefonoValido = (usuario) => {
-  const tel = limpiarTelefono(usuario?.telefono);
+  const tel = limpiarTelefono(usuario?.wsp);
   return tel.length >= 10 && tel.length <= 15;
 };
 
@@ -38,7 +38,6 @@ const ModalNotificacionWhatsapp = ({
 
   useEffect(() => {
     if (!mostrarModalWhatsapp || !clienteId) return;
-    console.log("🚀 ~ ModalNotificacionWhatsapp ~ listaUsuariosEmpleados:", listaUsuariosEmpleados)
     if (!listaUsuariosEmpleados || listaUsuariosEmpleados.length === 0) {
       fetchListarUsuariosEmpleados(clienteId);
     }

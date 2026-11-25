@@ -7,7 +7,7 @@ let configPromise = null;
 
 const getConfig = () => {
   if (!configPromise) {
-    configPromise = fetch("/api/config-whatsapp.php", {
+    configPromise = fetch("/wa-notification/config-whatsapp.php", {
       credentials: "same-origin", // cookie de sesión PHP
     })
       .then(async (res) => {

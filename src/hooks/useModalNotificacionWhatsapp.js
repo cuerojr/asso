@@ -25,6 +25,7 @@ export const useModalNotificacionWhatsapp = ({
   onCerrar,
   onEnviado,
 } = {}) => {
+  console.log("🚀 ~ useModalNotificacionWhatsapp ~ usuarios:", usuarios)
   const { enviarMensajes } = useWhatsappNotification();
 
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -65,7 +66,7 @@ export const useModalNotificacionWhatsapp = ({
 
     usuarios
       .filter((u) => usuariosSeleccionados.includes(u.id))
-      .forEach((u) => telefonos.add(normalizarTelefono(u.telefono)));
+      .forEach((u) => telefonos.add(normalizarTelefono(u.wsp)));
 
     if (limpiarTelefono(phoneNumber)) {
       telefonos.add(normalizarTelefono(phoneNumber));
