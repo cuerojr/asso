@@ -6002,6 +6002,14 @@ input:-webkit-autofill {
   }
 }
 
+.modal .ql-editor {
+  color: #000;
+}
+
+.modal .ql-editor.ql-blank::before {
+  color: rgba(0, 0, 0, 0.5); /* placeholder */
+}
+
 /* 31.Authorization */
 .auth-card {
   display: flex;

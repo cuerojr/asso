@@ -35,7 +35,7 @@ const GuardarInformeModal = (props) => {
       inputs.opcionales,
       inputs.filtroFallas,
       inputs.filtroEstados,
-      inputs.filtroComponentes
+      inputs.filtroComponentes,
     );
     setLoading(false);
   };
@@ -138,14 +138,11 @@ const GuardarInformeModal = (props) => {
           </Label>
           <ReactQuill
             key={quillKey}
-            id="introducción"
+            id="introduccion"
             theme="snow"
-            value={introduccion}
+            defaultValue={introduccion}
             onChange={setIntroduccion}
-            preserveWhitespace
-            style={{
-              backgroundColor: "white",
-            }}
+            style={{ backgroundColor: "white" }}
           />
           <hr />
           <Label for="firma">FIRMA</Label>

@@ -40,6 +40,13 @@
     }
 }
 
+.modal .ql-editor {
+  color: #000;
+}
+
+.modal .ql-editor.ql-blank::before {
+  color: rgba(0, 0, 0, 0.5); /* placeholder */
+}
 
 .fade-out {
     animation: fadeOut ease 3s;

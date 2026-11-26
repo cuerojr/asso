@@ -1,6 +1,5 @@
-import { Fragment, useEffect, useState, useCallback, useRef } from "react";
+import { Fragment, useEffect, useState, useCallback } from "react";
 import {
-  NavItem,
   Modal,
   ModalBody,
   ModalFooter,
@@ -18,7 +17,7 @@ import {
   deleteNotificacion,
 } from "../lib/clientes-api";
 import { NotificacionEnviada } from "./notificacionEnviada";
-import ReactQuill, { Quill } from "react-quill";
+import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "react-quill/dist/quill.bubble.css";
 
@@ -30,39 +29,6 @@ import ReactDOMServer from "react-dom/server";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import BuscarMensaje from "./mensajes/buscar-mensajes";
-
-// Importaciones correctas para Quill
-const Delta = Quill.import("delta");
-const Break = Quill.import("blots/break");
-const Embed = Quill.import("blots/embed");
-
-const lineBreakMatcher = () => {
-  let newDelta = new Delta();
-  newDelta.insert({ break: "" });
-  return newDelta;
-};
-
-class SmartBreak extends Break {
-  length() {
-    return 1;
-  }
-  value() {
-    return "\n";
-  }
-
-  insertInto(parent, ref) {
-    Embed.prototype.insertInto.call(this, parent, ref);
-  }
-}
-
-SmartBreak.blotName = "break";
-SmartBreak.tagName = "BR";
-
-// Registrar solo una vez
-if (!Quill.imports["blots/break"]) {
-  Quill.register(SmartBreak);
-}
 
 const quillModules = {
   toolbar: [
@@ -80,30 +46,6 @@ const quillModules = {
     ["clean"],
     [{ align: [] }],
   ],
-  clipboard: {
-    matchers: [["BR", lineBreakMatcher]],
-    matchVisual: false,
-  },
-  /*keyboard: {
-    bindings: {
-      linebreak: {
-        key: 13,
-        shiftKey: true,
-        handler: function (range) {
-          const currentLeaf = this.quill.getLeaf(range.index)[0];
-          const nextLeaf = this.quill.getLeaf(range.index + 1)[0];
-          this.quill.insertEmbed(range.index, "break", true, "user");
-          // Insert a second break if:
-          // At the end of the editor, OR next leaf has a different parent (<p>)
-          if (nextLeaf === null || currentLeaf.parent !== nextLeaf.parent) {
-            this.quill.insertEmbed(range.index, "break", true, "user");
-          }
-          // Now that we've inserted a line break, move the cursor forward
-          this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
-        },
-      },
-    },
-  },*/
 };
 
 const dropzoneComponentConfig = {
@@ -171,50 +113,7 @@ const Notificaciones = (props) => {
   const [asunto, setAsunto] = useState("");
   const [archivo, setArchivo] = useState("");
   const [estadoEnviado, setEstadoEnviado] = useState(false);
-  const [quillKey, setQuillKey] = useState(0); // Key para forzar re-render del editor
-
-  const quillRef = useRef(null);
-
-  useEffect(() => {
-    // quillKey cambia al hacer "volver", así que hay que re-registrar
-    if (!quillRef.current || !mostrarModalNotificaciones) return;
-    const quill = quillRef.current.getEditor();
-    const keyboard = quill.keyboard;
-
-    keyboard.addBinding(
-      { key: 13, shiftKey: null }, // Enter y Shift+Enter
-      (range, context) => {
-        // Si estás en lista, título, bloque de código o cita, dejá el comportamiento normal
-        if (
-          context.format.list ||
-          context.format.header ||
-          context.format["code-block"] ||
-          context.format.blockquote
-        ) {
-          return true;
-        }
-
-        if (range.length > 0) {
-          quill.deleteText(range.index, range.length, "user");
-        }
-
-        const [nextLeaf] = quill.getLeaf(range.index + 1);
-        const [currentLeaf] = quill.getLeaf(range.index);
-
-        quill.insertEmbed(range.index, "break", true, "user");
-        // Al final del editor o de la línea hace falta un segundo <br>
-        if (nextLeaf === null || currentLeaf.parent !== nextLeaf.parent) {
-          quill.insertEmbed(range.index, "break", true, "user");
-        }
-        quill.setSelection(range.index + 1, Quill.sources.SILENT);
-        return false;
-      },
-    );
-
-    // Mover nuestro binding al principio para que corra antes que el de Quill
-    const enterBindings = keyboard.bindings[13];
-    enterBindings.unshift(enterBindings.pop());
-  }, [quillKey, mostrarModalNotificaciones]);
+  const [quillKey, setQuillKey] = useState(0); // Key para remontar el editor vacío
 
   const mostrarNotificaciones = () => {
     setMostrarModalNotificaciones(true);
@@ -224,15 +123,12 @@ const Notificaciones = (props) => {
     setClienteSeleccionado(e.target.value);
   };
 
-  // Usar useCallback para evitar re-creación de función
-  const handleQuillChange = useCallback((content, delta, source, editor) => {
-    // Solo actualizar si el cambio viene del usuario
-    if (source === "user") {
-      setTextQuillStandart(content);
-    }
+  // Editor no controlado: el estado solo guarda el HTML para enviarlo
+  const handleQuillChange = useCallback((content) => {
+    setTextQuillStandart(content);
   }, []);
 
-  const enviarNotificacion = (e) => {
+  const enviarNotificacion = () => {
     enviarNotificacionCliente(
       clienteSeleccionado,
       asunto,
@@ -251,7 +147,7 @@ const Notificaciones = (props) => {
     setAsunto("");
     setArchivo("");
     setEstadoEnviado(false);
-    setQuillKey((prev) => prev + 1); // Forzar re-render del editor
+    setQuillKey((prev) => prev + 1); // Remonta el editor vacío
   };
 
   const finalizar = () => {
@@ -351,17 +247,13 @@ const Notificaciones = (props) => {
               <FormGroup>
                 <Label for="mensaje">Mensaje: </Label>
                 <ReactQuill
-                  style={{
-                    backgroundColor: "white",
-                  }}
                   key={quillKey}
-                  ref={quillRef}
                   id="mensaje"
                   theme="snow"
-                  value={textQuillStandart}
+                  defaultValue=""
                   onChange={handleQuillChange}
                   modules={quillModules}
-                  preserveWhitespace
+                  style={{ backgroundColor: "white" }}
                 />
               </FormGroup>
 
