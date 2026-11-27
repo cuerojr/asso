@@ -11,7 +11,7 @@ export default defineConfig({
     devSourcemap: false
   },
   build: {
-    outDir: 'dist/',
+    outDir: 'dist/admin_static',
     assetsDir: 'admin_static',
     rollupOptions: {
       output: {
