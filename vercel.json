@@ -2,11 +2,12 @@
   "version": 2,
   "installCommand": "npm install --legacy-peer-deps",
   "buildCommand": "vite build",
-  "outputDirectory": "admin_static",
+  "outputDirectory": "dist/admin_static",
   "framework": "vite",
   "rewrites": [
-    { "source": "/admin", "destination": "/admin/index.html" },
-    { "source": "/admin/(.*)", "destination": "/admin/index.html" }
+    { "source": "/admin/(.+\\..+)", "destination": "/$1" },
+    { "source": "/admin", "destination": "/index.html" },
+    { "source": "/admin/(.*)", "destination": "/index.html" }
   ],
   "redirects": [
     { "source": "/", "destination": "/admin", "permanent": false }
