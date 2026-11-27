@@ -3,7 +3,7 @@ import { useCallback, useMemo } from "react";
 
 const ASSO_PHONE = "0341 491-5887";
 const ASSO_EMAIL = "info@assoconsultores.ar";
-const PORTAL_URL = "https://clientes.assoconsultores.ar";
+export const PORTAL_URL = "https://clientes.assoconsultores.ar";
 
 export function useWhatsappMessages() {
   // Mensaje que se envía por WhatsApp al guardar el número

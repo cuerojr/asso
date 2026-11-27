@@ -126,7 +126,7 @@ const CargaControles = (props) => {
   }, [props.detalleDeComponentesYControles]);
 
   const seleccionarAnteriorSiguienteEquipo = (op) => {
-    console.log("seleccionar anterior/siguiente equipo", op);
+    //console.log("seleccionar anterior/siguiente equipo", op);
     equipos.forEach((equipo, index) => {
       if (equipo.id == equipoSeleccionado) {
         if (op == "anterior") {
@@ -139,7 +139,7 @@ const CargaControles = (props) => {
   };
 
   const siguienteEquipoFormulario = (siguienteEquipoDesdeParent) => {
-    console.log("siguiente equipo formulario");
+    //console.log("siguiente equipo formulario");
     if (equipoControlado) {
       let strMotivoNoControlado;
       if (otroMotivoNoControlado) {
@@ -170,10 +170,10 @@ const CargaControles = (props) => {
     archivo,
     componentes,
   ) => {
-    console.log(
+    /*console.log(
       "guardar desde parent",
       props.detalleDeComponentesYControles.componentes,
-    );
+    );*/
     props.detalleDeComponentesYControles.componentes.forEach(
       (componente, index) => {
         cargaControlPorComponente(

@@ -246,15 +246,17 @@ const Notificaciones = (props) => {
               </FormGroup>
               <FormGroup>
                 <Label for="mensaje">Mensaje: </Label>
-                <ReactQuill
-                  key={quillKey}
-                  id="mensaje"
-                  theme="snow"
-                  defaultValue=""
-                  onChange={handleQuillChange}
-                  modules={quillModules}
-                  style={{ backgroundColor: "white" }}
-                />
+                <div spellCheck lang="es">
+                  <ReactQuill
+                    key={quillKey}
+                    id="mensaje"
+                    theme="snow"
+                    defaultValue=""
+                    onChange={handleQuillChange}
+                    modules={quillModules}
+                    style={{ backgroundColor: "white" }}
+                  />
+                </div>
               </FormGroup>
 
               <DropzoneComponent

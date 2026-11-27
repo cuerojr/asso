@@ -136,14 +136,16 @@ const GuardarInformeModal = (props) => {
           <Label for="introduccion" className="mt-3">
             TEXTO DE INTRODUCCIÓN DE INFORME{" "}
           </Label>
-          <ReactQuill
-            key={quillKey}
-            id="introduccion"
-            theme="snow"
-            defaultValue={introduccion}
-            onChange={setIntroduccion}
-            style={{ backgroundColor: "white" }}
-          />
+          <div spellCheck lang="es">
+            <ReactQuill
+              key={quillKey}
+              id="introduccion"
+              theme="snow"
+              defaultValue={introduccion}
+              onChange={setIntroduccion}
+              style={{ backgroundColor: "white" }}
+            />
+          </div>
           <hr />
           <Label for="firma">FIRMA</Label>
           <InputGroup className="mb-3">

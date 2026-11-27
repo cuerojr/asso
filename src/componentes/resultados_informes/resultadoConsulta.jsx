@@ -51,6 +51,7 @@ import {
 import { transpose } from "../utils/utils";
 import moment from "moment";
 import "moment/locale/es";
+import { BASEURL } from "../../lib/baseurl";
 moment.locale("es");
 window.moment = moment;
 
@@ -98,7 +99,7 @@ const ResultadoConsulta = (props) => {
     fetchlistarEstados,
     fetchlistarcomponentesPorEmpresa,
   } = props;
-  console.log("🚀 ~ ResultadoConsulta ~ idEmpresa:", idEmpresa);
+  console.log("🚀 ~ ResultadoConsulta ~ props:", props);
 
   const informeHook = useInformeResultado({
     idEmpresa,
@@ -182,6 +183,7 @@ const ResultadoConsulta = (props) => {
 
       informeInformeOnline(idEmpresa, props.idInforme).then((res) => {
         if (res) {
+          console.log("🚀 ~ informeInformeOnline ~ res:", res);
           setDatosPdf(res);
           distruirDatos(res);
         }
@@ -454,7 +456,7 @@ const ResultadoConsulta = (props) => {
       <ModalNotificacionWhatsapp
         mostrarModalWhatsapp={false}
         clienteId={idEmpresa}
-        mensaje={getNewReportMessage({ titulo: datosPdf?.titulo })}
+        mensaje={getNewReportMessage({ titulo: datosPdf?.titulo, url: `${PORTAL_URL}/informe-generado/${props.idEmpresa}/${props.idInforme}` })}
       />
     </>
   );

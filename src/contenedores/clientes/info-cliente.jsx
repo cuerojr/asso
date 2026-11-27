@@ -240,6 +240,20 @@ const InfoCliente = (props) => {
                 TIPOS DE FALLAS
               </NavLink>
             </NavItem>
+            <NavItem>
+              <NavLink
+                className={classnames({
+                  active: currentTab === "motivos-no-controlados",
+                  "nav-link": true,
+                })}
+                onClick={(e) => {
+                  cambiarTab(e, "motivos-no-controlados");
+                }}
+                to="#"
+              >
+                MOTIVOS DE EQUIPOS NO CONTROLADOS
+              </NavLink>
+            </NavItem>
           </Nav>
           {(currentTab === "datos" || currentTab === "contrato") && (
             <div className="float-right">
@@ -378,6 +392,14 @@ const InfoCliente = (props) => {
 
           <TabPane tabId="fallas">
             <Fallas idEmpresa={props.idEmpresa} />
+          </TabPane>
+          <TabPane tabId="motivos-no-controlados">
+            <Tarjeta titulo="Motivos de equipos no controlados">
+              <p>
+                Aquí puede definir los motivos por los cuales un equipo no pudo ser controlado. Estos motivos se podrán seleccionar al momento de cargar controles de equipos.
+              </p>
+              
+            </Tarjeta>
           </TabPane>
         </TabContent>
       </Row>
