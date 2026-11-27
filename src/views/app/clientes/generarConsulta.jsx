@@ -128,7 +128,7 @@ const GenerarConsulta = (props) => {
         );
         setMostrarModalGuarda(false);
         //abrir el modal de notificacion por whatsapp
-        props.setRedirectWhatsapp(`/app/clientes/editar-cliente/${mantenerDatos.idEmpresa}/informes/${res.id}`);
+        props.setRedirectWhatsapp(`/informe-generado/${mantenerDatos.idEmpresa}/${res.id}`);
         props.setMostrarModalWhatsapp(true);
 
         //navigate(`/app/clientes/editar-cliente/${mantenerDatos.idEmpresa}/informes/${res.id}`);

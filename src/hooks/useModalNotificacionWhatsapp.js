@@ -4,6 +4,7 @@ import {
   useRef,
   useState
 } from "react";
+import { Link, redirect, useNavigate, useParams } from "react-router-dom";
 import {
   useWhatsappNotification
 } from "./useWhatsappNotification";
@@ -36,6 +37,7 @@ export const useModalNotificacionWhatsapp = ({
   redirect = null,
 } = {}) => {
   // console.log("🚀 ~ useModalNotificacionWhatsapp ~ usuarios:", usuarios)
+  const navigate = useNavigate();
   const {
     enviarMensajes
   } = useWhatsappNotification();
@@ -65,6 +67,9 @@ export const useModalNotificacionWhatsapp = ({
 
   const cerrar = useCallback(() => {
     onCerrar?.();
+    if (redirect) {
+      navigate(redirect);
+    }
   }, [onCerrar]);
 
   const toggleUsuario = useCallback((id) => {
