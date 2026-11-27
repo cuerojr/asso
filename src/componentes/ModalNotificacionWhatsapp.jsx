@@ -11,7 +11,7 @@ import {
   Label,
 } from "reactstrap";
 import { connect } from "react-redux";
-import { setMostrarModalWhatsapp } from "../reducers/notificacionesWhatsapp-reducer";
+import { setMostrarModalWhatsapp, setRedirectWhatsapp } from "../reducers/notificacionesWhatsapp-reducer";
 import { useModalNotificacionWhatsapp } from "../hooks/useModalNotificacionWhatsapp";
 import { fetchListarUsuariosEmpleados } from "../reducers/usuarios-reducer";
 
@@ -32,6 +32,8 @@ const ModalNotificacionWhatsapp = ({
   fetchListarUsuariosEmpleados,
   cargaMasiva,
   mensaje,
+  redirect = null,
+  redirectWhatsapp,
 }) => {
  const clienteId =
     clienteIdProp ?? detalleCliente?.id ?? cargaMasiva?.clienteSeleccionado?.value;
@@ -56,6 +58,7 @@ const ModalNotificacionWhatsapp = ({
     abierto: mostrarModalWhatsapp,
     usuarios: listaUsuariosEmpleados,
     mensaje,
+    redirect: redirectWhatsapp,
     onCerrar: () => setMostrarModalWhatsapp(false),
   });
 
@@ -141,9 +144,11 @@ const mapStateToProps = (state) => ({
   cargaMasiva: state.cargasMasivasReducer.cargaMasiva,
   usuariosEmpleado: state.usuariosReducer.usuariosEmpleado, // ajustá a tu state real
   listaUsuariosEmpleados: state.usuariosReducer.listaUsuariosEmpleados, // ajustá a tu state real
+  redirectWhatsapp: state.notificacionesWhatsappReducer.redirect,
 });
 
 export default connect(mapStateToProps, {
   setMostrarModalWhatsapp,
   fetchListarUsuariosEmpleados,
+  setRedirectWhatsapp,
 })(ModalNotificacionWhatsapp);

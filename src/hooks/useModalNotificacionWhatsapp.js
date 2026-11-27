@@ -1,6 +1,15 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useWhatsappNotification } from "./useWhatsappNotification";
-import { NotificationManager } from "../components/common/react-notifications";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState
+} from "react";
+import {
+  useWhatsappNotification
+} from "./useWhatsappNotification";
+import {
+  NotificationManager
+} from "../components/common/react-notifications";
 
 const MENSAJE_DEFAULT =
   "Hola! Tenemos novedades para vos en ASSO. Ingresá a tu cuenta para verlas.";
@@ -24,9 +33,12 @@ export const useModalNotificacionWhatsapp = ({
   mensaje = MENSAJE_DEFAULT,
   onCerrar,
   onEnviado,
+  redirect = null,
 } = {}) => {
-  console.log("🚀 ~ useModalNotificacionWhatsapp ~ usuarios:", usuarios)
-  const { enviarMensajes } = useWhatsappNotification();
+  // console.log("🚀 ~ useModalNotificacionWhatsapp ~ usuarios:", usuarios)
+  const {
+    enviarMensajes
+  } = useWhatsappNotification();
 
   const [phoneNumber, setPhoneNumber] = useState("");
   const [usuariosSeleccionados, setUsuariosSeleccionados] = useState([]);
@@ -47,6 +59,7 @@ export const useModalNotificacionWhatsapp = ({
       setPhoneNumber("");
       setUsuariosSeleccionados([]);
       setEnviando(false);
+      redirect = null;
     }
   }, [abierto]);
 
@@ -97,11 +110,18 @@ export const useModalNotificacionWhatsapp = ({
 
     setEnviando(true);
     try {
-      const { enviados, fallidos } = await enviarMensajes(telefonos, mensaje);
+      const {
+        enviados,
+        fallidos
+      } = await enviarMensajes(telefonos, mensaje);
 
       if (fallidos.length === 0) {
         NotificationManager.success("Notificaciones enviadas por WhatsApp");
         onEnviado?.();
+
+        if (redirect) {
+          navigate(redirect);
+        }
         cerrar();
       } else if (enviados === 0) {
         NotificationManager.error("No se pudo enviar la notificación");

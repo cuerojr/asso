@@ -5,8 +5,9 @@ import { altaInformeTipoOnline } from "../../../lib/informe-online-api";
 import { NotificationManager } from "../../../components/common/react-notifications";
 import GuardarInformeModal from "../../../componentes/resultados_informes/guardarInformeModal";
 import EdicionGenerarConsulta from "../../../componentes/resultados_informes/edicionGenerarConsulta";
+import { setMostrarModalWhatsapp, setRedirectWhatsapp } from "../../../reducers/notificacionesWhatsapp-reducer";
 import { agregarCero } from "../../../componentes/utils/utils";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, redirect, useNavigate, useParams } from "react-router-dom";
 import { connect } from "react-redux";
 
 import { limpiarFiltrosInforme } from "../../../reducers/informes-reducer";
@@ -88,11 +89,11 @@ const GenerarConsulta = (props) => {
     opcionales,
     filtroFallas,
     filtroEstados,
-    filtroComponentes
+    filtroComponentes,
   ) => {
-    const { filtrosInforme } = props
+    const { filtrosInforme } = props;
 
-    return altaInformeTipoOnline(
+    altaInformeTipoOnline(
       mantenerDatos.idEmpresa,
       JSON.stringify(mantenerDatos.seccionesIds),
       JSON.stringify(mantenerDatos.rutasIds),
@@ -112,19 +113,25 @@ const GenerarConsulta = (props) => {
       firma,
       opcionales,
       1,
-      filtrosInforme.selectedFallas.map(falla => falla.value),
-      filtrosInforme.selectedEstados.map(estado => estado.value),
-      filtrosInforme.selectedComponentes.map(componente => componente.value)
-    ).then((res) => {      
+      filtrosInforme.selectedFallas.map((falla) => falla.value),
+      filtrosInforme.selectedEstados.map((estado) => estado.value),
+      filtrosInforme.selectedComponentes.map((componente) => componente.value),
+    ).then((res) => {
+      console.log("🚀 ~ finalmenteGuarda ~ res:", res);
+      //return
       if (res.stat === 1) {
-      props.limpiarFiltrosInforme();
+        props.limpiarFiltrosInforme();
         NotificationManager.success(
           "El informe ha sido guardado correctamente",
           "Informe guardado",
-          3000
+          3000,
         );
+        setMostrarModalGuarda(false);
+        //abrir el modal de notificacion por whatsapp
+        props.setRedirectWhatsapp(`/app/clientes/editar-cliente/${mantenerDatos.idEmpresa}/informes/${res.id}`);
+        props.setMostrarModalWhatsapp(true);
 
-        navigate(`/app/clientes/editar-cliente/${mantenerDatos.idEmpresa}/informes`);
+        //navigate(`/app/clientes/editar-cliente/${mantenerDatos.idEmpresa}/informes/${res.id}`);
       } else {
         NotificationManager.error(res.err, "Hubo un error", 3000);
       }
@@ -162,7 +169,6 @@ const GenerarConsulta = (props) => {
       <EdicionGenerarConsulta
         aplicarConsulta={aplicarConsulta}
         idEmpresa={cliente} // 👈 ahora pasamos desde useParams
-        
       />
 
       <Row>
@@ -198,6 +204,9 @@ export default connect(
   (state) => ({
     detalleCliente: state.clientesReducer.detalleClienteState,
     filtrosInforme: state.informesReducer.filtrosInforme,
+    mostrarModalWhatsapp: state.informesReducer.mostrarModalWhatsapp,
+    setRedirectWhatsapp: state.informesReducer.setRedirectWhatsapp,
+    redirectWhatsapp: state.notificacionesWhatsappReducer.redirect,
   }),
-  { limpiarFiltrosInforme },
+  { limpiarFiltrosInforme, setMostrarModalWhatsapp, setRedirectWhatsapp },
 )(GenerarConsulta);

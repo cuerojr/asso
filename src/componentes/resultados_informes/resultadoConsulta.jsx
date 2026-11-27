@@ -352,7 +352,7 @@ const ResultadoConsulta = (props) => {
             )}
             <Button
               color="success"
-              className="mt-2 mr-2"
+              className="mt-2 mr-2 d-none"
               onClick={() => props.setMostrarModalWhatsapp(true)}
             >
               NOTIFICAR POR WHATSAPP
